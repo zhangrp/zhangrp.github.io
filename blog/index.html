@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Blog · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="A website for testing"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Blog · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="A website for testing"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="blog"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class="siteNavGroupActive siteNavItemActive"><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Recent Posts</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Recent Posts</h3><ul class=""><li class="navListItem"><a class="navItem" href="/blog/2020/04/09/markdown-rule">markdown规则详细介绍及自定义参数设置</a></li><li class="navListItem"><a class="navItem" href="/blog/2020/04/09/how-to-force-rereding-in-angular2">How to force a component&#x27;s re-rendering in Angular 2</a></li><li class="navListItem"><a class="navItem" href="/blog/2020/04/09/h5-notification">H5 notification</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer postContainer blogContainer"><div class="wrapper"><div class="posts"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle"><a href="/blog/2020/04/09/markdown-rule">markdown规则详细介绍及自定义参数设置</a></h1><p class="post-meta">April 9, 2020</p><div class="authorBlock"></div></header><article class="post-content"><div><span><p><strong>MD001 - Heading levels should only increment by one level at a time</strong></p>
+<p>标题级数每次只能扩大1, 也就是不能隔级创建标题（从1级到6级的顺序）</p>
+<p><strong>MD002 - First heading should be a top level heading</strong></p>
+<p>文档的第一个标题必须是最高级的标题（标题等级1级到6级逐渐降低）</p>
+<p>参数：“level”：指定最高级标题的级数，默认是1</p>
+<p><strong>MD003 - Heading style</strong>
+整篇文档要采用一致的标题格式</p>
+<p>参数：
+“style”：字符串，指定文档标题的格式，有(“consistent”, “atx”, “atx_closed”, “setext”, “setext_with_atx”,“setext_with_atx_closed”)五种，默认是&quot;consistent&quot;，也就是整篇文档一致</p>
+<p>标题格式必须统一，一般不能混用，但&quot;setext_with_atx&quot;, &quot;setext_with_atx_closed&quot;格式可以在&quot;setext&quot;格式二级标题后接着使用&quot;atx&quot;或&quot;atx_closed&quot;格式的标题。</p>
+<p><strong>MD004 - Unordered list style</strong>
+整篇文档定义无序列表的格式要一致</p>
+<p>参数：
+“style”：字符串，指定无序列表的定义格式，有(“consistent”, “asterisk”, “plus”, “dash”, “sublist”)五种，分别表示“定义时符号前后一致”，“用星号定义”，“用加号定义”，“用减号定义”，“定义多重列表时用不同的符号定义”，默认是&quot;consistent&quot;</p>
+<p><strong>MD005 - Inconsistent indentation for list items at the same level</strong></p>
+<p>同一级的列表缩进必须一致。在有序列表中，前面的数字序号可以左对齐，也可以右对齐</p>
+<p><strong>MD006 - Consider starting bulleted lists at the beginning of the line</strong></p>
+<p>1级列表不能缩进</p>
+<p><strong>MD007 - Unordered list indentation</strong></p>
+<p>无序列表嵌套缩进时默认采用两个空格</p>
+<p>参数：“ident”：指定无序列表嵌套时缩进的空格数，默认是2</p>
+<p><strong>MD009 - Trailing spaces</strong></p>
+<p>行尾最多可以添加两个空格，超过会给出警告，两个空格正好可以用于换行</p>
+<p>参数：</p>
+<ul>
+<li>“br_spaces”：指定在行尾可以添加的空格数目，空格数目建议大于等于2，如果小于2，会默认为0，也就是不允许任何行尾的空格</li>
+<li>“list_item_empty_lines”：字符串，指定在列表中是否(true or false)用默认的空格数缩进空行，有的解释器会要求列表中的空行要缩进</li>
+</ul>
+<p><strong>MD010 - Hard tabs</strong></p>
+<p>不能使用tab键缩进，要使用空格</p>
+<p>参数：“code_blocks”：指定本条规则在代码块里是否(true or false)生效</p>
+<p><strong>MD011 - Reversed link syntax</strong></p>
+<p>检查内联形式的链接的创建方式是否错误，中括号和圆括号是否用对</p>
+<p><strong>MD012 - Multiple consecutive blank lines</strong></p>
+<p>文档中不能有连续的空行，在代码块中此规则不会生效</p>
+<p>参数：“maximum”：指定文档中可以连续的最多空行数，默认值是1</p>
+<p><strong>MD013 - Line length</strong></p>
+<p>默认行的最大长度是80，此规则对代码块、表格、标题也生效</p>
+<p>参数：</p>
+<ul>
+<li>“line_length”：指定行的最大长度，默认是80</li>
+<li>“heading_line_length”：指定标题行的最大长度，默认是80</li>
+<li>“code_blocks”：指定规则是否(true or false)对代码块生效，默认true</li>
+<li>“tables”：指定规则是否(true or false)对表格生效，默认true</li>
+<li>“hesdings”：指定规则是否(true or false)对标题生效，默认true</li>
+</ul>
+<p><strong>MD014 - Dollar signs used before commands without showing output</strong></p>
+<p>在代码块中，终端命令前不需要有美元符号 $ 如果代码块中既有终端命令，也有命令的输出，则终端命令前可以有美元符号($)，如：</p>
+<pre><code class="hljs css language-shell"><span class="hljs-meta">$</span><span class="bash"> ls</span>
+foo bar
+<span class="hljs-meta">$</span><span class="bash"> cat foo</span>
+hello world
+</code></pre>
+<p><strong>MD019 - Multiple spaces after hash on atx style heading</strong></p>
+<p>在&quot;atx&quot;格式的标题中，#号和文字间只能用一个空格隔开，不能有多余的空格</p>
+<p><strong>MD020 - No space inside hashes on closed atx style heading</strong></p>
+<p>在&quot;closed_atx&quot;格式的标题中，文字和前后的#号之间需用一个空格隔开</p>
+<p><strong>MD021 - Multiple spaces inside hashes on closed atx style heading</strong></p>
+<p>在&quot;closed_atx&quot;格式的标题中，文字和前后的#号之间只能用一个空格隔开，不能有多余的空格</p>
+<p><strong>MD022 - Headings should be surrounded by blank lines</strong></p>
+<p>标题行的上下行必须都是空行</p>
+<p>参数：</p>
+<ul>
+<li>“lines_above”：指定标题行上方的空行数，默认为1，可以设为更大或0</li>
+<li>“lines_below”：指定标题行下方的空行数，默认为1，可以设为更大或0</li>
+</ul>
+<p>注意当此处的空行设为比1大的数时，规则MD012的设置也要改</p>
+<p><strong>MD023 - Headings must start at the beginning of the line</strong></p>
+<p>标题行不能缩进</p>
+<p><strong>MD024 - Multiple headings with the same content</strong></p>
+<p>文档不能有内容重复的标题</p>
+<p>参数：</p>
+<ul>
+<li>“siblings_only”：默认为false，设为true时，不同标题下的子标题内容可以重复</li>
+</ul>
+<p><strong>MD025 - Multiple top level headings in the same document</strong></p>
+<p>同一文档只能有一个最高级的标题，默认是只能有一个1级标题</p>
+<p>参数：</p>
+<ul>
+<li>“level”：指定文档最高级的标题，默认是1</li>
+<li>“front_matter_title”：字符串，指定在文档开头处的front matter中的标题，这个标题将作为整篇文档的最高级标题，如果文档中再次出现最高级标题，将会给出警告，另外，如果不想在front matter中指定标题，就把本参数的值设置为&quot;&quot;</li>
+</ul>
+<p><strong>MD026 - Trailing punctuation in heading</strong>
+标题行末尾不能有以下标点符号：&quot;.,;:!?&quot;</p>
+<p>参数：</p>
+<ul>
+<li>“punctuation”：字符串，指定标题行尾不能有的标点符号，默认是&quot;.,;:!?&quot;。此规则默认的是英文的标点符号，中文标点符号不在规则之内</li>
+</ul>
+<p><strong>MD027 - Multiple spaces after blockquote symbol</strong></p>
+<p>创建引用区块时，右尖括号 ( &gt; ) 和文字之间有且只能有一个空格。</p>
+<p><strong>MD028 - Blank line inside blockquote</strong></p>
+<p>两个引用区块间不能仅用一个空行隔开或者同一引用区块中不能有空行，如果一行中没有内容，则这一行要用&gt;开头。</p>
+<p><strong>MD029 - Ordered list item prefix</strong></p>
+<p>有序列表的前缀序号格式必须只用1或者从1开始的加1递增数字(“one_or_ordered”)。</p>
+<p>参数：</p>
+<ul>
+<li>“style”：字符串，指定前缀序号的格式，(“one”,“ordered”,“one_or_ordered”,“zero”)，分别表示只用1做前缀，用从1开始的加1递增数字做前缀，只用1或者从1开始的加1递增数字做前缀，只用0做前缀，默认值是&quot;one_or_ordered&quot;</li>
+</ul>
+<p><strong>MD030 - Spaces after list markers</strong></p>
+<p>列表（有序、无序）的前缀符号和文字之间用1个空格隔开。在列表嵌套或者同一列表项中有多个段落时，无序列表缩进两个空格，有序列表缩进3个空格。</p>
+<p>参数：</p>
+<ul>
+<li>“ul_single”,“ol_single”,“ul_multi”,“ol_multi”：分别规定无序列表单个段落，有序列表单个段落，无序列表多个段落，有序列表多个段落的前缀符号和文字之间的空格数，默认是1</li>
+</ul>
+<p><strong>MD031 - Fenced code blocks should be surrounded by blank lines</strong></p>
+<p>单独的代码块前后需要用空行隔开（除非是在文档开头或末尾），否则有些解释器不会解释为代码块</p>
+<p><strong>MD032 - Lists should be surrounded by blank lines</strong></p>
+<p>列表（有序、无序）前后需要用空行隔开，否则有些解释器不会解释为列表。列表的缩进必须一致，否则会警告</p>
+<p><strong>MD033 - Inline HTML</strong></p>
+<p>文档中不允许使用HTML语句</p>
+<p>参数：</p>
+<ul>
+<li>“allowed_elements”：自定义允许的元素，是一个字符串数组，默认是空(empty)</li>
+</ul>
+<p><strong>MD034 - Bare URL used</strong></p>
+<p>单纯的链接地址需要用尖括号 (&lt;&gt;) 包裹，否则有些解释器不会解释为链接</p>
+<p><strong>MD035 - Horizontal rule style</strong></p>
+<p>创建水平线时整篇文档要统一(consistent)，要和文档中第一次创建水平线使用的符号一致</p>
+<p>参数：</p>
+<ul>
+<li>“style”：字符串，指定创建水平线的方式，值有：(“consistent”,&quot;***&quot;,&quot;—&quot;,&quot;___&quot;)，默认是&quot;consistent&quot;</li>
+</ul>
+<p><strong>MD036 - Emphasis used instead of a heading</strong></p>
+<p>不能用强调代替标题</p>
+<p>参数：</p>
+<ul>
+<li>“punctuation”：字符串，指定用于结尾的标点符号，以此符号结尾的强调不会被视为以强调代替标题，默认值是&quot;.,;:!?&quot;</li>
+</ul>
+<p>此规则会检查只包含强调的单行段落，如果这种段落不是以指定的标点符号结尾，则会被视为以强调代替标题，会给出警告</p>
+<p><strong>MD037 - Spaces inside emphasis markers</strong></p>
+<p>用于创建强调的符号和强调的的文字之间不能有空格</p>
+<p><strong>MD038 - Spaces inside code span elements</strong></p>
+<p>当用单反引号创建代码段的时候，单反引号和它们之间的代码不能有空格。如果要把单反引号嵌入到代码段的首尾，创建代码段的单反引号和嵌入的单反引号间要有一个空格隔开</p>
+<p><strong>MD039 - Spaces inside link text</strong></p>
+<p>链接名和包围它的中括号之间不能有空格，但链接名中间可以有空格</p>
+<p><strong>MD040 - Fenced code blocks should have a language specified</strong></p>
+<p>单独的代码块（此处是指上下用三个反引号包围的代码块）应该指定代码块的编程语言，这一点有助于解释器对代码进行代码高亮</p>
+<p><strong>MD041 - First line in file should be a top level heading</strong></p>
+<p>文档的第一个非空行应该是文档最高级的标题，默认是1级标题</p>
+<p>参数：</p>
+<ul>
+<li>“level”：指定文档最高级的标题，默认是1</li>
+<li>“front_matter_title”：字符串，指定在文档开头处的front matter中的标题，这个标题将作为整篇文档的最高级标题，另外，如果不想在front matter中指定标题，就把本参数的值设置为&quot;&quot;</li>
+</ul>
+<p><strong>MD042 - No empty links</strong></p>
+<p>链接的地址不能为空</p>
+<p><strong>MD043 - Required heading structure</strong></p>
+<p>要求标题遵循一定的结构，默认是没有规定的结构(“null”)</p>
+<p>参数：</p>
+<ul>
+<li>“headings”：字符串数组，指定标题需要遵循的结构，默认是&quot;null&quot;，可以自行指定结构，如：星号(*)表示对应的标题是可选的，没有强制要求，本条具体可以参照MD043</li>
+</ul>
+<p><strong>MD044 - Proper names should have the correct capitalization</strong></p>
+<p>指定一些名称，会检查它是否有正确的大写</p>
+<p>参数：</p>
+<ul>
+<li>“names”：字符串数组，指定要检查需要大写的名称，默认是空(“null”)</li>
+<li>“code_blocks”：指定本规则是否(true or false)对代码块生效，默认是true</li>
+</ul>
+<p>一些经常使用的名称可以使用本规则防止其拼写错误，比如JavaScript中字母J和S需要大写，就可以写到参数&quot;names&quot;中，防止写错</p>
+<p><strong>MD045 - Images should have alternate text (alt text)</strong></p>
+<p>图片链接必须包含描述文本（alt text）</p>
+<p><strong>MD046 - Code block style</strong></p>
+<p>整篇文档采用一致的代码格式</p>
+<p>参数：</p>
+<ul>
+<li>“style”: 字符串，指定代码块定义格式，有（“consistent”,“fenced”,“indented”）三种，分别代表：文档上下文一致，使用三个反引号隔开，使用缩进，默认是上下文一致</li>
+</ul>
+<p><strong>MD047 - Files should end with a single newline character</strong></p>
+<p>文档需用一个空行结尾</p>
+</span></div></article></div><div class="post"><header class="postHeader"><h1 class="postHeaderTitle"><a href="/blog/2020/04/09/how-to-force-rereding-in-angular2">How to force a component&#x27;s re-rendering in Angular 2</a></h1><p class="post-meta">April 9, 2020</p><div class="authorBlock"></div></header><article class="post-content"><div><span><p>Rendering happens after change detection. To force change detection, so that component property values that have changed get propagated to the DOM (and then the browser will render those changes in the view), here are some options:</p>
+<ul>
+<li><a href="https://angular.io/api/core/ApplicationRef#tick">ApplicationRef.tick()</a> - similar to Angular 1's <code>$rootScope.$digest()</code> -- i.e., check the full component tree</li>
+<li><a href="https://angular.io/api/core/NgZone#run">NgZone.run(callback)</a> - similar to <code>$rootScope.$apply(callback)</code> -- i.e., evaluate the callback function inside the Angular 2 zone. I think, but I'm not sure, that this ends up checking the full component tree after executing the callback function.</li>
+<li><a href="https://angular.io/api/core/ChangeDetectorRef#detectChanges">ChangeDetectorRef.detectChanges()</a> - similar to <code>$scope.$digest()</code> -- i.e., check only this component and its children</li>
+</ul>
+<p>详细地址<a href="https://stackoverflow.com/questions/35105374/how-to-force-a-components-re-rendering-in-angular-2">https://stackoverflow.com/questions/35105374/how-to-force-a-components-re-rendering-in-angular-2</a></p>
+</span></div></article></div><div class="post"><header class="postHeader"><h1 class="postHeaderTitle"><a href="/blog/2020/04/09/h5-notification">H5 notification</a></h1><p class="post-meta">April 9, 2020</p><div class="authorBlock"></div></header><article class="post-content"><div><span><h2><a class="anchor" aria-hidden="true" id="用户权限---notificationpermission"></a><a href="#用户权限---notificationpermission" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>用户权限 - Notification.permission</h2>
+<p><code>Notification.permission</code>是一个静态方法，可以获取用户当前的通知权限状态，返回一个<code>String</code>，可以根据返回值判断用户是否授予了通知权限。返回值有三种情况：</p>
+<ul>
+<li>default
+<ul>
+<li>用户还未被询问是否授权，所以通知不会被显示。</li>
+</ul></li>
+<li>granted
+<ul>
+<li>表示之前已经询问过用户，并且用户已经授予了显示通知的权限。</li>
+</ul></li>
+<li>denied
+<ul>
+<li>用户已经明确的拒绝了显示通知的权限。</li>
+</ul></li>
+</ul>
+<p>当值为<code>default</code>或者<code>denied</code>时都不会显示通知消息，只有明确的被设置成<code>granted</code>才会显示通知消息</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> permission = Notification.permission;
+<span class="hljs-keyword">if</span>(permission === <span class="hljs-string">'granted'</span>){
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'已经授权通知，可以进行你的通知啦！'</span>);
+}<span class="hljs-keyword">else</span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'用户还未授权，请先授权！'</span>);
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="请求权限---notificationrequestpermissioncallback"></a><a href="#请求权限---notificationrequestpermissioncallback" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>请求权限 - Notification.requestPermission(CALLBACK)</h2>
+<p>应用发送通知之前必须要取得发送通知的权限，才能成功进行通知。<code>Notification.requestPermission(CALLBACK)</code>是请求获取权限的方法，允许传入一个回调，回调会返回用户选择的何种权限，返回两个值，<code>granted</code>代表允许，<code>denied</code>代表拒绝。并且<code>Notification.requestPermission()</code>支持<code>then</code>方式的链式调用，也就意味着可以异步调用它。</p>
+<pre><code class="hljs css language-javascript">Notification.requestPermission(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">permission</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'用户是否允许通知： '</span>,permission === <span class="hljs-string">'granted'</span> ? <span class="hljs-string">'允许'</span> : <span class="hljs-string">'拒绝'</span>);
+});
+<span class="hljs-comment">//两种方式是等价的</span>
+Notification.requestPermission().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">permission</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'用户是否允许通知： '</span>,permission === <span class="hljs-string">'granted'</span> ? <span class="hljs-string">'允许'</span> : <span class="hljs-string">'拒绝'</span>);
+});
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="创建通知---new-notificationtitle-options"></a><a href="#创建通知---new-notificationtitle-options" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>创建通知 - new Notification(TITLE, OPTIONS)</h2>
+<p><code>new Notification(TITLE, OPTIONS)</code>方法创建可以创建一个通知实例，允许参入参数两个参数<code>TITLE</code>和<code>OPTIONS</code>。注意默认情况下（实际可以通过<code>OPTIONS</code>中的<code>timestamp</code>参数控制）一旦通知实例被创建出来，它会立即被显示出来。</p>
+<h3><a class="anchor" aria-hidden="true" id="title参数"></a><a href="#title参数" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TITLE参数</h3>
+<p><code>TITLE</code>表示通知的标题。必须参数，允许数字、字符串和空。</p>
+<h3><a class="anchor" aria-hidden="true" id="options参数"></a><a href="#options参数" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>OPTIONS参数</h3>
+<p><code>OPTIONS</code>是非必须参数，必须为一个对象，它包含：</p>
+<pre><code class="hljs css language-javascript">{
+    <span class="hljs-comment">//文字的方向；它的值可以是 auto（自动）, ltr（从左到右）, or rtl（从右到左）</span>
+    <span class="hljs-string">'dir'</span>: <span class="hljs-string">'auto'</span>,
+    <span class="hljs-comment">//指定通知中所使用的语言。这个字符串必须在 BCP 47 language tag 文档中是有效的</span>
+    <span class="hljs-string">'lang'</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-comment">//通知中额外显示的字符串</span>
+    <span class="hljs-string">'body'</span>: <span class="hljs-string">'您有一条新的消息'</span>,
+    <span class="hljs-comment">//赋予通知一个ID，以便在必要的时候对通知进行刷新、替换或移除。</span>
+    <span class="hljs-string">'tag'</span>: <span class="hljs-string">''</span>,
+    <span class="hljs-comment">//一个图片的URL，将被用于显示通知的图标。</span>
+    <span class="hljs-string">'icon'</span>: <span class="hljs-string">''</span>  
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="事件"></a><a href="#事件" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>事件</h3>
+<p>Notification.onclick：处理 click 事件的处理。每当用户点击通知时被触发。
+Notification.onshow：处理 show 事件的处理。当通知显示的时候被触发。
+Notification.onerror：处理 error 事件的处理。每当通知遇到错误时被触发。
+Notification.onclose：处理 close 事件的处理。当用户关闭通知时被触发。</p>
+<h2><a class="anchor" aria-hidden="true" id="浏览器兼容性"></a><a href="#浏览器兼容性" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>浏览器兼容性</h2>
+<table>
+<thead>
+<tr><th style="text-align:center">Feature</th><th>Chrome</th><th style="text-align:left">Firefox (Gecko)</th><th style="text-align:left">Internet Explorer</th><th style="text-align:left">Opera</th><th style="text-align:left">Safari</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:center">Basic support</td><td>5 <a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/Prefixes">webkit</a> (see notes) 22</td><td style="text-align:left">4.0 <a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/Prefixes">moz</a> (see notes) 22</td><td style="text-align:left">未实现</td><td style="text-align:left">25</td><td style="text-align:left">6 (see notes)</td></tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr><th style="text-align:left">Feature</th><th style="text-align:left">Android</th><th style="text-align:left">Firefox Mobile (Gecko)</th><th style="text-align:left">Firefox OS</th><th style="text-align:left">IE Mobile</th><th style="text-align:left">Opera Mobile</th><th style="text-align:left">Safari Mobile</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align:left">Basic support</td><td style="text-align:left">?</td><td style="text-align:left">4.0 <a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/Prefixes">moz</a> (see notes) 22</td><td style="text-align:left">1.0.1 <a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/Prefixes">moz</a> (see notes) 1.2</td><td style="text-align:left">未实现</td><td style="text-align:left">?</td><td style="text-align:left">未实现</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="扩展"></a><a href="#扩展" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>扩展</h2>
+<p>提示用户操作界面，一种方式是通过上面的Notification，另外一种方式就是闪烁title。</p>
+<p>参考下面的代码。</p>
+<pre><code class="hljs css language-javascript">newExcitingAlerts = (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> oldTitle = <span class="hljs-built_in">document</span>.title;
+    <span class="hljs-keyword">var</span> msg = <span class="hljs-string">"New!"</span>;
+    <span class="hljs-keyword">var</span> timeoutId;
+    <span class="hljs-keyword">var</span> blink = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{ <span class="hljs-built_in">document</span>.title = <span class="hljs-built_in">document</span>.title == msg ? <span class="hljs-string">' '</span> : msg; };
+    <span class="hljs-keyword">var</span> clear = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        clearInterval(timeoutId);
+        <span class="hljs-built_in">document</span>.title = oldTitle;
+        <span class="hljs-built_in">window</span>.onmousemove = <span class="hljs-literal">null</span>;
+        timeoutId = <span class="hljs-literal">null</span>;
+    };
+    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">if</span> (!timeoutId) {
+            timeoutId = setInterval(blink, <span class="hljs-number">1000</span>);
+            <span class="hljs-built_in">window</span>.onmousemove = clear;
+        }
+    };
+}());
+</code></pre>
+<p>通过Notification有浏览器限制，老的浏览器可能不支持。闪烁title大部门浏览器都支持，但提示不明显。</p>
+<h2><a class="anchor" aria-hidden="true" id="参考网站"></a><a href="#参考网站" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>参考网站</h2>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API">Notifications API</a></p>
+<p><a href="https://segmentfault.com/a/1190000012127653">H5的Notification特性 - Web的桌面通知功能</a></p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div></div></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

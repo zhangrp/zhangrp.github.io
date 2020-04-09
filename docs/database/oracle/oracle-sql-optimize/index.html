@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>oracle sql优化 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="**1、SELECT子句中避免使用&#x27;\*&#x27;**"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="oracle sql优化 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="**1、SELECT子句中避免使用&#x27;\*&#x27;**"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">oracle sql优化</h1></header><article><div><span><p><strong>1、SELECT子句中避免使用'*'</strong>
+ORACLE在解析的过程中，会将'*' 依次转换成所有的列名，这个工作是通过查询数据字典完成的，这意味着将耗费更多的时间。另外，应该是仅取出需要查询的列，而不是返回所有的列。</p>
+<p><strong>2、减少访问数据库的次数</strong>
+ORACLE在内部执行了许多工作：解析SQL语句，估算索引的利用率，绑定变量，读数据块等。
+该优化点需要平衡，如果复杂sql耗时非常久，可以把复杂sql拆成多个简单sql，然后操作多次。</p>
+<p><strong>3、使用DECODE函数来减少处理时间</strong>
+使用DECODE函数可以避免重复扫描相同记录或重复连接相同的表。</p>
+<p><strong>4、删除重复记录</strong>
+最高效的删除重复记录方法 ( 因为使用了ROWID)例子：</p>
+<pre><code class="hljs css language-sql"><span class="hljs-keyword">DELETE</span>
+  <span class="hljs-keyword">FROM</span> EMP E
+ <span class="hljs-keyword">WHERE</span> E.ROWID &gt; (<span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">MIN</span>(X.ROWID) <span class="hljs-keyword">FROM</span> EMP X <span class="hljs-keyword">WHERE</span> X.EMP_NO = E.EMP_NO);
+</code></pre>
+<p><strong>5、用TRUNCATE替代DELETE，慎用</strong>
+当删除表中的记录时，在通常情况下，回滚段(rollback segments ) 用来存放可以被恢复的信息。如果你没有COMMIT事务，ORACLE会将数据恢复到删除之前的状态（准确地说是恢复到执行删除命令之前的状况）而当运用TRUNCATE时，回滚段不再存放任何可被恢复的信息。当命令运行后，数据不能被恢复。因此很少的资源被调用，执行时间也会很短。</p>
+<p>TRUNCATE只在删除全表适用，TRUNCATE是DDL不是DML。</p>
+<p><strong>6、尽量多使用COMMIT</strong></p>
+<p>只要有可能，在程序中尽量多使用COMMIT，这样程序的性能得到提高，需求也会因为COMMIT所释放的资源而减少。COMMIT所释放的资源：</p>
+<blockquote>
+<p>回滚段上用于恢复数据的信息
+被程序语句获得的锁
+redo log buffer 中的空间
+ORACLE为管理上述3种资源中的内部花费</p>
+</blockquote>
+<p>如果长时间不COMMIT，可能回报错”回滚段太长“。</p>
+<p><strong>7、使用表的别名(Alias)</strong></p>
+<p>当在SQL语句中连接多个表时， 请使用表的别名并把别名前缀于每个Column上。这样一来，就可以减少解析的时间并减少那些由Column歧义引起的语法错误。</p>
+<p><strong>8、用EXISTS替代IN、用NOT EXISTS替代NOT IN</strong></p>
+<p>在许多基于基础表的查询中，为了满足一个条件，往往需要对另一个表进行联接。在这种情况下， 使用EXISTS(或NOT EXISTS)通常将提高查询的效率。 在子查询中，NOT IN子句将执行一个内部的排序和合并。 无论在哪种情况下，NOT IN都是最低效的 (因为它对子查询中的表执行了一个全表遍历)。为了避免使用NOT IN ，我们可以把它改写成外连接(Outer Joins)或NOT EXISTS。</p>
+<p><strong>9、用索引提高效率</strong></p>
+<p>索引是表的一个概念部分，用来提高检索数据的效率，ORACLE使用了一个复杂的自平衡B-tree结构。 通常，通过索引查询数据比全表扫描要快。 当ORACLE找出执行查询和Update语句的最佳路径时， ORACLE优化器将使用索引。 同样在联结多个表时使用索引也可以提高效率。 另一个使用索引的好处是，它提供了主键(primary key)的唯一性验证。那些LONG或LONG RAW数据类型， 你可以索引几乎所有的列。</p>
+<p>通常， 在大型表中使用索引特别有效。当然，你也会发现，在扫描小表时，使用索引同样能提高效率。虽然使用索引能得到查询效率的提高，但是我们也必须注意到它的代价。 索引需要空间来存储，也需要定期维护，每当有记录在表中增减或索引列被修改时， 索引本身也会被修改。 这意味着每条记录的INSERT ， DELETE ， UPDATE将为此多付出4 ， 5 次的磁盘I/O 。因为索引需要额外的存储空间和处理，那些不必要的索引反而会使查询反应时间变慢。定期的重构索引是有必要的：</p>
+<pre><code class="hljs css language-sql"><span class="hljs-keyword">ALTER</span> <span class="hljs-keyword">INDEX</span> &lt;INDEXNAME&gt; <span class="hljs-keyword">REBUILD</span> &lt;TABLESPACENAME&gt;;
+</code></pre>
+<p><strong>10、sql语句用大写的</strong></p>
+<p>因为oracle总是先解析sql语句，把小写的字母转换成大写的再执行。</p>
+<p><strong>11、避免在索引列上使用NOT</strong></p>
+<p>我们要避免在索引列上使用NOT， NOT会产生在和在索引列上使用函数相同的影响。当ORACLE”遇到”NOT，他就会停止使用索引转而执行全表扫描。</p>
+<p><strong>12、避免在索引列上使用计算</strong></p>
+<p>WHERE子句中，如果索引列是函数的一部分。优化器将不使用索引而使用全表扫描。</p>
+<p><strong>13、用&gt;=替代&gt;</strong></p>
+<p>高效:</p>
+<pre><code class="hljs css language-sql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span>  EMP  <span class="hljs-keyword">WHERE</span>  DEPTNO &gt;=<span class="hljs-number">4</span> 
+</code></pre>
+<p>低效:</p>
+<pre><code class="hljs css language-sql"><span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">FROM</span> EMP <span class="hljs-keyword">WHERE</span> DEPTNO &gt;<span class="hljs-number">3</span> 
+</code></pre>
+<p>两者的区别在于， 前者DBMS将直接跳到第一个DEPT等于4的记录而后者将首先定位到DEPTNO=3的记录并且向前扫描到第一个DEPT大于3的记录。</p>
+<p><strong>14、用UNION替换OR (适用于索引列)</strong></p>
+<p>通常情况下，用UNION替换WHERE子句中的OR将会起到较好的效果。对索引列使用OR将造成全表扫描。注意， 以上规则只针对多个索引列有效。如果有column没有被索引， 查询效率可能会因为你没有选择OR而降低。</p>
+<p><strong>15、用IN来替换OR</strong></p>
+<p>这是一条简单易记的规则，但是实际的执行效果还须检验。</p>
+<p><strong>16、避免在索引列上使用IS NULL和IS NOT NULL</strong></p>
+<p>避免在索引中使用任何可以为空的列，ORACLE将无法使用该索引。对于单列索引，如果列包含空值，索引中将不存在此记录。对于复合索引，如果每个列都为空，索引中同样不存在此记录。如果至少有一个列不为空，则记录存在于索引中。举例: 如果唯一性索引建立在表的A列和B列上， 并且表中存在一条记录的A，B值为(123，null) ， ORACLE将不接受下一条具有相同A，B值（123，null）的记录(插入)。 然而如果所有的索引列都为空，ORACLE将认为整个键值为空而空不等于空。 因此你可以插入1000 条具有相同键值的记录，当然它们都是空! 因为空值不存在于索引列中，所以WHERE子句中对索引列进行空值比较将使ORACLE停用该索引。</p>
+<p><strong>17、总是使用索引的第一个列</strong></p>
+<p>如果索引是建立在多个列上， 只有在它的第一个列(leading column)被where子句引用时，优化器才会选择使用该索引。 这也是一条简单而重要的规则，当仅引用索引的第二个列时，优化器使用了全表扫描而忽略了索引。</p>
+<p><strong>18、用UNION-ALL 替换UNION ( 如果有可能的话)</strong></p>
+<p>当SQL语句需要UNION两个查询结果集合时，这两个结果集合会以UNION-ALL的方式被合并， 然后在输出最终结果前进行排序。 如果用UNION ALL替代UNION， 这样排序就不是必要了。 效率就会因此得到提高。 需要注意的是，UNION ALL 将重复输出两个结果集合中相同记录。 因此各位还是要从业务需求分析使用UNION ALL的可行性。 UNION 将对结果集合排序，这个操作会使用到SORT_AREA_SIZE这块内存。 对于这块内存的优化也是相当重要的。</p>
+<p><strong>19、避免改变索引列的类型</strong></p>
+<p>当比较不同数据类型的数据时， ORACLE自动对列进行简单的类型转换。</p>
+<p><strong>20、 需要当心的WHERE子句</strong></p>
+<blockquote>
+<p>!= 将不使用索引，索引只能告诉你什么存在于表中， 而不能告诉你什么不存在于表中
+||是字符连接函数。 就象其他函数那样， 停用了索引。
++是数学函数。 就象其他数学函数那样， 停用了索引。
+相同的索引列不能互相比较，这将会启用全表扫描。</p>
+</blockquote>
+<p><strong>21、大数据量检索不使用索引</strong></p>
+<p>如果检索数据量超过30%的表中记录数。使用索引将没有显著的效率提高。</p>
+<p>在特定情况下， 使用索引也许会比全表扫描慢， 但这是同一个数量级上的区别。 而通常情况下，使用索引比全表扫描要块几倍乃至几千倍！</p>
+<p><strong>22、避免使用耗费资源的操作</strong></p>
+<p>带有DISTINCT、UNION、MINUS、INTERSECT，ORDER BY的SQL语句会启动SQL引擎执行耗费资源的排序(SORT)功能。 DISTINCT需要一次排序操作， 而其他的至少需要执行两次排序。 通常，带有UNION， MINUS ， INTERSECT的SQL语句都可以用其他方式重写。如果你的数据库的SORT_AREA_SIZE调配得好， 使用UNION ， MINUS， INTERSECT也是可以考虑的， 毕竟它们的可读性很强。</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

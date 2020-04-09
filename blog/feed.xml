@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>博客 Blog</title>
+        <link>https://your-docusaurus-test-site.com/blog</link>
+        <description>The best place to stay up-to-date with the latest 博客 news and events.</description>
+        <lastBuildDate>Thu, 09 Apr 2020 06:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <image>
+            <title>博客 Blog</title>
+            <url>https://your-docusaurus-test-site.com/img/favicon.ico</url>
+            <link>https://your-docusaurus-test-site.com/blog</link>
+        </image>
+        <copyright>Copyright © 2020</copyright>
+        <item>
+            <title><![CDATA[markdown规则详细介绍及自定义参数设置]]></title>
+            <link>https://your-docusaurus-test-site.com/blog/2020/04/09/markdown-rule.html</link>
+            <guid>https://your-docusaurus-test-site.com/blog/2020/04/09/markdown-rule.html</guid>
+            <pubDate>Thu, 09 Apr 2020 06:00:00 GMT</pubDate>
+            <description><![CDATA[<p><strong>MD001 - Heading levels should only increment by one level at a time</strong></p> <p>标题级数每次只能扩大1, 也就是不能隔级创建标题（从1级到6级的顺序）</p> <p><strong>MD002 - First heading should be a top level heading</strong></p> <p>文档的第一个标题必须是最高级的标题（标题等级1级到6级逐渐降低）</p> <p>参数：“level”：指定最高级标题的级数，默认是1</p> <p><strong>MD003 - Heading style</strong> 整篇文档要采用一致的标题...</p>]]></description>
+        </item>
+        <item>
+            <title><![CDATA[How to force a component's re-rendering in Angular 2]]></title>
+            <link>https://your-docusaurus-test-site.com/blog/2020/04/09/how-to-force-rereding-in-angular2.html</link>
+            <guid>https://your-docusaurus-test-site.com/blog/2020/04/09/how-to-force-rereding-in-angular2.html</guid>
+            <pubDate>Thu, 09 Apr 2020 06:00:00 GMT</pubDate>
+            <description><![CDATA[<p>Rendering happens after change detection. To force change detection, so that component property values that have changed get propagated to the DOM (and then the browser will render those changes in the view), here are some options:</p> <ul> <li><a href="https://angular.io/api/core/ApplicationRef#tick">ApplicationRef.ti...</a></li></ul>]]></description>
+        </item>
+        <item>
+            <title><![CDATA[H5 notification]]></title>
+            <link>https://your-docusaurus-test-site.com/blog/2020/04/09/h5-notification.html</link>
+            <guid>https://your-docusaurus-test-site.com/blog/2020/04/09/h5-notification.html</guid>
+            <pubDate>Thu, 09 Apr 2020 06:00:00 GMT</pubDate>
+            <description><![CDATA[<h2><a class="anchor" aria-hidden="true" id="用户权限---notificationpermission"></a><a href="#用户权限---notificationpermission" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewbox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg></a>用户权限 - Notification.permission</h2> <p><code>Notification.permission</code>是一个静态方法，可以获取用户当前的通知权限状态，返回一个<code>String</code>，可以根据返回值判断用户是否授予了通知权限。返回值有三种情况：</p> <ul> <li>default <ul> <li>用户还未被询问是否授权，所以通知不会被显示。</li> </ul></li> <li>granted <ul> <li>表示之前已经询问过用户，并且用户已经授予了显示通知的权限。</li> </ul></li> <li>denied <ul> <li>用户已经明确的拒绝了显示通知的权限。</li> </ul></li> </ul> <p>当值为<code>default</code>或者<code>denied</code>时都不会显示通知消...</p>]]></description>
+        </item>
+    </channel>
+</rss>
