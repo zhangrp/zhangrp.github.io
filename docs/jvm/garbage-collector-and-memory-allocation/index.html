@@ -1,0 +1,494 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>垃圾收集器与内存分配策略 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 基础理论"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="垃圾收集器与内存分配策略 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 基础理论"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">垃圾收集器与内存分配策略</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="基础理论"></a><a href="#基础理论" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>基础理论</h2>
+<h3><a class="anchor" aria-hidden="true" id="哪些内存需要回收？对象已死吗？"></a><a href="#哪些内存需要回收？对象已死吗？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>哪些内存需要回收？对象已死吗？</h3>
+<p>通过引用计数器算法和可达性分析算法判断对象是否可以回收。</p>
+<h4><a class="anchor" aria-hidden="true" id="1、引用计数算法"></a><a href="#1、引用计数算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1、引用计数算法</h4>
+<ul>
+<li>实现简单，判断效率高</li>
+<li>无法解决循环引用的问题，主流的Java虚拟机都没有选用这种算法来管理内存</li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="2、可达性分析算法"></a><a href="#2、可达性分析算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2、可达性分析算法</h4>
+<p>判断对象是否通过GCRoot可达。通过一系列的GC Roots对象作为起点，从这些节点向下搜索，搜索所走过的路径称为引用链，当一个对象到GC Roots没有任何一个链相连，就是不可达。</p>
+<h4><a class="anchor" aria-hidden="true" id="哪些可以做为gc-root"></a><a href="#哪些可以做为gc-root" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>哪些可以做为GC ROOT</h4>
+<ul>
+<li>虚拟机栈（栈针中的本地变量表）对应的对象---对象还在虚拟机栈中</li>
+<li>方法区中静态属性引用的对象，类中通过<code>static</code>修饰的属性</li>
+<li>方法区中常量引用的对象，常量指编译器生成的各种字面量和符号引用。比如<code>String a=&quot;abcd&quot;</code>中的abcd</li>
+<li>本地方法栈中JNI（即Native方法）引用的对象</li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="关于引用"></a><a href="#关于引用" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>关于引用</h4>
+<ul>
+<li>强引用</li>
+</ul>
+<p>只要有强引用存在，垃圾收集器永远不会回收被引用的对象。强引用一般指<code>new Object()</code>。需要注意的是一个对象只要有强引用关联，不管它是否还有软引用、弱引用、虚引用都不会被回收。</p>
+<ul>
+<li>软引用</li>
+</ul>
+<p>有用但非必要的对象，系统将在要发生内存溢出异常前，对此进行回收，回收之后还没有足够的内存，才会抛出内存溢出。<code>SoftReference</code>。使用场景：缓存。</p>
+<pre><code class="hljs css language-java"><span class="hljs-comment">//-XX:+PrintGCDetails -Xmx20m</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SoftReferenceTest</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span> </span>{
+        <span class="hljs-keyword">int</span> MAX_SIZE = <span class="hljs-number">100</span>;
+
+        List&lt;Image&gt; imageList = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; MAX_SIZE; i++) {
+            imageList.add(<span class="hljs-keyword">new</span> Image(<span class="hljs-string">""</span> + i));
+        }
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">10</span>; j++) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; MAX_SIZE; i++) {
+                imageList.get(i).getData();
+            }
+        }
+    }
+
+    <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Image</span> </span>{
+        <span class="hljs-keyword">private</span> String path;
+        <span class="hljs-keyword">private</span> SoftReference&lt;<span class="hljs-keyword">byte</span>[]&gt; data;
+
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Image</span><span class="hljs-params">(String path)</span> </span>{
+            <span class="hljs-keyword">this</span>.path = path;
+            <span class="hljs-keyword">this</span>.data = <span class="hljs-keyword">new</span> SoftReference&lt;&gt;(<span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">0</span>]);
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">byte</span>[] readData() {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>];
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">byte</span>[] getData() {
+            <span class="hljs-keyword">byte</span> reData[] = <span class="hljs-keyword">this</span>.data.get();
+            <span class="hljs-keyword">if</span> (reData == <span class="hljs-keyword">null</span> || reData.length == <span class="hljs-number">0</span>) {
+                System.out.println(<span class="hljs-string">"read --"</span> + <span class="hljs-keyword">this</span>.path);
+                reData = readData();
+                <span class="hljs-keyword">this</span>.data = <span class="hljs-keyword">new</span> SoftReference&lt;&gt;(reData);
+            }
+            <span class="hljs-keyword">return</span> reData;
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>弱引用</li>
+</ul>
+<p>非必须对象，只能生存到下一次垃圾收集发生之前。<code>WeakReference</code>。<br>
+使用：WeakHashMap和ThreadLocal。</p>
+<ul>
+<li>虚引用</li>
+</ul>
+<p>为对象设置虚引用关联的唯一目的就是能在这个对象被垃圾收集器回收时收到一个系统通知，<code>PhantomReference</code>需要和<code>ReferenceQueue</code>一同使用。</p>
+<pre><code class="hljs css language-java"><span class="hljs-comment">//-XX:+PrintGCDetails -Xmx20m</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PhantomReferenceTest</span> </span>{
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span></span>{
+        ReferenceQueue referenceQueue = <span class="hljs-keyword">new</span> ReferenceQueue();
+        List&lt;PhantomReference&gt; phantomReferenceList = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
+            phantomReferenceList.add(<span class="hljs-keyword">new</span> PhantomReference(<span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>], referenceQueue));
+            Reference reference;
+            <span class="hljs-keyword">while</span>((reference= referenceQueue.poll()) != <span class="hljs-keyword">null</span>){
+                phantomReferenceList.remove(reference);
+            }
+            <span class="hljs-comment">//phantomReferenceList.get(i).get(); -- 代码写死返回null</span>
+            System.out.println(phantomReferenceList.size());
+        }
+    }
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="weakhashmap"></a><a href="#weakhashmap" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>WeakHashMap</h4>
+<p><code>WeakHashMap</code>是Java集合框架里的一员，它是一种<code>Map</code>。它的特殊之处在于 WeakHashMap里的entry可能会被GC自动删除，即使程序员没有调用remove()或者clear()方法。<br>
+<code>WeakHashMap</code>的key是弱引用，key被回收后会添加到ReferenceQueue队列中，下次再操作WeakHashMap时会先根据ReferenceQueue删除被GC回收的键。</p>
+<pre><code class="hljs css language-java"><span class="hljs-comment">//-XX:+PrintGCDetails -Xmx20m</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WeakHashMapTest</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span> </span>{
+        WeakHashMap&lt;Key, Object&gt; weakHashMap = <span class="hljs-keyword">new</span> WeakHashMap();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
+            weakHashMap.put(<span class="hljs-keyword">new</span> Key(), <span class="hljs-keyword">new</span> Object());
+            System.out.println(i + <span class="hljs-string">"----"</span> + weakHashMap.size());
+        }
+    }
+    <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Key</span> </span>{
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">byte</span>[] a = <span class="hljs-keyword">new</span> <span class="hljs-keyword">byte</span>[<span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>];
+    }
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="threadlocal"></a><a href="#threadlocal" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ThreadLocal</h4>
+<p><img src="./garbage-collector-and-memory-allocation.assets/image-20200414120833886.png" alt="image-20200414120833886"></p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadLocal</span>&lt;<span class="hljs-title">T</span>&gt; </span>{
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>{
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        <span class="hljs-keyword">if</span> (map != <span class="hljs-keyword">null</span>) {
+            ThreadLocalMap.Entry e = map.getEntry(<span class="hljs-keyword">this</span>);
+            <span class="hljs-keyword">if</span> (e != <span class="hljs-keyword">null</span>)
+                <span class="hljs-keyword">return</span> (T)e.value;
+        }
+        <span class="hljs-keyword">return</span> setInitialValue();
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> T <span class="hljs-title">setInitialValue</span><span class="hljs-params">()</span> </span>{
+        T value = initialValue();
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        <span class="hljs-keyword">if</span> (map != <span class="hljs-keyword">null</span>)
+            map.set(<span class="hljs-keyword">this</span>, value);
+        <span class="hljs-keyword">else</span>
+            createMap(t, value);
+        <span class="hljs-keyword">return</span> value;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(T value)</span> </span>{
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        <span class="hljs-keyword">if</span> (map != <span class="hljs-keyword">null</span>)
+            map.set(<span class="hljs-keyword">this</span>, value);
+        <span class="hljs-keyword">else</span>
+            createMap(t, value);
+    }
+
+     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">remove</span><span class="hljs-params">()</span> </span>{
+         ThreadLocalMap m = getMap(Thread.currentThread());
+         <span class="hljs-keyword">if</span> (m != <span class="hljs-keyword">null</span>)
+             m.remove(<span class="hljs-keyword">this</span>);
+     }
+
+    <span class="hljs-function">ThreadLocalMap <span class="hljs-title">getMap</span><span class="hljs-params">(Thread t)</span> </span>{
+        <span class="hljs-keyword">return</span> t.threadLocals;<span class="hljs-comment">//ThreadLocal.ThreadLocalMap threadLocals = null;</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">createMap</span><span class="hljs-params">(Thread t, T firstValue)</span> </span>{
+        t.threadLocals = <span class="hljs-keyword">new</span> ThreadLocalMap(<span class="hljs-keyword">this</span>, firstValue);
+    }
+
+    <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadLocalMap</span> </span>{
+        <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entry</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WeakReference</span>&lt;<span class="hljs-title">ThreadLocal</span>&gt; </span>{
+            Object value;
+
+            Entry(ThreadLocal k, Object v) {
+                <span class="hljs-keyword">super</span>(k);
+                value = v;
+            }
+        }
+
+        <span class="hljs-keyword">private</span> Entry[] table;
+
+        <span class="hljs-function"><span class="hljs-keyword">private</span> Entry <span class="hljs-title">getEntry</span><span class="hljs-params">(ThreadLocal key)</span> </span>{
+            <span class="hljs-keyword">int</span> i = key.threadLocalHashCode &amp; (table.length - <span class="hljs-number">1</span>);
+            Entry e = table[i];
+            <span class="hljs-keyword">if</span> (e != <span class="hljs-keyword">null</span> &amp;&amp; e.get() == key)
+                <span class="hljs-keyword">return</span> e;
+            <span class="hljs-keyword">else</span>
+                <span class="hljs-keyword">return</span> getEntryAfterMiss(key, i, e);
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(ThreadLocal key, Object value)</span> </span>{
+            Entry[] tab = table;
+            <span class="hljs-keyword">int</span> len = tab.length;
+            <span class="hljs-keyword">int</span> i = key.threadLocalHashCode &amp; (len-<span class="hljs-number">1</span>);
+
+            <span class="hljs-keyword">for</span> (Entry e = tab[i];
+                 e != <span class="hljs-keyword">null</span>;
+                 e = tab[i = nextIndex(i, len)]) {
+                ThreadLocal k = e.get();
+
+                <span class="hljs-keyword">if</span> (k == key) {
+                    e.value = value;
+                    <span class="hljs-keyword">return</span>;
+                }
+
+                <span class="hljs-keyword">if</span> (k == <span class="hljs-keyword">null</span>) {
+                    replaceStaleEntry(key, value, i);
+                    <span class="hljs-keyword">return</span>;
+                }
+            }
+
+            tab[i] = <span class="hljs-keyword">new</span> Entry(key, value);
+            <span class="hljs-keyword">int</span> sz = ++size;
+            <span class="hljs-keyword">if</span> (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)
+                rehash();
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">remove</span><span class="hljs-params">(ThreadLocal key)</span> </span>{
+            Entry[] tab = table;
+            <span class="hljs-keyword">int</span> len = tab.length;
+            <span class="hljs-keyword">int</span> i = key.threadLocalHashCode &amp; (len-<span class="hljs-number">1</span>);
+            <span class="hljs-keyword">for</span> (Entry e = tab[i];
+                 e != <span class="hljs-keyword">null</span>;
+                 e = tab[i = nextIndex(i, len)]) {
+                <span class="hljs-keyword">if</span> (e.get() == key) {
+                    e.clear();
+                    expungeStaleEntry(i);
+                    <span class="hljs-keyword">return</span>;
+                }
+            }
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">expungeStaleEntry</span><span class="hljs-params">(<span class="hljs-keyword">int</span> staleSlot)</span> </span>{
+            Entry[] tab = table;
+            <span class="hljs-keyword">int</span> len = tab.length;
+
+            <span class="hljs-comment">// expunge entry at staleSlot</span>
+            tab[staleSlot].value = <span class="hljs-keyword">null</span>;
+            tab[staleSlot] = <span class="hljs-keyword">null</span>;
+            size--;
+
+            Entry e;
+            <span class="hljs-keyword">int</span> i;
+            <span class="hljs-keyword">for</span> (i = nextIndex(staleSlot, len);
+                 (e = tab[i]) != <span class="hljs-keyword">null</span>;
+                 i = nextIndex(i, len)) {
+                ThreadLocal k = e.get();
+                <span class="hljs-keyword">if</span> (k == <span class="hljs-keyword">null</span>) {
+                    e.value = <span class="hljs-keyword">null</span>;
+                    tab[i] = <span class="hljs-keyword">null</span>;
+                    size--;
+                } <span class="hljs-keyword">else</span> {
+                    <span class="hljs-keyword">int</span> h = k.threadLocalHashCode &amp; (len - <span class="hljs-number">1</span>);
+                    <span class="hljs-keyword">if</span> (h != i) {
+                        tab[i] = <span class="hljs-keyword">null</span>;
+
+                        <span class="hljs-keyword">while</span> (tab[h] != <span class="hljs-keyword">null</span>)
+                            h = nextIndex(h, len);
+                        tab[h] = e;
+                    }
+                }
+            }
+            <span class="hljs-keyword">return</span> i;
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">rehash</span><span class="hljs-params">()</span> </span>{
+            expungeStaleEntries();
+
+            <span class="hljs-keyword">if</span> (size &gt;= threshold - threshold / <span class="hljs-number">4</span>)
+                resize();
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">expungeStaleEntries</span><span class="hljs-params">()</span> </span>{
+            Entry[] tab = table;
+            <span class="hljs-keyword">int</span> len = tab.length;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; len; j++) {
+                Entry e = tab[j];
+                <span class="hljs-keyword">if</span> (e != <span class="hljs-keyword">null</span> &amp;&amp; e.get() == <span class="hljs-keyword">null</span>)
+                    expungeStaleEntry(j);
+            }
+        }
+    }
+}
+</code></pre>
+<p>使用</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ThreadLocal&lt;Map&lt;Object, Object&gt;&gt; resources = <span class="hljs-keyword">new</span> ThreadLocal&lt;Map&lt;Object, Object&gt;&gt;(){
+        <span class="hljs-function"><span class="hljs-keyword">protected</span> Map&lt;Object, Object&gt; <span class="hljs-title">initialValue</span><span class="hljs-params">()</span> </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HashMap&lt;Object, Object&gt;();
+        }
+    }
+</code></pre>
+<p>采用弱引用是为了不让ThreadLocalMap影响ThreadLocal的回收：
+弱引用也是用来描述非必须对象的，但是它的强度比软引用更弱一些，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。当垃圾收集器工作时，无论当前内存是否足够，都会回收掉只被弱引用关联的对象。在JDK1.2之后通过WeakReference类来实现弱引用。（只要对象被除WeakReference对象之外所有的对象解除引用后，该对象便可以被GC回收）<br>
+<code>ThreadLocalMap</code>使用<code>ThreadLocal</code>的弱引用作为key，如果一个<code>ThreadLocal</code>没有外部强引用来引用它，那么系统GC的时候，这个<code>ThreadLocal</code>势必会被回收，这样一来，<code>ThreadLocalMap</code>中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：<code>Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value</code>永远无法回收，造成内存泄漏。<br>
+其实，ThreadLocalMap的设计中已经考虑到这种情况，也加上了一些防护措施：在ThreadLocal的get()、set()、remove()的时候都会清除线程ThreadLocalMap里所有key为null的value。<br>
+但是这些被动的预防措施并不能保证不会内存泄漏，就比如说下面几种情况，就会导致ThreadLocal可能会发生内存泄漏：</p>
+<ul>
+<li>使用static的ThreadLocal，延长了ThreadLocal的生命周期，可能导致的内存泄漏（参考ThreadLocal 内存泄露的实例分析）。
+<ul>
+<li>分配使用了ThreadLocal又不再调用get(),set(),remove()方法，那么就会导致内存泄漏。</li>
+</ul></li>
+</ul>
+<p><strong>最佳实践</strong>：每次使用完ThreadLocal，都调用它的remove()方法，清除数据</p>
+<p>另外需要注意，在使用线程池技术和ThreadLoacl时，如果使用完后不清理，可能会拿到“上一个线程”设置的值。这里的“上一个线程”和当前线程，其实对于的是一个线程。</p>
+<h4><a class="anchor" aria-hidden="true" id="不可达的对象并非非死不可？"></a><a href="#不可达的对象并非非死不可？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>不可达的对象并非”非死不可“？</h4>
+<p>对象的死亡过程：</p>
+<ul>
+<li>如果对象在进行可达性分析后发现没有与GC Roots相连接的引用链，那它将会被第一次标记，并且进行一次筛选，筛选的条件是对象是否需要执行finalizer（没有覆盖finalizer()方法或者finalize()方法已经被虚拟机调用过）</li>
+<li>如果有必要执行finalize方法，就加入到F-Queue队列中，由Finalizer线程触发其执行</li>
+</ul>
+<p>自我拯救过程？</p>
+<p>在<code>finalizer()</code>方法中重新与引用链上的一个对象建立关联，譬如把this赋值给其它对象。</p>
+<h4><a class="anchor" aria-hidden="true" id="finalizer线程"></a><a href="#finalizer线程" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Finalizer线程</h4>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Finalizer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">FinalReference</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ReferenceQueue queue = <span class="hljs-keyword">new</span> ReferenceQueue();
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">runFinalizer</span><span class="hljs-params">(JavaLangAccess jla)</span> </span>{
+        <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>) {
+            <span class="hljs-keyword">if</span> (hasBeenFinalized()) <span class="hljs-keyword">return</span>;
+            remove();
+        }
+        <span class="hljs-keyword">try</span> {
+            Object finalizee = <span class="hljs-keyword">this</span>.get();
+            <span class="hljs-keyword">if</span> (finalizee != <span class="hljs-keyword">null</span> &amp;&amp; !(finalizee <span class="hljs-keyword">instanceof</span> java.lang.Enum)) {
+                <span class="hljs-comment">/** 在System中实现
+                public void invokeFinalize(Object var1) throws  Throwable {
+                    var1.finalize();
+                }
+                **/</span>
+                jla.invokeFinalize(finalizee);
+                finalizee = <span class="hljs-keyword">null</span>;
+            }
+        } <span class="hljs-keyword">catch</span> (Throwable x) { }
+        <span class="hljs-keyword">super</span>.clear();
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FinalizerThread</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Thread</span> </span>{
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">boolean</span> running;
+        FinalizerThread(ThreadGroup g) {
+            <span class="hljs-keyword">super</span>(g, <span class="hljs-string">"Finalizer"</span>);
+        }
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+            <span class="hljs-keyword">if</span> (running)
+                <span class="hljs-keyword">return</span>;
+            running = <span class="hljs-keyword">true</span>;
+            <span class="hljs-comment">//死循环，从ReferenceQueue中取出对象然后执行其finalizer方法</span>
+            <span class="hljs-keyword">for</span> (;;) {
+                <span class="hljs-keyword">try</span> {
+                    Finalizer f = (Finalizer)queue.remove();
+                    f.runFinalizer(jla);
+                } <span class="hljs-keyword">catch</span> (InterruptedException x) {
+                }
+            }
+        }
+    }
+    <span class="hljs-comment">//自动启动</span>
+    <span class="hljs-keyword">static</span> {
+        ThreadGroup tg = Thread.currentThread().getThreadGroup();
+        Thread finalizer = <span class="hljs-keyword">new</span> FinalizerThread(tg);
+        finalizer.setPriority(Thread.MAX_PRIORITY - <span class="hljs-number">2</span>);<span class="hljs-comment">//优先级</span>
+        finalizer.setDaemon(<span class="hljs-keyword">true</span>);<span class="hljs-comment">//守护线程</span>
+        finalizer.start();
+    }
+}
+</code></pre>
+<p>注意：</p>
+<ul>
+<li>finalize()方法在一个对象被销毁和回收前会被调用</li>
+<li>属于Object的一个方法</li>
+<li>finalize抛出的未捕获异常只会导致该对象的finalize执行退出</li>
+<li>用户可以自己调用对象的finalize方法，但是这种调用是正常的方法调用，和对象的销毁过程无关</li>
+<li>由Finalizer线程在垃圾回收前执行
+<ul>
+<li>不保证执行顺序和执行时效</li>
+<li>谨防由finalize引起的安全漏洞</li>
+<li>尽量不要用finalize，如果使用尽量简单使用，且避免对象再生</li>
+<li>可以用来保护非内存资源被释放。即使我们定义了其它的方法来释放非内存资源，但是其它人未必会调用该方法来释放。在finalize里面可以检查一下，如果没有释放就释放好了，晚释放总比不释放好。像socket。</li>
+<li>即使对象的finalize已经运行了，不能保证该对象被销毁。要实现一些保证对象彻底被销毁时的动作，只能依赖于java.lang.ref里面的类和GC交互了。</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="什么时候回收"></a><a href="#什么时候回收" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>什么时候回收?</h3>
+<p>什么时候进行内存回收？</p>
+<h3><a class="anchor" aria-hidden="true" id="如何回收？"></a><a href="#如何回收？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>如何回收？</h3>
+<p>常用的回收算法有：标记-清理算法、复制算法、标记-整理算法、分代收集算法</p>
+<h4><a class="anchor" aria-hidden="true" id="标记-清理算法"></a><a href="#标记-清理算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>标记-清理算法</h4>
+<p>首先标记出所有的需要回收的对象，在标记完成后统一回收所有被标记的对象。<br>
+存在问题：<br>
+1、标记和清除两个过程效率都不高<br>
+2、存在内存碎片</p>
+<h4><a class="anchor" aria-hidden="true" id="复制算法"></a><a href="#复制算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>复制算法</h4>
+<p>把内存划分为相同的两块，当一块使用完后，将还存活的对象复制到另外一块上，然后将当前块一次性清掉。实现简单，执行效率高，不存储内存碎片。因为内存是规整的，所以可采用指针碰撞进行内存分配。</p>
+<p>存在问题：</p>
+<p>1、每次只能使用一半的内存，空间浪费大</p>
+<p>改进方法：减少空间浪费。IBM研究新生对象98%是“朝生夕死”，所以并不需按照1：1划分。小空间交换复制+老年代担保机制。</p>
+<p><img src="./garbage-collector-and-memory-allocation.assets/image-20200414135857863.png" alt="image-20200414135857863"></p>
+<p>2、当对象存活率高时，需要进行较多的复制操作</p>
+<h4><a class="anchor" aria-hidden="true" id="标记整理算法"></a><a href="#标记整理算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>标记整理算法</h4>
+<p>复制算法如果为了避免浪费50%就需要有担保机制，所以老年代一般不能选用复制算法。优点：因为带有整理功能，所以不存在内存碎片，可以采用指针碰撞形式进行内存分配。且相对于复制算法，不存在空间浪费。缺点：需要进行复制。</p>
+<h4><a class="anchor" aria-hidden="true" id="分代收集算法"></a><a href="#分代收集算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>分代收集算法</h4>
+<p>根据各个年代的特点分别采用最适合的算法。</p>
+<p>新生代：每次收集时，大批对象死去，少量存活，采用复制算法<br>
+老年代：对象存活率高，没有额外空间担保，采用标记-整理算法。</p>
+<h2><a class="anchor" aria-hidden="true" id="回收方法区"></a><a href="#回收方法区" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>回收方法区</h2>
+<p>常量的回收：如果字符传abc已进入常量池，但当前系统没有任何一个String对象引用常量池中的abc时，就可以把abc清理出常量池</p>
+<p>类的回收：</p>
+<ul>
+<li>同时满足下面条件，才可以回收
+<ul>
+<li>该类所有的实例都已经被回收</li>
+<li>加载该类的ClassLoader已经被回收</li>
+<li>该类对应的Class对象没有任何地方被引用，无法在任何地方通过反射访问该类的方法</li>
+</ul></li>
+<li>满足条件可以被回收，但不是必然。HotSpot通过<code>-Xnoclassgc</code>参数进行控制是否进行class回收</li>
+<li>在大量使用反射、动态代理、CGLib等ByteCode框架、动态生成JSP、OSGI频繁自定义ClassLoader的场景需要虚拟机具备类卸载的功能，以保证永久代不会溢出</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="hotspot的算法实现"></a><a href="#hotspot的算法实现" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>HotSpot的算法实现</h2>
+<h3><a class="anchor" aria-hidden="true" id="枚举根节点"></a><a href="#枚举根节点" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>枚举根节点</h3>
+<p>必须停止所有的Java执行线程（Stop The World）。根节点中很大一步分是栈上引用，因此需要判断栈上的数据到底是对象还是数值。另外，带有整理功能的GC算法中，也需要修改栈上引用的地址。</p>
+<p>如何判断栈上的数据是对象还是数值？</p>
+<p>1、保守式GC</p>
+<p>JVM选择不记录类型数据（不知道栈上的数据是引用还是数值），从已知位置（比如JVM栈）开始扫描每一个数字，判断是引用还是数值。判断标准：上线边界检查（GC堆的上线边界），对齐检查（通常分配空间的时候会有对齐要求）。</p>
+<p>优点：实现简单，可以方便的用在对GC没有特别支持的编程语言里提供自动内存管理</p>
+<p>缺点：存在疑似指针，而无法完全GC。<strong>另外由于是疑似指针，对象就不可移动。不能选择带有整理功能的GC算法。但如果对象的访问是采用句柄方式就可以移动了。</strong></p>
+<p>2、半保守式GC</p>
+<p>JVM选择在栈上不记录类型信息，而在对象上记录类型信息。仍然存在疑似指针，虽然这个值指向的确实是一个对象，难道它就不能是值吗？</p>
+<p>3、准确式GC</p>
+<p>直接能给出这块数据是不是指针。</p>
+<ul>
+<li>方法一：让数据自身带上标记</li>
+<li>方法二：让编译器为每个方法生成特别的扫描码</li>
+<li>方法三：从外部记录下类型信息，存在映射表（HotSpot、JRockit、J9都是采用这种方式实现的），HotSpot为OopMap</li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="hotspot的oopmap"></a><a href="#hotspot的oopmap" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>HotSpot的OopMap</h4>
+<p>需要解释器和JIT编译器都有相应的支持。在HotSpot的实现中，是使用一组称为OopMap的数据结构来达到这个目的的，在类加载完成的时候，HotSpot就把对象内什么偏移量上是什么数据类型计算出来，在JIT编译过程中，也会在特定的位置记录下栈和寄存器中哪些位置是引用。借助OopMap可快速完成GCRoot枚举。</p>
+<p>但仍然存在问题，引起OopMap内容变化的指令非常多，如果每一条指令都生成OopMap，需要大量的额外空间和计算量。如何解决？安全点。程序执行时不是随时停下来GC，只有到达安全点才能暂停，这样就只需要在安全点生成OopMap。</p>
+<h3><a class="anchor" aria-hidden="true" id="安全点"></a><a href="#安全点" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安全点</h3>
+<p><strong>选择标准：</strong></p>
+<ul>
+<li>不能太少以致于让GC等待时间太长</li>
+<li>不能太频繁以致于增加运行负荷</li>
+<li>因此选择让程序具有长时间执行的点，作为安全点，比如：方法跳转、循环跳转、异常跳转</li>
+</ul>
+<p><strong>如何在GC发生时，让所有的线程都执行到最近的安全点上停下来？</strong></p>
+<ul>
+<li>抢占式中断：在GC发生时，首先把所有线程全部中断，如果发现有线程中断的地方不在安全点，就恢复线程，让它跑到安全点上。优点：不需要线程执行代码的主动配合。目前没有虚拟机采用这种方式。为什么不采用这种方式？个人理解：
+<ul>
+<li>安全点的选择标准是让程序具有长时间执行的点，所有直接抢占，可能大部分的线程都没有跑到安全点，这样再放开，不就成主动式中断了吗</li>
+</ul></li>
+<li>主动式中断：在发生GC时，设置一个标志。在全全点和创建对象需要分配内存的地方，去检查这个GC标志，发现中断标志为真时就自己中断挂起。</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="安全区域"></a><a href="#安全区域" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安全区域</h3>
+<p><strong>Safepoint无法解决的情况</strong>：当程序不执行时（比如线程Sleep或者Blocked状态），无法响应GC的中断请求，自己走到安全点挂起。这就需要安全区域。</p>
+<p>安全区域是指在一段代码片段中，引用关系不会发生变化，在这个区域中的任意一个地方开始GC都是安全的。线程执行到Safe Region中的代码时，首先标示自己已经进入Safe Region。发生GC时，不用管标示自己为SafeRegion状态的线程。线程离开SafeRegin时，需要检查是否已完成GC（或者根节点枚举，不同垃圾收集器不同），如果没有完成，就必须等待。</p>
+<h2><a class="anchor" aria-hidden="true" id="垃圾收集器"></a><a href="#垃圾收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>垃圾收集器</h2>
+<p>垃圾收集器是垃圾收集算法的具体实现。</p>
+<p><img src="./garbage-collector-and-memory-allocation.assets/image-20200414151031345.png" alt="image-20200414151031345"></p>
+<h3><a class="anchor" aria-hidden="true" id="serial收集器"></a><a href="#serial收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Serial收集器</h3>
+<p><img src="./garbage-collector-and-memory-allocation.assets/image-20200414151101858.png" alt="image-20200414151101858"></p>
+<p>采用一个CPU、一个线程去完成垃圾收集工作。在垃圾收集时必须暂停其它所有的线程，直到收集结束。是Client模式下默认新生代收集器。</p>
+<h3><a class="anchor" aria-hidden="true" id="parnew收集器"></a><a href="#parnew收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ParNew收集器</h3>
+<p><img src="./garbage-collector-and-memory-allocation.assets/image-20200414151111195.png" alt="image-20200414151111195"></p>
+<p>Serial收集器的多线程版本。运行在Server模式下的虚拟机首选的新生代收集器。主要原生是除Serial收集器外，目前只有它能和CMS收集器配合工作。</p>
+<h3><a class="anchor" aria-hidden="true" id="parallel-scavenge收集器"></a><a href="#parallel-scavenge收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Parallel Scavenge收集器</h3>
+<p>新生代收集器、采用复制算法、并行的多线程收集器。主要目前是高吞吐量。停顿时间短适合需要与用户交互的程序，提升用户体验。高吞吐量可高效地利用CPU时间，尽快完成程序的运算任务，适合在后台运算而不需要太多交互的任务。</p>
+<h3><a class="anchor" aria-hidden="true" id="serial-old收集器"></a><a href="#serial-old收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Serial Old收集器</h3>
+<p><img src="./garbage-collector-and-memory-allocation.assets/image-20200414151121204.png" alt="image-20200414151121204"></p>
+<p>Serial收集器的老年代版本，单线程，使用标记整理算法。主要意义是给Client模式下的虚拟机使用。server模式下，CMS收集器的后备方案。</p>
+<h3><a class="anchor" aria-hidden="true" id="parallel-old收集器"></a><a href="#parallel-old收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Parallel Old收集器</h3>
+<p>Parallel Scavenge收集器的老年代版本，多线程，采用标记整理算法。</p>
+<p><img src="./garbage-collector-and-memory-allocation.assets/image-20200414151129090.png" alt="image-20200414151129090"></p>
+<h3><a class="anchor" aria-hidden="true" id="cms收集器"></a><a href="#cms收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CMS收集器</h3>
+<p>以获取最短回收停顿时间为目标的收集器。Concurrent Mark Sweep，采用标记清除算法。</p>
+<h3><a class="anchor" aria-hidden="true" id="g1收集器"></a><a href="#g1收集器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>G1收集器</h3>
+<h2><a class="anchor" aria-hidden="true" id="内存分配及回收策略"></a><a href="#内存分配及回收策略" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>内存分配及回收策略</h2>
+<p>所谓自动内存管理，包括自动给对象分配内存和自动回收分配给对象的内存。</p>
+<p>普遍的内存分配规则：</p>
+<ul>
+<li>对象优先在Eden区分配：对象在新生代Eden区中分配，当Eden区没有足够的内存，虚拟机发起一次MinorGC</li>
+<li>大对象直接进去老年代：大对象的分配对虚拟机是一个坏消息，更坏的消息是朝生夕死的大对象。<code>-XX:PretenureSizeThreshold</code>，大于该值的对象直接进入老年代，默认值为0，只对Serial和ParNew收集器有效。</li>
+<li>长期存活的对象将进入老年代：对象头上有4个bit用来标示对象的年龄，每经过一次Minor GC年龄加一，增加到一定程度后进入老年代。通过<code>-XX:MaxTenuringThreshold</code>配置多少代后进入到老年代。默认值15</li>
+<li>动态对象年龄判断：虚拟机并不是永远要求对象的年龄必须达到<code>MaxTenuringThreshold</code>才进入老年代。当Survivor空间中相同年龄所有对象大小的总和大于Survivor空间的一半时，大于或等于该年龄的直接进入老年代</li>
+<li>空间分配担保：在MinorGC之前，虚拟机会先检查老年代最大的连续空间是否大于新生代对象总空间。如果大于，标示此次MinorGC安全。如果不大于，判断<code>HandlePromotionFailure</code>
+是否允许担保失败（JDK6 Update24之后虽然有这个参数但会不会再使用，直接允许），不允许直接直接Full GC。如果允许，判断老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小，如果大于，冒险MinorGC（老年待空间可能不够），如果小于，执行FullGC。
+<img src="./garbage-collector-and-memory-allocation.assets/image-20200414154155315.png" alt="image-20200414154155315"></li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#基础理论">基础理论</a><ul class="toc-headings"><li><a href="#哪些内存需要回收？对象已死吗？">哪些内存需要回收？对象已死吗？</a></li><li><a href="#什么时候回收">什么时候回收?</a></li><li><a href="#如何回收？">如何回收？</a></li></ul></li><li><a href="#回收方法区">回收方法区</a></li><li><a href="#hotspot的算法实现">HotSpot的算法实现</a><ul class="toc-headings"><li><a href="#枚举根节点">枚举根节点</a></li><li><a href="#安全点">安全点</a></li><li><a href="#安全区域">安全区域</a></li></ul></li><li><a href="#垃圾收集器">垃圾收集器</a><ul class="toc-headings"><li><a href="#serial收集器">Serial收集器</a></li><li><a href="#parnew收集器">ParNew收集器</a></li><li><a href="#parallel-scavenge收集器">Parallel Scavenge收集器</a></li><li><a href="#serial-old收集器">Serial Old收集器</a></li><li><a href="#parallel-old收集器">Parallel Old收集器</a></li><li><a href="#cms收集器">CMS收集器</a></li><li><a href="#g1收集器">G1收集器</a></li></ul></li><li><a href="#内存分配及回收策略">内存分配及回收策略</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

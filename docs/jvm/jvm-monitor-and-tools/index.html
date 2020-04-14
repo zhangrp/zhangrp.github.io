@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>虚拟机监控及故障处理工具 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## JDK命令行工具"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="虚拟机监控及故障处理工具 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## JDK命令行工具"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">虚拟机监控及故障处理工具</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="jdk命令行工具"></a><a href="#jdk命令行工具" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JDK命令行工具</h2>
+<p>1、jps：虚拟机进程状态工具</p>
+<p>2、jstat：虚拟机统计信息监视工具，gc信息、类加载信息等</p>
+<p>3、jinfo：配置信息工具，实时地查看和调整虚拟机各项参数</p>
+<p>4、jmap：内存映象工具</p>
+<ul>
+<li>-dump生成Java堆转储快照，-F当没有相应时，强制生成</li>
+<li>-heap现在java堆信息</li>
+</ul>
+<p>5、jhat：堆转储快照分析工具</p>
+<p>6、jstack：堆栈跟踪工具</p>
+<h3><a class="anchor" aria-hidden="true" id="线程状态"></a><a href="#线程状态" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>线程状态</h3>
+<ul>
+<li>NEW：线程刚创建，尚未启动</li>
+<li>RUNNABLE：现在在正在正常运行中，当然可能会有某种耗时计算/IO等待/CPU时间片切换等，这个状态下发生的等待一般是其他系统资源，而不是锁，Sleep等</li>
+<li>BLOCKED：线程等待进入临界区</li>
+<li>WAITING：现在拥有某个锁后，调用了自己的wait方法，等待其他线程调用notify/notifyAll以便该线程可以继续执行下一步操作</li>
+<li>TIMED_WAITING：有限时间的WAITING，和BLOCKED的区别，一个在还未进去临界区，一个已进入</li>
+<li>TERMINATED：run方法已经执行完毕</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="hsdis：jit生成代码反汇编"></a><a href="#hsdis：jit生成代码反汇编" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>HSDIS：JIT生成代码反汇编</h2>
+<h2><a class="anchor" aria-hidden="true" id="可视化工具"></a><a href="#可视化工具" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>可视化工具</h2>
+<h3><a class="anchor" aria-hidden="true" id="jconsole"></a><a href="#jconsole" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JConsole</h3>
+<h3><a class="anchor" aria-hidden="true" id="memory-analyzer-tools"></a><a href="#memory-analyzer-tools" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Memory Analyzer Tools</h3>
+<ul>
+<li>Heap Dump：Heap Dump是一个java进程在某个时间点上的内存快照，通常写Heap Dump文件前会触发一次FullGC。获取方式：
+<ul>
+<li>1、通过<code>jmap -dump:format=b,file=dump.bin pid</code>获取</li>
+<li>2、通过配置JVM参数当OutOfMemory时自动获取，<code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=dump.bin</code></li>
+</ul></li>
+<li>Shallow Heap&amp; Retained Heap
+<ul>
+<li>Shallow Heap表示一个对象消费的内存总量，即对象本身的大小</li>
+<li>Retained Heap表示该对象垃圾回收后释放的堆内存的大小</li>
+</ul></li>
+<li>Dominator Tree：支配树，用来描述对象的关系图</li>
+<li>GCRoot</li>
+<li>Incomming Reference &amp; Outgoing Reference
+<ul>
+<li>Incomming Reference 指的是引用当前对象的外部对象</li>
+<li>Outgoing Reference 指的是当前对象引用的外部对象</li>
+</ul></li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#jdk命令行工具">JDK命令行工具</a><ul class="toc-headings"><li><a href="#线程状态">线程状态</a></li></ul></li><li><a href="#hsdis：jit生成代码反汇编">HSDIS：JIT生成代码反汇编</a></li><li><a href="#可视化工具">可视化工具</a><ul class="toc-headings"><li><a href="#jconsole">JConsole</a></li><li><a href="#memory-analyzer-tools">Memory Analyzer Tools</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
