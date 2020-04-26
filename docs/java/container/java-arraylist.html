@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Java ArrayList · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="ArrayList是基于数组`Object[]`实现的，支持快速随机访问。RandomAccess接口标识着该类支持快速随机访问。数组的默认大小为10。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Java ArrayList · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="ArrayList是基于数组`Object[]`实现的，支持快速随机访问。RandomAccess接口标识着该类支持快速随机访问。数组的默认大小为10。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Java ArrayList</h1></header><article><div><span><p>ArrayList是基于数组<code>Object[]</code>实现的，支持快速随机访问。RandomAccess接口标识着该类支持快速随机访问。数组的默认大小为10。</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ArrayList</span>&lt;<span class="hljs-title">E</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractList</span>&lt;<span class="hljs-title">E</span>&gt;
+        <span class="hljs-keyword">implements</span> <span class="hljs-title">List</span>&lt;<span class="hljs-title">E</span>&gt;, <span class="hljs-title">RandomAccess</span>, <span class="hljs-title">Cloneable</span>, <span class="hljs-title">java</span>.<span class="hljs-title">io</span>.<span class="hljs-title">Serializable</span>
+</span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> DEFAULT_CAPACITY = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> Object[] elementData;
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="扩容"></a><a href="#扩容" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>扩容</h2>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Object[] EMPTY_ELEMENTDATA = {};
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ArrayList</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">super</span>();
+    <span class="hljs-keyword">this</span>.elementData = EMPTY_ELEMENTDATA;
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">add</span><span class="hljs-params">(E e)</span> </span>{
+    ensureCapacityInternal(size + <span class="hljs-number">1</span>);  <span class="hljs-comment">// Increments modCount!!</span>
+    elementData[size++] = e;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+}
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ensureCapacityInternal</span><span class="hljs-params">(<span class="hljs-keyword">int</span> minCapacity)</span> </span>{
+    <span class="hljs-keyword">if</span> (elementData == EMPTY_ELEMENTDATA) {
+        minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);
+    }
+    ensureExplicitCapacity(minCapacity);
+}
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">ensureExplicitCapacity</span><span class="hljs-params">(<span class="hljs-keyword">int</span> minCapacity)</span> </span>{
+    modCount++;
+
+    <span class="hljs-comment">// overflow-conscious code</span>
+    <span class="hljs-keyword">if</span> (minCapacity - elementData.length &gt; <span class="hljs-number">0</span>)
+        grow(minCapacity);
+}
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">grow</span><span class="hljs-params">(<span class="hljs-keyword">int</span> minCapacity)</span> </span>{
+    <span class="hljs-comment">// overflow-conscious code</span>
+    <span class="hljs-keyword">int</span> oldCapacity = elementData.length;
+    <span class="hljs-keyword">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">if</span> (newCapacity - minCapacity &lt; <span class="hljs-number">0</span>)
+        newCapacity = minCapacity;
+    <span class="hljs-keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="hljs-number">0</span>)
+        newCapacity = hugeCapacity(minCapacity);
+    <span class="hljs-comment">// minCapacity is usually close to size, so this is a win:</span>
+    elementData = Arrays.copyOf(elementData, newCapacity);
+}
+</code></pre>
+<p>1、在新增元素时自动扩容</p>
+<p>2、<code>int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);</code>每次扩容以前的1.5倍</p>
+<p>3、<code>Arrays.copyOf(elementData, newCapacity)</code>最终调用的是<code>System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));</code>，这个是native方法，耗费性能，尽量提前进行容量规划，避免多次扩容</p>
+<h2><a class="anchor" aria-hidden="true" id="删除元素"></a><a href="#删除元素" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>删除元素</h2>
+<pre><code class="hljs css language-java"><span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">remove</span><span class="hljs-params">(<span class="hljs-keyword">int</span> index)</span> </span>{
+    rangeCheck(index);
+
+    modCount++;
+    E oldValue = elementData(index);
+
+    <span class="hljs-keyword">int</span> numMoved = size - index - <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (numMoved &gt; <span class="hljs-number">0</span>)
+        System.arraycopy(elementData, index+<span class="hljs-number">1</span>, elementData, index,
+                         numMoved);
+    elementData[--size] = <span class="hljs-keyword">null</span>; <span class="hljs-comment">// clear to let GC do its work</span>
+
+    <span class="hljs-keyword">return</span> oldValue;
+}
+</code></pre>
+<p>删除元素的时候通过<code>System.arraycopy(elementData, index+1, elementData, index, numMoved);</code>把后面的元素向前拷贝，性能也不是很好。对于频繁删除元素的，采用<code>ArrayList</code>。</p>
+<h2><a class="anchor" aria-hidden="true" id="concurrentmodificationexception"></a><a href="#concurrentmodificationexception" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ConcurrentModificationException</h2>
+<p>modCount用来记录ArrayList结构发生变化的次数。结构发生变化是指添加或者删除至少一个元素的所有操作，或者是调整内部数组的大小，仅仅只是设置元素的值不算结构发生变化，比如<code>public E set(int index, E element)</code>。在进行序列化或者迭代等操作时，需要比较操作前后modCount是否改变，如果改变了需要抛出 ConcurrentModificationException。</p>
+<p>迭代：</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">private</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Itr</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Iterator</span>&lt;<span class="hljs-title">E</span>&gt; </span>{
+    <span class="hljs-keyword">int</span> cursor;       <span class="hljs-comment">// index of next element to return</span>
+    <span class="hljs-keyword">int</span> lastRet = -<span class="hljs-number">1</span>; <span class="hljs-comment">// index of last element returned; -1 if no such</span>
+    <span class="hljs-keyword">int</span> expectedModCount = modCount;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> E <span class="hljs-title">next</span><span class="hljs-params">()</span> </span>{
+        checkForComodification();
+        <span class="hljs-comment">//...</span>
+    }
+    <span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">checkForComodification</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">if</span> (modCount != expectedModCount)
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ConcurrentModificationException();
+    }
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="序列化"></a><a href="#序列化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>序列化</h2>
+<p>ArrayList基于数组实现，但具有动态扩容特性，因此保存元素的数组不一定都会被使用，那么就没必要全部进行</p>
+<p>序列化，所以<code>private transient Object[] elementData;</code>elementData使用transient 修饰。</p>
+<p>自定义了<code>writeObject</code>和<code>readObject</code>来实现序列化：</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> size;
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">writeObject</span><span class="hljs-params">(java.io.ObjectOutputStream s)</span>
+    <span class="hljs-keyword">throws</span> java.io.IOException</span>{
+    <span class="hljs-keyword">int</span> expectedModCount = modCount;
+    s.defaultWriteObject();
+    s.writeInt(size);
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i&lt;size; i++) {
+        s.writeObject(elementData[i]);
+    }
+    <span class="hljs-keyword">if</span> (modCount != expectedModCount) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> ConcurrentModificationException();
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">readObject</span><span class="hljs-params">(java.io.ObjectInputStream s)</span>
+    <span class="hljs-keyword">throws</span> java.io.IOException, ClassNotFoundException </span>{
+    elementData = EMPTY_ELEMENTDATA;
+    s.defaultReadObject();
+    s.readInt(); 
+    <span class="hljs-keyword">if</span> (size &gt; <span class="hljs-number">0</span>) {
+        ensureCapacityInternal(size);
+        Object[] a = elementData;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>; i&lt;size; i++) {
+            a[i] = s.readObject();
+        }
+    }
+}
+</code></pre>
+<p>可以看到size不是临时变量，通过<code>s.defaultWriteObject();</code>可以被序列化，那么这里其实<code>size</code>被序列化了两次，为什么要这样操作呢？为了版本间的兼容性考虑。</p>
+<pre><code class="hljs css language-code">defaultReadObject() and defaultWriteObject() should be the first method <span class="hljs-keyword">call</span> inside readObject(ObjectInputStream o) <span class="hljs-keyword">and</span> writeObject(ObjectOutputStream o). It <span class="hljs-keyword">reads</span> <span class="hljs-keyword">and</span> writes <span class="hljs-keyword">all</span> the non-transient <span class="hljs-keyword">fields</span> <span class="hljs-keyword">of</span> the <span class="hljs-keyword">class</span> respectively. 
+
+These methods also helps <span class="hljs-keyword">in</span> backward <span class="hljs-keyword">and</span> future compatibility. <span class="hljs-keyword">If</span> <span class="hljs-keyword">in</span> future you <span class="hljs-keyword">add</span> <span class="hljs-keyword">some</span> non-transient <span class="hljs-keyword">field</span> <span class="hljs-keyword">to</span> the <span class="hljs-keyword">class</span> <span class="hljs-keyword">and</span> you <span class="hljs-keyword">are</span> trying <span class="hljs-keyword">to</span> deserialize it <span class="hljs-keyword">by</span> the older <span class="hljs-keyword">version</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">class</span> <span class="hljs-keyword">then</span> the defaultReadObject() method will neglect the newly added <span class="hljs-keyword">field</span>, similarly <span class="hljs-keyword">if</span> you deserialize the <span class="hljs-keyword">old</span> serialized <span class="hljs-keyword">object</span> <span class="hljs-keyword">by</span> the <span class="hljs-keyword">new</span> <span class="hljs-keyword">version</span> <span class="hljs-keyword">then</span> the <span class="hljs-keyword">new</span> non transient <span class="hljs-keyword">field</span> will take <span class="hljs-keyword">default</span> <span class="hljs-keyword">value</span> <span class="hljs-keyword">from</span> JVM i.e. <span class="hljs-keyword">if</span> its <span class="hljs-keyword">object</span> <span class="hljs-keyword">then</span> <span class="hljs-literal">null</span> <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> primitive <span class="hljs-keyword">then</span> <span class="hljs-built_in">boolean</span> <span class="hljs-keyword">to</span> <span class="hljs-literal">false</span>, <span class="hljs-built_in">int</span> <span class="hljs-keyword">to</span> <span class="hljs-number">0</span> etc….
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#扩容">扩容</a></li><li><a href="#删除元素">删除元素</a></li><li><a href="#concurrentmodificationexception">ConcurrentModificationException</a></li><li><a href="#序列化">序列化</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

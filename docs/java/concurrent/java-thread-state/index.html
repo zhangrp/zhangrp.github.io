@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Java线程状态 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 线程状态"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Java线程状态 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 线程状态"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Java线程状态</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="线程状态"></a><a href="#线程状态" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>线程状态</h2>
+<p><img src="./java-thread-state.assets/0B95E13B-DC23-CC46-B962-264BB4565284.png" alt="0B95E13B-DC23-CC46-B962-264BB4565284"></p>
+<p>Java语言定义了5中线程状态，在任意一个时间点，一个线程只能有且只有其中的一种状态。</p>
+<p><strong>新建（New）</strong>：创建后尚未启动的线程处于这种状态</p>
+<p><strong>运行（Runable）</strong>：包含了操作系统线程状态中的Running和Ready，也就是处于此状态的线程有可能正在运行，也有可能等待着CPU为它分配执行时间。</p>
+<p><strong>无限期等待状态（Waiting）</strong>：处于此状态的线程不会被分配CPU执行时间，它们要等待其它线程显式地唤醒。以下方法会让线程陷入无限等待状态：</p>
+<ul>
+<li>没有设置Timeout参数的Object.wait()：即，wait(0)</li>
+<li>没有设置Timeout参数的Thread.join()：本质也是通过wait实现，wait(0)</li>
+<li>LockSupport.park()：调用的是<code>UNSAFE.park</code>，jvm内部实现，通过设置一个状态位实现</li>
+</ul>
+<p><strong>有限期等待状态（Timed Waiting）</strong>：处于此状态的线程也不会被分配CPU执行时间，但它可以被其它线程显式地唤醒，也可以在超时后由系统自动唤醒。以下方法会让线程进入到有限期等待状态：</p>
+<ul>
+<li>Thread.sleep()</li>
+<li>设置了Timeout参数的Object.wait(timeout)</li>
+<li>设置了Timeout参数的Thread.join(timeout)：本质也是通过wait实现</li>
+<li>LockSupport.parkUntil(deadline)</li>
+</ul>
+<p>阻塞（Blocked）：线程被阻塞了，“线程阻塞”与“等待状态”的区别是：“阻塞状态”是等待着获取一个排他锁，这个事件将</p>
+<p>在另一个线程放弃这个锁的时候发生；而“等待状态”则是在等待一段时间或者唤醒动作的时候发生。</p>
+<p>结束（Terminated）：已终止线程的线程状态，线程已结束执行。</p>
+<p><strong>注意：</strong></p>
+<p>1、wait()必须要通过notify去唤醒，如果没有对应的notify将会一直等待下去，尽管已经没有现在占用锁了。</p>
+<p>2、wiat被notify或者超时后，如果能获取到锁进入到RUNNABLE状态，如果不能获取到锁进入到BLOCKED状态</p>
+<h2><a class="anchor" aria-hidden="true" id="实际应用"></a><a href="#实际应用" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>实际应用</h2>
+<p>1、通过jstack dump出当前的线程，了解当前线程的状态</p>
+<ul>
+<li>如果里面有大量的线程状态是BLOCKED，那么需要关注</li>
+<li>如果最后有DEADLOCK，就说明出现了死锁，需要进一步分析哪两个线程造成了死锁</li>
+</ul>
+<p>2、分析cpu占用高</p>
+<pre><code class="hljs css language-sh"><span class="hljs-comment"># top -Hp 24045 //列出进程对应的线程，找出占用CPU高的线程</span>
+Tasks:  61 total,   1 running,  60 sleeping,   0 stopped,   0 zombie
+Cpu(s): 43.7%us,  5.3%sy,  0.0%ni, 48.5%id,  0.0%wa,  0.0%hi,  2.6%si,  0.0%st
+Mem:   3924884k total,  3744412k used,   180472k free,     5724k buffers
+Swap:  4063224k total,   867456k used,  3195768k free,   177824k cached
+
+  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                                                                                     
+24074 <span class="hljs-built_in">test</span>   20   0 3784m 1.6g  18m S 34.2 43.6   5:12.52 java                                                                                                         
+24075 <span class="hljs-built_in">test</span>   20   0 3784m 1.6g  18m R 30.6 43.6   6:49.42 java                                                                                                         
+24078 <span class="hljs-built_in">test</span>   20   0 3784m 1.6g  18m S 24.6 43.6  10:16.63 java                                                                                                         
+24076 <span class="hljs-built_in">test</span>   20   0 3784m 1.6g  18m S  6.6 43.6  16:01.65 java   
+
+比如现在24074CPU占用高
+<span class="hljs-comment"># jstack 24045 &gt; aaaa.out //dump当前的线程状态，</span>
+
+24074转换成16进制为5E0A，找到5e0a线程，就可以分析这个线程具体在干什么。
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#线程状态">线程状态</a></li><li><a href="#实际应用">实际应用</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
