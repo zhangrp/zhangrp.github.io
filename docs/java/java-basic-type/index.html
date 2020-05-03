@@ -87,7 +87,7 @@ Character：0~127，所有的</p>
     Student student = <span class="hljs-keyword">new</span> Student();
     student.setMame(<span class="hljs-string">"123"</span>);
     temp.put(student, <span class="hljs-number">111L</span>);
-    
+
     student.setMame(<span class="hljs-string">"456"</span>);
     System.out.println(temp.get(student));
 }
@@ -101,7 +101,7 @@ Character：0~127，所有的</p>
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">hashCode</span><span class="hljs-params">()</span> </span>{
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.mame.hashCode();
     }
-} 
+}
 </code></pre>
 <p>2、String Pool，String常量池：如果一个String对象已经被创建过了，那么就会从StringPool中取得引用。只有String是不可变的，才可能使用StringPool。</p>
 <p>3、安全性：String经常作为参数，String不可变性可以保证参数不可变。例如在作为网络连接参数的情况下如果String是可变的，那么在网络连接过程中，String被改变，改变String对象的那一方以为现在连接的是其它主机，而实际情况却不一定是。</p>
@@ -144,7 +144,7 @@ System.out.println(s5 == s6); <span class="hljs-comment">// true</span>
     }
 }
 </code></pre>
-<pre><code class="hljs css language-shell"><span class="hljs-meta">#</span><span class="bash"> javap -c -v NewStringTest.class </span>
+<pre><code class="hljs css language-shell"><span class="hljs-meta">#</span><span class="bash"> javap -c -v NewStringTest.class</span>
 Constant pool:
 <span class="hljs-meta">   #</span><span class="bash">1 = Methodref          <span class="hljs-comment">#6.#22         // java/lang/Object."&lt;init&gt;":()V</span></span>
 <span class="hljs-meta">   #</span><span class="bash">2 = Class              <span class="hljs-comment">#23            // java/lang/String</span></span>

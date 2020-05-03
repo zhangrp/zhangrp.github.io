@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Java Volatile · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="有volatile修饰的共享变量进行写操作的时候会多出一行汇编代码lock，lock前缀的指令在多核处理器下会引发两件事情。  "/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Java Volatile · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="有volatile修饰的共享变量进行写操作的时候会多出一行汇编代码lock，lock前缀的指令在多核处理器下会引发两件事情。  "/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Java Volatile</h1></header><article><div><span><p>有volatile修饰的共享变量进行写操作的时候会多出一行汇编代码lock，lock前缀的指令在多核处理器下会引发两件事情。<br>
+1）将当前处理器缓存行的数据写回到系统内存<br>
+2）这个写回内存的操作会使在其它CPU里缓存了该内存地址的数据无效</p>
+<p>其中第二点应该是有缓存一致性协议保证。本身和volatile没有关系。</p>
+<p>volatile有两条内存语义：<br>
+1、保证此变量所有线程的可见性，这里的”可见性“是指当一条线程修改了这个变量的值，新值对于其它线程来说是可以立即得知的（volatile变量的写操作会立刻写会到内存，volatile的读操作会直接从内存中读取）<br>
+2、静止指令重排序优化，普通的变量仅仅会保证在该方法的执行过程中所有依赖赋值结果的地方都能获取到正确的结果，而不能保证变量赋值操作的顺序与程序代码中的执行顺序一致</p>
+<p><strong>如何保证变量的立即可见</strong>  <br>
+1、volatile修饰的变量，赋值后会多执行一个lock addl $0x0,(%rsp)操作，这个操作相当于一个内存屏障，它的作用是使得本CPU的cache写入到内存（具体哪些会被写入到内存，我觉得应该是所有共享变量所在的缓存行）<br>
+2、写入到内存后，缓存一致性协议会使得其他CPU中缓存的数据失效，其他CPU再操作数据时就会从内存中重新获取值<br>
+3、对volatie变量的读操作，每次都是从内存中获取值（volatile变量的读规则如何体现的？在X86中，JMM仅需在volatile写后面插入一个StoreLoad屏障即可正确实现volatile写-读的内存语义）</p>
+<p>示例1：由于存在指令重排序，17行可能先于16行执行，另外一个线程可能就会读到a=0的值</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span> </span>{
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100000</span>; i++) {
+            <span class="hljs-keyword">new</span> Thread() {
+                <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;
+                <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> init = <span class="hljs-keyword">false</span>;
+
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+
+                    <span class="hljs-keyword">new</span> Thread() {
+                        <span class="hljs-meta">@Override</span>
+                        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+                            a = <span class="hljs-number">1</span>;                 <span class="hljs-comment">//16行</span>
+                            init = <span class="hljs-keyword">true</span>;           <span class="hljs-comment">//17行</span>
+                        }
+                    }.start();
+
+                    <span class="hljs-keyword">new</span> Thread() {
+                        <span class="hljs-meta">@Override</span>
+                        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+                            <span class="hljs-keyword">if</span> (init &amp;&amp; a == <span class="hljs-number">0</span>) {
+                                System.out.println(a);
+                            }
+                        }
+                    }.start();
+                }
+            }.start();
+        }
+    }
+}
+</code></pre>
+<p>示例2：全局状态标示</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Work</span> </span>{
+    <span class="hljs-keyword">volatile</span> <span class="hljs-keyword">boolean</span> isShutDown = <span class="hljs-keyword">false</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">shutdown</span><span class="hljs-params">()</span> </span>{
+        isShutDown = <span class="hljs-keyword">true</span>;
+        System.out.println(<span class="hljs-string">"shutdown!"</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">doWork</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">while</span> (!isShutDown) {
+            System.out.println(<span class="hljs-string">"doWork"</span>);
+        }
+    }
+}
+</code></pre>
+<p>示例3：单例模式，如果singleton没有被volatile修饰，可能会读取到没有完全初始化的singleton</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span> Singleton singleton = <span class="hljs-keyword">null</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-comment">//todo</span>
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getSingleton</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">if</span> (singleton == <span class="hljs-keyword">null</span>) {
+            <span class="hljs-keyword">synchronized</span> (Singleton<span class="hljs-class">.<span class="hljs-keyword">class</span>) </span>{
+                <span class="hljs-keyword">if</span> (singleton == <span class="hljs-keyword">null</span>) {
+                    singleton = <span class="hljs-keyword">new</span> Singleton();
+                }
+            }
+        }
+        <span class="hljs-keyword">return</span> singleton;
+    }
+}
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

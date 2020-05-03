@@ -1,0 +1,114 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Java线程池 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 线程池带来的好处"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Java线程池 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 线程池带来的好处"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Java线程池</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="线程池带来的好处"></a><a href="#线程池带来的好处" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>线程池带来的好处</h2>
+<p>1、降低资源消耗：重复利用已创建的线程降低线创建和销毁造成的消耗<br>
+2、提高响应速度：任务到达时，任务可以不需要等到线程创建就能立即执行<br>
+3、提高线程的可管理性：线程是稀缺资源，如无限制地创建，不仅会消耗系统资源还会降低系统的可维护性；使用线程池可以进行统一分配、调优和监控</p>
+<h2><a class="anchor" aria-hidden="true" id="线程池的执行流程"></a><a href="#线程池的执行流程" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>线程池的执行流程</h2>
+<p><img src="./java-thread-pool.assets/image-20200428145805552.png" alt="image-20200428145805552"></p>
+<p>1、判断核心线程池里面的线程是否都在执行任务，如果不是则创建一个新的工作线程来执行任务<br>
+2、判断线程工作队列是否已满，如果工作队列没满，则将新提交的任务存储在这个工作队列中<br>
+3、线程池的线程是否都创建满了，如果没有，则创建一个新的工作线程来执行任务<br>
+4、如果线程池的线程已创建满，交给饱和策略来处理这个任务</p>
+<p><img src="./java-thread-pool.assets/image-20200428145822872.png" alt="image-20200428145822872"></p>
+<p>1、如果当前运行的线程少于corePoolSize，则创建新线程来执行（需要获取全局锁）<br>
+2、如果运行的线程等于或者多于corePoolSize，则将任务加入到BlockingQueue<br>
+3、如果BlockingQueue已经满，则创建新的线程来处理任务（需要获取全局锁）<br>
+4、如果创建线程使得当前运行的线程超出maximumPoolSize，任务被拒绝，调用 RejectedExecutionHandler.rejectedExecution()</p>
+<h2><a class="anchor" aria-hidden="true" id="创建线程池"></a><a href="#创建线程池" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>创建线程池</h2>
+<pre><code class="hljs css language-java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ThreadPoolExecutor</span><span class="hljs-params">(<span class="hljs-keyword">int</span> corePoolSize,<span class="hljs-keyword">int</span> maximumPoolSize,<span class="hljs-keyword">long</span> keepAliveTime,TimeUnit unit, 
+BlockingQueue&lt;Runnable&gt; workQueue,ThreadFactory threadFactory,RejectedExecutionHandler handler)</span></span>;
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="corepoolsize（线程池基本大小）"></a><a href="#corepoolsize（线程池基本大小）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>corePoolSize（线程池基本大小）</h3>
+<p>来一个新任务时，如果当前的线程数量少于corePollSize，则创建新的线程执行任务（即使其它空闲的线程能处理任务）。可理解为工厂正式工数量。优先满足创建够corePollSize个线程，可以通过prestartAllCoreThreads方法，预创建，因为创建工作线程是需要加锁的，这样做可以尽量避免加锁。</p>
+<h3><a class="anchor" aria-hidden="true" id="runnabletaskqueue（任务队列）"></a><a href="#runnabletaskqueue（任务队列）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>runnableTaskQueue（任务队列）</h3>
+<p>用于保存待执行任务的阻塞队列。支持下面四种：</p>
+<ul>
+<li>ArrayBlockingQueue：基于数组，有界，先进先出</li>
+<li>LinkedBlockingQueue：基于链表，先进先出，吞吐量高于ArrayBlockedQueue</li>
+<li>SynchronousQueue：不存储元素的阻塞队列，插入操作必须等待另外一个线程调用移除操作</li>
+<li>PriorityBlockingQUeue：具有优先级的无限阻塞队列</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="maximumpoolsize（线程池最大数量）"></a><a href="#maximumpoolsize（线程池最大数量）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>maximumPoolSize（线程池最大数量）</h3>
+<p>如果队列满了，并且创建的线程数小于最大线程数，则线程池会再创建新的线程执行任务。可理解为工厂为了应变突然增加的需求量，额外可以招的临时工量（maximumPoolSize-corePoolSize）。<strong>如果上面用的是无界队列（LinkedBlockingQueue，PriorityBlockingQUeue），这个参数就没有效果。</strong></p>
+<h3><a class="anchor" aria-hidden="true" id="threadfactory（创建线程的工厂）"></a><a href="#threadfactory（创建线程的工厂）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ThreadFactory（创建线程的工厂）</h3>
+<p>可通过线程工厂给每个创建出来的线程设置更有意义的名字。推荐使用。</p>
+<h3><a class="anchor" aria-hidden="true" id="rejectedexecutionhandler（饱和策略）"></a><a href="#rejectedexecutionhandler（饱和策略）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>RejectedExecutionHandler（饱和策略）</h3>
+<ul>
+<li>AbortPolicy：直接抛出异常</li>
+<li>DiscardPolicy：丢弃，不抛出异常</li>
+<li>CallerRunsPolicy：用调用者所在的线程来运行任务</li>
+<li>DiscardOldestPolicy：丢弃队列中最近的任务，并执行当前任务</li>
+<li>实现RejectedExecutionHandler接口，自定义策略，如记录日志，任务持久化存储等</li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="keepalivetime（线程活动保持时间）"></a><a href="#keepalivetime（线程活动保持时间）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>keepAliveTime（线程活动保持时间）</h3>
+<p>工作任务空闲后，保持存活的时间。如果任务多，执行时间短，可以调大时间，提高利用率。</p>
+<h3><a class="anchor" aria-hidden="true" id="timeunit（线程活动保持时间的单位）"></a><a href="#timeunit（线程活动保持时间的单位）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TimeUnit（线程活动保持时间的单位）</h3>
+<p>可选单位有天、小时、分钟、毫秒、微妙、纳秒。</p>
+<h2><a class="anchor" aria-hidden="true" id="向线程池提交任务"></a><a href="#向线程池提交任务" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>向线程池提交任务</h2>
+<ul>
+<li>execut()：不需要返回值</li>
+<li>submit()：有返回值Future，Future.get会阻塞当前线程直到任务完成。也支持Future.get(timeout, unit)，阻塞一段时间，超时后抛出TimeoutException。Futrue内部通过<code>LockSupport</code>实现。</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="关闭线程池"></a><a href="#关闭线程池" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>关闭线程池</h2>
+<ul>
+<li>shutdown：将线程池状态设置为SHUTDOWN，getTask会继续去任务，直到取完退出。阻止新提交的任务，已经提交的任务不会收到影响。</li>
+<li>shutdownNow：先将线程次的状态设置为STOP，然后尝试停止所有的线程，getTask不会再继续去任务了。返回等待执行任务的列表。</li>
+</ul>
+<p>1、遍历线程池中的工作线程，然后逐个调用线程的interrupt方法来中断线程，无法响应中断的任务，不会被终止<br>
+2、调用后isShutdown()方法就会返回true<br>
+3、所有的任务都关闭后，才表示线程池关闭成功，这时isTerminated才会返回true<br>
+4、关闭后可通过awaitTermination等待</p>
+<h2><a class="anchor" aria-hidden="true" id="合理配置线程池"></a><a href="#合理配置线程池" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>合理配置线程池</h2>
+<h3><a class="anchor" aria-hidden="true" id="任务性质"></a><a href="#任务性质" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>任务性质</h3>
+<ul>
+<li>CPU密集型：配置尽可能少的线程，如配置Ncpu+1个线程的线程池</li>
+<li>IO密集型：配置尽可能多的线程，如2*Ncpu</li>
+<li>混合型
+<ul>
+<li>如果可以拆分，将其拆分成一个CPU密集型任务和一个IO密集型任务，前提是两个任务的执行时长相差不大</li>
+<li>相差太大，就没有必要拆分</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="任务优先级"></a><a href="#任务优先级" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>任务优先级</h3>
+<p>优先级不同的任务可以通过优先级队列PriorityBlockingQueue来处理，让优先级高的先执行。这样可能出现优先级低的一直不会执行。</p>
+<h3><a class="anchor" aria-hidden="true" id="任务的执行时长"></a><a href="#任务的执行时长" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>任务的执行时长</h3>
+<p>执行时间不同的任务，可以交给不通规模的线程池来处理，或者可以使用优先级队列，让执行时间短的任务先执行。</p>
+<h3><a class="anchor" aria-hidden="true" id="任务的依赖性"></a><a href="#任务的依赖性" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>任务的依赖性</h3>
+<p>依赖数据库连接池的任务，因为任务等待时间长，CPU空闲时间长，线程数应该设置的较大。</p>
+<h3><a class="anchor" aria-hidden="true" id="等待队列"></a><a href="#等待队列" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>等待队列</h3>
+<p>建议使用有界队列。如果任务处理异常，可能会使队列变的非常大，撑爆系统，使系统不稳定。</p>
+<h2><a class="anchor" aria-hidden="true" id="线程池的监控"></a><a href="#线程池的监控" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>线程池的监控</h2>
+<ul>
+<li>通过线程池提供的参数进行监控
+<ul>
+<li>taskCount：线程池需要执行的任务数量</li>
+<li>completeTaskCount：已完成的任务数量</li>
+<li>largestPollSize：曾创建过的最大线程数量</li>
+<li>getPollSize：线程池线程的数量</li>
+<li>getAcitiveCount：当前活动的线程数</li>
+</ul></li>
+<li>通过扩展线程池进行监控
+<ul>
+<li>重写beforeExecute、afterExecute、terminated方法</li>
+<li>可以在执行前，执行后，线程池关闭时执行一些代码</li>
+<li>用来监控任务的平均执行时间，最大执行时间和最小执行时间</li>
+</ul></li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#线程池带来的好处">线程池带来的好处</a></li><li><a href="#线程池的执行流程">线程池的执行流程</a></li><li><a href="#创建线程池">创建线程池</a><ul class="toc-headings"><li><a href="#corepoolsize（线程池基本大小）">corePoolSize（线程池基本大小）</a></li><li><a href="#runnabletaskqueue（任务队列）">runnableTaskQueue（任务队列）</a></li><li><a href="#maximumpoolsize（线程池最大数量）">maximumPoolSize（线程池最大数量）</a></li><li><a href="#threadfactory（创建线程的工厂）">ThreadFactory（创建线程的工厂）</a></li><li><a href="#rejectedexecutionhandler（饱和策略）">RejectedExecutionHandler（饱和策略）</a></li><li><a href="#keepalivetime（线程活动保持时间）">keepAliveTime（线程活动保持时间）</a></li><li><a href="#timeunit（线程活动保持时间的单位）">TimeUnit（线程活动保持时间的单位）</a></li></ul></li><li><a href="#向线程池提交任务">向线程池提交任务</a></li><li><a href="#关闭线程池">关闭线程池</a></li><li><a href="#合理配置线程池">合理配置线程池</a><ul class="toc-headings"><li><a href="#任务性质">任务性质</a></li><li><a href="#任务优先级">任务优先级</a></li><li><a href="#任务的执行时长">任务的执行时长</a></li><li><a href="#任务的依赖性">任务的依赖性</a></li><li><a href="#等待队列">等待队列</a></li></ul></li><li><a href="#线程池的监控">线程池的监控</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

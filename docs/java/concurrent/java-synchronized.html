@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Java互斥同步 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="同步是指多个线程并发访问共享数据时，保证共享数据在同一时刻只被一个（或者一些，在使用信号量的时候）线程使用。而互斥是实现同步的一种手段，临界区、互斥量和信号量都是主要的互斥实现方式。互斥是因，同步是果；互斥方法，同步是目的。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Java互斥同步 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="同步是指多个线程并发访问共享数据时，保证共享数据在同一时刻只被一个（或者一些，在使用信号量的时候）线程使用。而互斥是实现同步的一种手段，临界区、互斥量和信号量都是主要的互斥实现方式。互斥是因，同步是果；互斥方法，同步是目的。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Java互斥同步</h1></header><article><div><span><p>同步是指多个线程并发访问共享数据时，保证共享数据在同一时刻只被一个（或者一些，在使用信号量的时候）线程使用。而互斥是实现同步的一种手段，临界区、互斥量和信号量都是主要的互斥实现方式。互斥是因，同步是果；互斥方法，同步是目的。</p>
+<p>Java提供了两种锁机制来控制多个线程对共享资源的互斥访问，第一个是JVM实现的synchronized，而另一个是</p>
+<p>JDK实现的ReentrantLock。</p>
+<h2><a class="anchor" aria-hidden="true" id="synchronized"></a><a href="#synchronized" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>synchronized</h2>
+<p>synchronized经过编译后，会在同步块的前后分别形成monitorenter和monitorexit这两个字节码指令，这两个字节码指令都需要一个reference类型的参数来指明要锁定和解锁的对象 。</p>
+<ul>
+<li>synchronized修饰类，锁定的是class对象</li>
+<li>synchronized修饰方法，锁定的是对象实例
+<ul>
+<li>如果是静态方法，锁定的是整个类</li>
+</ul></li>
+<li>synchronized指定了对象，锁定的是这个对象的reference</li>
+</ul>
+<p>synchronized同步块对同一条线程来说是可重入，不会出现把自己锁死的问题 。java的线程是映射到操作系统的原生线程上的，如果要阻塞或者唤醒一个线程，都需要操作系统来帮忙完成，这就需要从用户态转换到核心态中（甚至有时状态转换消耗的时间比用户代码执行的时间还长）。所以synchronize是一个重量级的操作。</p>
+<p>Java SE1.6为了减少获得锁和释放锁带来的性能消耗，引入了偏向锁和轻量级锁，在Java SE1.6中，锁一共有4中状态，从低到高依次是：无锁状态、偏向锁状态、轻量级锁状态和重量级锁状态，这几个状态会随着竞争情况逐渐升级。锁只能升级，不能降级。</p>
+<h2><a class="anchor" aria-hidden="true" id="reentrantlock"></a><a href="#reentrantlock" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ReentrantLock</h2>
+<p>在基本用法上，ReentrantLock和synchronized很相似，都是线程重入的，只是在写法上有区别，一个表现为API层面的互斥锁（lock()和unlock()方法配合try/finally与语句块来完成），一个是原生语法层面的互斥锁。</p>
+<p>ReentrantLock相比synchronized增加了一些高级特性：</p>
+<ul>
+<li>等待可中断：当持有锁的线程长期不释放锁的时候，正在等待的线程可以选择放弃等待，改为处理其他事情
+<ul>
+<li>通过lock获取锁而被阻塞的线程被中断后继续往下运行；通过lockInterruptibly获取锁而被阻塞的线程被中断后抛出异常。</li>
+</ul></li>
+<li>公平锁和非公平锁：RenntrantLock默认情况是非公平锁，可以通过构造函数传值指定为公平锁。
+<ul>
+<li>非公平锁和公平锁的主要区别：非公平锁当线程进入时，总是先尝试着获取锁，如果获取不到再排队，而公平锁，只有当前队列中有线程就排队。</li>
+</ul></li>
+<li>绑定多个条件：ReentrantLock，可以通过newCondition()，new多个condition，然后通过conditon.await，condition.signal来阻塞或唤醒。而synchronized只能绑定一个条。</li>
+</ul>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProduceAndConsumer</span> </span>{
+    ReentrantLock reentrantLock = <span class="hljs-keyword">new</span> ReentrantLock();
+    Condition notEmpty = reentrantLock.newCondition();
+    Condition notFull = reentrantLock.newCondition();
+
+    <span class="hljs-keyword">public</span> List&lt;Integer&gt; factory = <span class="hljs-keyword">new</span> ArrayList&lt;Integer&gt;();
+    <span class="hljs-keyword">public</span> Integer size = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Integer max_size = <span class="hljs-number">10</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">produce</span><span class="hljs-params">(Integer i)</span> </span>{
+        reentrantLock.lock();
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">while</span> (size &gt;= <span class="hljs-number">10</span>) { <span class="hljs-comment">//注意这个地方一定要while，和wait，notify一样</span>
+                <span class="hljs-keyword">try</span> {
+                    notFull.await();
+                } <span class="hljs-keyword">catch</span> (Exception e) {
+
+                }
+            }
+            factory.add(i);
+            size++;
+            notEmpty.signalAll();
+        } <span class="hljs-keyword">finally</span> {
+            reentrantLock.unlock();
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">consumer</span><span class="hljs-params">()</span> </span>{
+        reentrantLock.lock();
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-keyword">while</span> (size == <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">try</span> {
+                    notEmpty.await();
+                } <span class="hljs-keyword">catch</span> (Exception e) {
+
+                }
+            }
+            System.out.println(factory.remove(<span class="hljs-number">0</span>));
+            size--;
+            notFull.signalAll();
+        } <span class="hljs-keyword">finally</span> {
+            reentrantLock.unlock();
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String args[])</span> </span>{
+        <span class="hljs-keyword">final</span> ProduceAndConsumer produceAndConsumer = <span class="hljs-keyword">new</span> ProduceAndConsumer();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
+            <span class="hljs-keyword">new</span> Thread() {
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">100</span>; j++) {
+                        produceAndConsumer.produce(j);
+                    }
+                }
+            }.start();
+
+            <span class="hljs-keyword">new</span> Thread() {
+                <span class="hljs-meta">@Override</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>{
+                    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">100</span>; j++) {
+                        produceAndConsumer.consumer();
+                    }
+                }
+            }.start();
+        }
+    }
+}
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="比较"></a><a href="#比较" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>比较</h2>
+<ul>
+<li>锁的实现：synchronized是JVM实现的，而ReentrantLock是JDK实现的。</li>
+<li>性能：新版本Java对synchronized进行了很多优化，例如自旋锁等，synchronized与ReentrantLock大致相同</li>
+<li>等待可中断：当持有锁的线程长期不释放锁的时候，正在等待的线程可以选择放弃等待，改为处理其他事情。ReentrantLock 可中断，而 synchronized 不行。</li>
+<li>公平锁：公平锁是指多个线程在等待同一个锁时，必须按照申请锁的时间顺序来依次获得锁。synchronized中的锁是非公平的，ReentrantLock默认情况下也是非公平的，但是也可以是公平的。</li>
+<li>锁绑定多个条件：一个 ReentrantLock 可以同时绑定多个 Condition 对象。</li>
+</ul>
+<p><strong>如何选择：</strong>除非需要使用ReentrantLock的高级功能，否则优先使用synchronized。这是因为synchronized是JVM实现的一种锁机制，JVM原生地支持它，而ReentrantLock不是所有的JDK版本都支持。并且使用synchronized不用担心没有释放锁而导致死锁问题，因为JVM会确保锁的释放。虚拟机未来的改进方向更倾向于synchronized。（1.8的ConcurrentHashMap就的例子，它已经改成使用synchronized锁了）</p>
+<p>互斥同步最主要的问题就是进行线程阻塞和唤醒所带来的性能问题，因此也称为阻塞同步。从处理问题的方式上说，互斥同步属于一种悲观的并发策略，总是认为只要不去做正确的同步措施（比如加锁），那就肯定会出现问题，无论共享数据是否真的会出现竞争，它都要进行加锁（这里讨论的是概念模型，实际上虚拟机会优化掉很大一部分不必要的加锁）、用户态核心态转换、维护锁计数器和检查是否有被阻塞的现在需要唤醒等操作。</p>
+<h2><a class="anchor" aria-hidden="true" id="非阻塞同步"></a><a href="#非阻塞同步" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>非阻塞同步</h2>
+<p>硬件指令集的发展，我们有了另外一种选择：<strong>基于冲突检测的乐观并发策略</strong>，通俗地将，<strong>就是先进行操作，如果没有其它线程争用共享数据，那操作就成功了；如果共享数据有争用，产生了冲突，那就再采取其它补偿措施</strong>（最常用的补偿措施就是不断的重试，直到成功），这种乐观的并发策略不需要把线程挂起，因此称为非阻塞同步。</p>
+<p>条件：需要检测冲突和操作这两个步骤具有原子性。</p>
+<h3><a class="anchor" aria-hidden="true" id="cas"></a><a href="#cas" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CAS</h3>
+<p>现代CPU新增了CAS（Compare-and-Swap，比较并交换）指令。CAS执行需要三个操作数：<strong>内存位置值（Java中可以理解为变量的内存地址值，V）,旧的预期值（A），新值（B）。当旧的预期值和内存位置值一致时，设置成新值。实际使用时只需要传AB即可。</strong></p>
+<p>Java提供了通过Unsafe类来实现CAS操作。但是Unsafe类不是提供给用户程序调用的，因此，不采用反射手段，我们只能通过其他的Java API来间接的使用它。</p>
+<pre><code class="hljs css language-java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSwapObject</span><span class="hljs-params">(Object var1, <span class="hljs-keyword">long</span> var2, Object var4, Object var5)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSwapInt</span><span class="hljs-params">(Object var1, <span class="hljs-keyword">long</span> var2, <span class="hljs-keyword">int</span> var4, <span class="hljs-keyword">int</span> var5)</span></span>;
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSwapLong</span><span class="hljs-params">(Object var1, <span class="hljs-keyword">long</span> var2, <span class="hljs-keyword">long</span> var4, <span class="hljs-keyword">long</span> var6)</span></span>;
+</code></pre>
+<p>CAS存在ABA问题，即：如果一个变量V初始读取的时候是A，并在在准备赋值的时候检查到它仍然为A值，那么就能说它的值没有被其它线程改变过吗？如果这段时间它的值曾经被改为B，后来又改回了A，那么CAS操作就会误认为它从来没有被改变过。为了解决这个问题，引入了AtomicStampedReference，在比较时把对象的戳印stamp也一起比较。</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AtomicStampedReference</span>&lt;<span class="hljs-title">V</span>&gt; </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Pair</span>&lt;<span class="hljs-title">T</span>&gt; </span>{
+        <span class="hljs-keyword">final</span> T reference;
+        <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> stamp;
+        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Pair</span><span class="hljs-params">(T reference, <span class="hljs-keyword">int</span> stamp)</span> </span>{
+            <span class="hljs-keyword">this</span>.reference = reference;
+            <span class="hljs-keyword">this</span>.stamp = stamp;
+        }
+        <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-function">Pair&lt;T&gt; <span class="hljs-title">of</span><span class="hljs-params">(T reference, <span class="hljs-keyword">int</span> stamp)</span> </span>{
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Pair&lt;T&gt;(reference, stamp);
+        }
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> Pair&lt;V&gt; pair;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">compareAndSet</span><span class="hljs-params">(V   expectedReference,
+                                 V   newReference,
+                                 <span class="hljs-keyword">int</span> expectedStamp,
+                                 <span class="hljs-keyword">int</span> newStamp)</span> </span>{
+        Pair&lt;V&gt; current = pair;
+        <span class="hljs-keyword">return</span>
+            expectedReference == current.reference &amp;&amp;
+            expectedStamp == current.stamp &amp;&amp;
+            ((newReference == current.reference &amp;&amp;
+              newStamp == current.stamp) ||
+             casPair(current, Pair.of(newReference, newStamp)));
+    }
+}
+</code></pre>
+<p>使用：</p>
+<pre><code class="hljs css language-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AtomicStampedReferenceTest</span> </span>{
+    <span class="hljs-keyword">private</span> AtomicStampedReference atomicStampedReference = <span class="hljs-keyword">new</span> AtomicStampedReference(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>);
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">getAndSet</span><span class="hljs-params">(Integer i)</span> </span>{
+        <span class="hljs-keyword">for</span> (; ; ) {
+            <span class="hljs-keyword">int</span> stamp = atomicStampedReference.getStamp();
+            Integer current = (Integer) atomicStampedReference.getReference();
+            <span class="hljs-keyword">if</span> (atomicStampedReference.compareAndSet(current, i, stamp, stamp + <span class="hljs-number">1</span>)) {
+                <span class="hljs-keyword">return</span> current;
+            }
+        }
+    }
+}  
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#synchronized">synchronized</a></li><li><a href="#reentrantlock">ReentrantLock</a></li><li><a href="#比较">比较</a></li><li><a href="#非阻塞同步">非阻塞同步</a><ul class="toc-headings"><li><a href="#cas">CAS</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
