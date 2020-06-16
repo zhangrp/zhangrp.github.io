@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>选择排序 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="每一趟从待排序的数据元素中选出最小（或最大）的一个元素，顺序放在已排好序的数列的最前（最后），直到所有待排序的数据元素排完。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="选择排序 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="每一趟从待排序的数据元素中选出最小（或最大）的一个元素，顺序放在已排好序的数列的最前（最后），直到所有待排序的数据元素排完。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">选择排序</h1></header><article><div><span><p>每一趟从待排序的数据元素中选出最小（或最大）的一个元素，顺序放在已排好序的数列的最前（最后），直到所有待排序的数据元素排完。</p>
+<pre><code class="hljs css language-java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sort</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a[])</span> </span>{
+    <span class="hljs-keyword">if</span>(a == <span class="hljs-keyword">null</span> || a.length == <span class="hljs-number">0</span> || a.length == <span class="hljs-number">1</span>){
+        <span class="hljs-keyword">return</span>;
+    }
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i=<span class="hljs-number">0</span>;i&lt;a.length;i++){
+        <span class="hljs-keyword">int</span> k = i;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j=i+<span class="hljs-number">1</span>;j&lt;a.length;j++){
+            <span class="hljs-keyword">if</span>(a[j] &lt; a[k]){
+                k = j;
+            }
+        }
+        <span class="hljs-keyword">if</span>(k != i){
+            swap(a, i, k);
+        }
+    }
+}
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">swap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a[], <span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> j)</span></span>{
+    <span class="hljs-keyword">int</span> p = a[i];
+    a[i] = a[j];
+    a[j] = p;
+}
+</code></pre>
+<ul>
+<li>时间复杂度分析：O(n^2)</li>
+</ul>
+<p>为什么时间复杂度是O(n^2)？<br>
+假如当n个元素时时间复杂度是f(n)，可以得出f(n) = f(n-1)+n。类推，f(n-1)=f(n-2)+n-1, f(n-2)=f(n-3)+n-2....
+f(n)=n+(n-1)+(n-2)+(n-3)+...+1=n(n-1)/2。当n趋近于无穷大时f(n)趋近与n^2。</p>
+<ul>
+<li>不稳定排序</li>
+</ul>
+<p>在一趟选择，如果当前元素比一个元素小，而该小的元素又出现在一个和当前元素相等的元素后面，那么交换后稳定性就被破坏了。比如：5 8 5 2 9，第一趟排序5就和2交换了，稳定性已破坏。
+最坏，最好和平均情况下时间复杂度均为O(n^2)</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

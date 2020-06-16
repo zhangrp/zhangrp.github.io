@@ -8,38 +8,38 @@ boolean只有两个值：true、false，可以使用1 bit来存储，但是具�
 <span class="hljs-keyword">int</span> y = x;       <span class="hljs-comment">//自动拆箱</span>
 </code></pre>
 <p>自动装箱是通过<code>valueOf()</code>方法实现的，自动拆箱是通过其<code>intValue</code>或<code>longValue</code>之类的实现的。自动装箱涉及到缓存，如Integer的缓存：</p>
-<pre><code class="hljs css language-java">    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IntegerCache</span> </span>{
-        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> low = -<span class="hljs-number">128</span>;
-        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> high;
-        <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Integer cache[];
+<pre><code class="hljs css language-java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IntegerCache</span> </span>{
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> low = -<span class="hljs-number">128</span>;
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> high;
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Integer cache[];
 
-        <span class="hljs-keyword">static</span> {
-            <span class="hljs-comment">// high value may be configured by property</span>
-            <span class="hljs-keyword">int</span> h = <span class="hljs-number">127</span>;
-            String integerCacheHighPropValue =
-                sun.misc.VM.getSavedProperty(<span class="hljs-string">"java.lang.Integer.IntegerCache.high"</span>);
-            <span class="hljs-keyword">if</span> (integerCacheHighPropValue != <span class="hljs-keyword">null</span>) {
-                <span class="hljs-keyword">int</span> i = parseInt(integerCacheHighPropValue);
-                i = Math.max(i, <span class="hljs-number">127</span>);
-                <span class="hljs-comment">// Maximum array size is Integer.MAX_VALUE</span>
-                h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="hljs-number">1</span>);
-            }
-            high = h;
-
-            cache = <span class="hljs-keyword">new</span> Integer[(high - low) + <span class="hljs-number">1</span>];
-            <span class="hljs-keyword">int</span> j = low;
-            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; cache.length; k++)
-                cache[k] = <span class="hljs-keyword">new</span> Integer(j++);
+    <span class="hljs-keyword">static</span> {
+        <span class="hljs-comment">// high value may be configured by property</span>
+        <span class="hljs-keyword">int</span> h = <span class="hljs-number">127</span>;
+        String integerCacheHighPropValue =
+            sun.misc.VM.getSavedProperty(<span class="hljs-string">"java.lang.Integer.IntegerCache.high"</span>);
+        <span class="hljs-keyword">if</span> (integerCacheHighPropValue != <span class="hljs-keyword">null</span>) {
+            <span class="hljs-keyword">int</span> i = parseInt(integerCacheHighPropValue);
+            i = Math.max(i, <span class="hljs-number">127</span>);
+            <span class="hljs-comment">// Maximum array size is Integer.MAX_VALUE</span>
+            h = Math.min(i, Integer.MAX_VALUE - (-low) -<span class="hljs-number">1</span>);
         }
+        high = h;
 
-        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IntegerCache</span><span class="hljs-params">()</span> </span>{}
+        cache = <span class="hljs-keyword">new</span> Integer[(high - low) + <span class="hljs-number">1</span>];
+        <span class="hljs-keyword">int</span> j = low;
+        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; cache.length; k++)
+            cache[k] = <span class="hljs-keyword">new</span> Integer(j++);
     }
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Integer <span class="hljs-title">valueOf</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>{
-        <span class="hljs-keyword">assert</span> IntegerCache.high &gt;= <span class="hljs-number">127</span>;
-        <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)
-            <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Integer(i);
-    }
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">IntegerCache</span><span class="hljs-params">()</span> </span>{}
+}
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Integer <span class="hljs-title">valueOf</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>{
+    <span class="hljs-keyword">assert</span> IntegerCache.high &gt;= <span class="hljs-number">127</span>;
+    <span class="hljs-keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)
+        <span class="hljs-keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Integer(i);
+}
 </code></pre>
 <p>Integer的缓存池<code>IntegerCache</code>稍微特殊一点，下边界-128是确定的，上边界默认值127，但可调整，在启动jvm的时候，通过<code>-XX:AutoBoxCacheMax=&lt;size&gt;</code>来指定这个缓冲池的大小，该选项在JVM初始化的时候会设定一个名为<code>java.lang.IntegerCache.high</code>系统属性。<br>
 因为缓冲池的存在，在用<code>==</code>比较时，结果可能会有差异。</p>
