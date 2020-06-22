@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Redis-支持的数据类型 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Redis是速度非常快的非关系型（NoSQL）内存键值数据库，可以存储键和五种不同类型的值之间的映射。键的类型只能为**字符串**，值支持五种数据类型：**字符串String、列表List、集合Set、散列表Hash、有序集合ZSet**。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Redis-支持的数据类型 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="Redis是速度非常快的非关系型（NoSQL）内存键值数据库，可以存储键和五种不同类型的值之间的映射。键的类型只能为**字符串**，值支持五种数据类型：**字符串String、列表List、集合Set、散列表Hash、有序集合ZSet**。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Redis-支持的数据类型</h1></header><article><div><span><p>Redis是速度非常快的非关系型（NoSQL）内存键值数据库，可以存储键和五种不同类型的值之间的映射。键的类型只能为<strong>字符串</strong>，值支持五种数据类型：<strong>字符串String、列表List、集合Set、散列表Hash、有序集合ZSet</strong>。</p>
+<p>Redis支持很多特性，例如将内存中的数据持久化到硬盘中，使用复制来扩展读性能，使用分片来扩展写性能。</p>
+<table>
+<thead>
+<tr><th>数据类型</th><th>可存储的值</th><th>操作</th></tr>
+</thead>
+<tbody>
+<tr><td>String</td><td>字符串、整数、浮点数</td><td>对整个字符串或者字符串的其中一部分执行操作  对整数和浮点数执行自增或者自减操作</td></tr>
+<tr><td>List</td><td>列表，有序，元素可重复，可用作队列</td><td>从两端压入或者弹出元素  对单个或者多个元素进行修剪，只保留一个范围内的元素</td></tr>
+<tr><td>Set</td><td>无序，元素唯一不可重复，可用于去重（set 是数学上集合的概念，集合三要素：确定性，互异性，无序性）</td><td>添加、获取、移除单个元素  检查一个元素是否存在于集合中  计算交集、并集、差集  从集合里面随机获取元素</td></tr>
+<tr><td>Hash</td><td>包含键值对的无序散列表</td><td>添加、获取、移除单个键值对  获取所有键值对  检查某个键是否存在</td></tr>
+<tr><td>ZSet</td><td>有序集合</td><td>添加、获取、删除元素  根据分值范围或者成员来获取元素  计算一个键的排名</td></tr>
+</tbody>
+</table>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

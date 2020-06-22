@@ -41,13 +41,13 @@
 }  
 </code></pre>
 <p><img src="./java-hashmap.assets/image-20200425213148385.png" alt="image-20200425213148385"></p>
-<p>1、HashMap内部包含了一个Entry类型的数组table，其默认大小是16</p>
-<p>2、Entry存储着键值对。它包含了四个字段，从 next 字段我们可以看出 Entry 是一个链表</p>
-<p>3、数组中的每个位置被当成一个桶，一个桶存放一个链表</p>
-<p>4、HashMap使用拉链法来解决冲突，同一个链表中存放哈希值和散列桶取模运算结果相同的Entry</p>
+<p>1、HashMap内部包含了一个Entry类型的数组table，其默认大小是16<br>
+2、Entry存储着键值对。它包含了四个字段，从 next 字段我们可以看出 Entry 是一个链表<br>
+3、数组中的每个位置被当成一个桶，一个桶存放一个链表<br>
+4、HashMap使用拉链法来解决冲突，同一个链表中存放哈希值和散列桶取模运算结果相同的Entry</p>
 <h3><a class="anchor" aria-hidden="true" id="为什么默认是16"></a><a href="#为什么默认是16" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>为什么默认是16</h3>
-<p>1、和hash算法有关</p>
-<p>2、太大太小都不好，是经验值</p>
+<p>1、和hash算法有关<br>
+2、太大太小都不好，是经验值</p>
 <h2><a class="anchor" aria-hidden="true" id="拉链"></a><a href="#拉链" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>拉链</h2>
 <p>Hash冲突够，通过链表添加一个元素，插入时是在头部插入。</p>
 <p><img src="./java-hashmap.assets/image-20200425214309387.png" alt="image-20200425214309387"></p>
@@ -143,7 +143,7 @@
 <h2><a class="anchor" aria-hidden="true" id="链表转红黑树"></a><a href="#链表转红黑树" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>链表转红黑树</h2>
 <p>从 JDK 1.8开始，一个桶存储的链表长度大于8时会将链表转换为红黑树。</p>
 <h2><a class="anchor" aria-hidden="true" id="与hashtable区别"></a><a href="#与hashtable区别" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>与HashTable区别</h2>
-<p>1、HashTable使用synchronized来进行同步
+<p>1、HashTable使用synchronized来进行同步<br>
 2、HashMap可以插入键为null的Entry（插入位置是0）</p>
 <p>HashMap计算key的hash值时调用单独的方法，在该方法中会判断key是否为null，如果是则返回0；而Hashtable中则直接调用key的hashCode()方法，因此如果key为null，则抛出空指针异常。</p>
 <p>HashMap将键值对添加进数组时，不会主动判断value是否为null；而Hashtable则首先判断value是否为null</p>
@@ -178,7 +178,7 @@
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
 }
 </code></pre>
-<p>3、HashMap的迭代器是fail-fast迭代器（modCount）
+<p>3、HashMap的迭代器是fail-fast迭代器（modCount）<br>
 4、HashMap不能保证随着时间的推移Map中的元素次序是不变的（会扩容），HashTable应该也不保证。</p>
 </span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#存储结构">存储结构</a><ul class="toc-headings"><li><a href="#为什么默认是16">为什么默认是16</a></li></ul></li><li><a href="#拉链">拉链</a></li><li><a href="#扩容">扩容</a></li><li><a href="#链表转红黑树">链表转红黑树</a></li><li><a href="#与hashtable区别">与HashTable区别</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
                 document.addEventListener('keyup', function(e) {
