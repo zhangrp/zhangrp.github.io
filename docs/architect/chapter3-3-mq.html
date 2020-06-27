@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>消息队列设计与实践 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 消息队列定义"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="消息队列设计与实践 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 消息队列定义"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">消息队列设计与实践</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="消息队列定义"></a><a href="#消息队列定义" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>消息队列定义</h2>
+<p>消息队列技术是分布式应用间交换信息的一种技术。消息队列可以驻留在内存或磁盘上，队列存储消息直到它们被应用程序取走。通过消息队列，应用程序可以独立地执行，不需要知道彼此的位置或在继续执行前不需要等到接收程序接收此消息。</p>
+<p>消息队列本质：一次RPC变成两次RPC，数据转存</p>
+<h2><a class="anchor" aria-hidden="true" id="消息队列应用场景"></a><a href="#消息队列应用场景" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>消息队列应用场景</h2>
+<ul>
+<li>异步通信：同步架构变成异步架构</li>
+<li>解耦业务：基于消息模型，关注&quot;通知&quot;，而非&quot;处理&quot;</li>
+<li>错峰与流控</li>
+<li>广播：广播消息</li>
+<li>时序保证</li>
+</ul>
+<p>目前的RocketMQ对延时消息支持并不好，只支持固定几个延时，如果支持任意延时？</p>
+<p><strong>方法一</strong>：即时消息直接发送MQ，延时消息写到数据库或redis，然后通过进程检查，时间到达后，再把消息取出来发到MQ。</p>
+<p>缺点：需要引入遍历的Clinet，发送端不透明，需要把延时消息或即时消息发送到不同的地方。</p>
+<p><strong>方法二</strong>：RocketMQ改造</p>
+<p>每30分钟一个文件？</p>
+<p><font color=red>其实遇到这个问题，也应该从业务上去考虑，任何延时是否需要。现在发送1个月后需要处理的消息有必须要吗，这样可靠吗？</font></p>
+<h2><a class="anchor" aria-hidden="true" id="生产环境mq推荐"></a><a href="#生产环境mq推荐" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>生产环境MQ推荐</h2>
+<ul>
+<li><strong>高吞吐、高可靠性可容忍场景</strong>：推荐Kafka，如日志处理</li>
+<li><strong>高可靠场景</strong>：推荐RocketMQ，如电商订单消息</li>
+</ul>
+<p>在高可靠场景中，如果是涉及到钱的场景，可以采用RocketMQ同步刷盘和同步复制，如果同步复制，对性能压力太大，可以去掉同步复制，当RocketMQ broker的Master挂了之后，通过应用程序打印的日志进行恢复。</p>
+<p><font color=red>RocketMQ的时序消息无法保证的一个场景是，Master挂了之后，topic迁移到其它的Master上，可能出现短暂的乱序。是否可以Master挂了之后Slaver提升为主。</font></p>
+<h2><a class="anchor" aria-hidden="true" id="rocketmq如何masterslave自动切换"></a><a href="#rocketmq如何masterslave自动切换" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>RocketMQ如何Master/Slave自动切换</h2>
+<p>1、目前的NameServer是无状态的，Broker的心跳信息上报给NamerServer</p>
+<p>2、引入ZooKeeper，NameServer通过ZooKeeper竞争称为Controller</p>
+<p>3、Broker依赖ZooKeeper，通过ZooKeeper获取Controller所在的NamerServer</p>
+<p>4、Broker的心跳信息只上报给Controller，再由NameServer复制给其它的NameServer，NameServer地位变成不对等，有了Master的概念</p>
+<p>5、切换过程中，通过Controller来奇幻slave变成master，同时更新其它两个NameServer的路由信息</p>
+<p>6、NameServer Controller的HA由ZooKeeper来负责</p>
+<p>7、Client仍然是随意连接到任意一台NameServer</p>
+<p>缺点：NameServer之间没有通过强一致性的协议，可以会出现路由信息短暂不一致的情况</p>
+<p>解决方法：通过Controller定时更新其它两个NameServer的路由信息，保证一致</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#消息队列定义">消息队列定义</a></li><li><a href="#消息队列应用场景">消息队列应用场景</a></li><li><a href="#生产环境mq推荐">生产环境MQ推荐</a></li><li><a href="#rocketmq如何masterslave自动切换">RocketMQ如何Master/Slave自动切换</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

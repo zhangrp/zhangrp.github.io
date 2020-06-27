@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>服务负载均衡设计 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 负载均衡系统"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="服务负载均衡设计 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 负载均衡系统"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">服务负载均衡设计</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="负载均衡系统"></a><a href="#负载均衡系统" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>负载均衡系统</h2>
+<p>硬件：F10、A10、Radware</p>
+<p>软件：LVS（4层），Nginx（7层），HAProxy（4层或7层）</p>
+<p>反向代理、正向代理：站在用户的角度，如果用户知道这个代理存在就是正向代理，如用户不知道这个代理存储就是反向代理。</p>
+<h3><a class="anchor" aria-hidden="true" id="lvs"></a><a href="#lvs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>LVS</h3>
+<p><img src="./chapter2-3-overload-balance.assets/image15.png" alt="image15" style="zoom:50%;" /></p>
+<p>LVS（Linux Virtual
+Server）即Linux虚拟服务器，是由章文嵩博士主导的开源负载均衡项目，目前LVS已经被集成到Linux内核模块中。该项目在Linux内核中实现了基于IP的数据请求负载均衡调度方案，其体系结构如上图所示，终端互联网用户从外部访问公司的外部负载均衡服务器，终端用户的Web请求会发送给LVS调度器，调度器根据自己预设的算法决定将该请求发送给后端的某台Web服务器。整个转发过程对用户是透明的。根据LVS工作模式的不同，真实服务器会选择不同的方式将用户需要的数据发送到终端用户，LVS工作模式分为NAT模式、TUN模式、以及DR模式。</p>
+<p><strong>1、VS/NAT(Virtual Server via Network Address Translation)</strong>，即网络地址翻转技术实现虚拟服务器。当请求来到时，LVS将数据报文中的目标地址（即虚拟IP地址）改成具体的某台Web Server，端口也改成Web
+Server的端口，然后把报文发给Web Server。Web Server处理完数据后，需要返回给LVS，然后LVS服务将数据包中的源地址和源端口改成VIP的地址和端口，最后把数据发送出去。由此可以看出，用户的请求和返回都要经过LVS
+Server，如果数据过多，LVS Server肯定会不堪重负。工作在网络层。</p>
+<p><strong>2、VS/TUN（Virtual Server via IP Tunneling）</strong>，即IP隧道技术实现虚拟服务器。它跟VS/NAT基本一样，但是Web Server是直接返回数据给客户端，不需要经过LVS Server，这大大降低了LVS Server的压力。</p>
+<p><strong>3、VS/DR（Virtual Server via Direct Routing）</strong>，即用直接路由技术实现虚拟服务器。跟前面两种方式，它的报文转发方法有所不同，<strong>VS/DR通过改写请求报文的MAC地址</strong>，将请求发送到Web Server，而Web Server将响应直接返回给客户，免去了VS/TUN中的IP隧道开销。这种方式是三种负载调度机制中性能最高最好的，但是必须要求Web Server与LVS Server都有一块网卡连在同一物理网段上。工作在数据链路层。</p>
+<h2><a class="anchor" aria-hidden="true" id="负载均衡算法"></a><a href="#负载均衡算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>负载均衡算法</h2>
+<p>Random：随机，按权重设置随机概率</p>
+<p>RoundRobin：轮询，按约定的权重设置轮询比率</p>
+<p>ConsistentHash：一致性Hash，相同参数的请求总是发送到统一提供者。存在节点漂移的问题。强一致不能采用一致性hash。</p>
+<p>节点漂移问题：节点A异常，数据迁移到节点B上，当节点A恢复后又加入，A上可能存在脏数据。</p>
+<h2><a class="anchor" aria-hidden="true" id="广义负载均衡"></a><a href="#广义负载均衡" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>广义负载均衡</h2>
+<p>广义的负载均衡是指有完整的故障处理恢复机制：故障自动发现、故障服务自动摘除、请求自动重试、服务恢复自动发现。</p>
+<p>1、谁来发现服务故障？如果仅仅靠注册中心来发现服务故障，很难发现服务假死的情况（服务不可用，但心跳正常，心跳线程和服务线程肯定不会是一个）。谁最痛谁去推动，所以可采用由调用者去发现服务异常。</p>
+<p>2、如何判断服务故障？统计最近的服务调用情况，失败或超时高于30%时，服务即故障。</p>
+<p>3、如何通知服务重启？发送通知给控制中心，由控制中心触发重启。控制中心在每台机器上面都有一个client进程，通过client进程对主机进行管控。</p>
+<p>4、如何重启？jstack 2次，kill 进程，sleep
+6s，start进程。之所以要sleep一段时间，是让注册中心发现服务异常，然后从注册中心中踢出。</p>
+<p>6、如何实现服务恢复自动发现？依靠注册中心，服务恢复后又把自己注册到注册中心，上游服务通过watch机制发现服务，然后建立与该服务的连接。</p>
+<p><img src="./chapter2-3-overload-balance.assets/image16.png" alt="image16" style="zoom:50%;" /></p>
+<p>7、请求自动重试：服务熔断后，可以慢慢放一些流量去调用着试试，如果服务是好的可以慢慢恢复访问，如果服务仍然异常，可以继续熔断。</p>
+<h3><a class="anchor" aria-hidden="true" id="一、业务逻辑层"></a><a href="#一、业务逻辑层" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>一、业务逻辑层</h3>
+<p>1、向注册中心注册服务，与注册中心建立心跳</p>
+<p>2、处理来自网关层的服务请求</p>
+<h3><a class="anchor" aria-hidden="true" id="二、网关层"></a><a href="#二、网关层" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>二、网关层</h3>
+<p>1、从注册中心获取服务，并通过watch机制监控服务的变化情况</p>
+<p>2、服务分主机以TCP的形式建立长连接池</p>
+<p><img src="./chapter2-3-overload-balance.assets/image17.png" alt="image17" style="zoom:50%;" /></p>
+<p>3、接收从nginx过来的请求，通过一定的负载均衡策略，选择某一个业务逻辑层，调用服务</p>
+<p>4、统计每1秒每个业务逻辑层的调用情况，失败和超时超过30%，即认为该业务逻辑层故障</p>
+<p>5、某业务逻辑层故障后网关层删除连接池中与该业务逻辑层的连接（具体实现时，考虑到请求自动重试功能，不删除而只是标示成不可用），此时注册中心并没有发现业务逻辑挂了</p>
+<p>6、通知控制中心某业务逻辑层异常</p>
+<h3><a class="anchor" aria-hidden="true" id="三、控制中心"></a><a href="#三、控制中心" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>三、控制中心</h3>
+<p>1、收到网关层上报的某业务逻辑层异常后，通知系统管理员</p>
+<p>2、重启该业务逻辑层，通过控制中心在每台主机上的客户端执行</p>
+<p>保留现场（间隔几秒jstack 2次，可用来比较线程状态）；kill 进程；sleep
+6s；start 进程</p>
+<p>（间隔6秒是因为：zk心跳是2s一次，如果连续3次没有收到异常，才认为服务异常，然后删除节点。如果很快就重启完了，注册中心就不能感知到服务的异常）。</p>
+<p>因为网关层会部署多个，那么可能出现多个网关层向控制中心上报业务逻辑层的异常，如何处理？控制中心收到相同的异常处理请求后，短时内不重复处理，比如10分钟。</p>
+<h3><a class="anchor" aria-hidden="true" id="四、网关层"></a><a href="#四、网关层" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>四、网关层</h3>
+<p>1、业务逻辑层重启完成后，会重新注册到注册中心</p>
+<p>2、网关层通过watch机制就能感知到业务逻辑层的变化，然后重新向业务逻辑层建立连接，这就完成了服务恢复的自动发现</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#负载均衡系统">负载均衡系统</a><ul class="toc-headings"><li><a href="#lvs">LVS</a></li></ul></li><li><a href="#负载均衡算法">负载均衡算法</a></li><li><a href="#广义负载均衡">广义负载均衡</a><ul class="toc-headings"><li><a href="#一、业务逻辑层">一、业务逻辑层</a></li><li><a href="#二、网关层">二、网关层</a></li><li><a href="#三、控制中心">三、控制中心</a></li><li><a href="#四、网关层">四、网关层</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

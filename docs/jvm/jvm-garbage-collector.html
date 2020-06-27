@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>垃圾收集器 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="收集算法是内存回收的理论，垃圾收集器是内存回收的具体实现。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="垃圾收集器 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="收集算法是内存回收的理论，垃圾收集器是内存回收的具体实现。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">垃圾收集器</h1></header><article><div><span><p>收集算法是内存回收的理论，垃圾收集器是内存回收的具体实现。</p>
+<p><img src="./jvm-garbage-collector.assets/image-20200414151031345.png" alt="image-20200414151031345"></p>
+<p>parallel<code>[ˈpærəlel]</code> 并行的<br>
+serial<code>[ˈsɪəriəl]</code> 顺序的，串行的<br>
+scavenge<code>[ˈskævɪndʒ]</code> 觅食、捡破烂<br>
+tenured<code>[ˈtenjəd]</code> 终身的长期的<br>
+CMS，Concurrent Mark Sweep，sweep<code>[swiːp]</code>扫、打扫、清扫，Concurrent并发</p>
+<p><strong>并行（Parallel）</strong>：指多条垃圾收集线程并行工作，但此时用户线程仍处理等待状态</p>
+<p><strong>并发（Concurrent）</strong>：用户线程和垃圾收集线程同时执行，在单CPU上可能是交替执行，在多CPU上可能是并行的在不同CPU上执行</p>
+<p>到目前为止还没有最好的收集器出现，更加没有万能的收集器，只是选择对具体应用最合适的收集器。</p>
+<table>
+<thead>
+<tr><th>新生代</th><th>老年代</th><th>JVM参数</th></tr>
+</thead>
+<tbody>
+<tr><td>Serial (DefNew)</td><td>Serial Old(PSOldGen)</td><td>-XX:+UseSerialGC</td></tr>
+<tr><td>Parallel Scavenge (PSYoungGen)</td><td>Serial Old(PSOldGen)</td><td>-XX:+UseParallelGC</td></tr>
+<tr><td>Parallel Scavenge (PSYoungGen)</td><td>Parallel Old (ParOldGen)</td><td>-XX:+UseParallelOldGC</td></tr>
+<tr><td>ParNew (ParNew)</td><td>Serial Old(PSOldGen)</td><td>-XX:-UseParNewGC</td></tr>
+<tr><td>ParNew (ParNew)</td><td>CMS+Serial Old(PSOldGen)</td><td>-XX:+UseConcMarkSweepGC</td></tr>
+<tr><td>G1</td><td>G1</td><td>-XX:+UseG1GC</td></tr>
+</tbody>
+</table>
+<p><font color=red>JDK 1.7/1.8默认收集器：-XX:+UseParallelOldGC， Parallel Scavenge (PSYoungGen) + Parallel Old (ParOldGen)</font></p>
+<p><font color=red>JDK1.9开始默认收集器为：G1</font></p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

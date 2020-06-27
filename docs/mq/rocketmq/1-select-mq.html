@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>消息队列选项对比分析 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="目前主流的MQ主要是RocketMQ，kafka，RabbitMQ，选型对比纬度：系统定位、支持功能、可用性、可靠性、运维。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="消息队列选项对比分析 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="目前主流的MQ主要是RocketMQ，kafka，RabbitMQ，选型对比纬度：系统定位、支持功能、可用性、可靠性、运维。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">消息队列选项对比分析</h1></header><article><div><span><p>目前主流的MQ主要是RocketMQ，kafka，RabbitMQ，选型对比纬度：系统定位、支持功能、可用性、可靠性、运维。</p>
+<p><strong>基础项：</strong></p>
+<table>
+<thead>
+<tr><th>对比项</th><th>kafka</th><th>RocketMQ</th><th>RabbitMQ</th></tr>
+</thead>
+<tbody>
+<tr><td>成熟度</td><td>日志领域应用广泛</td><td>成熟</td><td>成熟</td></tr>
+<tr><td>公司/社区</td><td>Apache</td><td>Apache</td><td>Mozilla Public License</td></tr>
+<tr><td>活跃程度</td><td>高</td><td>高</td><td>高</td></tr>
+<tr><td>API完备性</td><td>高</td><td>高</td><td>高</td></tr>
+<tr><td>文档完备性</td><td>完善</td><td>完善</td><td>完善</td></tr>
+<tr><td>客户端语言</td><td>Java、C++、Python、Go</td><td>Java</td><td>Java、C++、Python</td></tr>
+</tbody>
+</table>
+<p><strong>可用性、可靠性对比：</strong></p>
+<table>
+<thead>
+<tr><th>对比项</th><th>kafka</th><th>RocketMQ</th><th>RabbitMQ</th></tr>
+</thead>
+<tbody>
+<tr><td>部署方式</td><td>集群</td><td>集群</td><td>集群</td></tr>
+<tr><td>集群管理</td><td>ZooKeeper</td><td>Name Server</td><td>Erlang天然支持</td></tr>
+<tr><td>选主方式</td><td>自动选举</td><td>不支持</td><td>最早加入的节点</td></tr>
+<tr><td>主从切换</td><td>自动切换</td><td>不支持自动切换</td><td>自动切换</td></tr>
+<tr><td>数据可靠性</td><td>高</td><td>高</td><td>高</td></tr>
+<tr><td>性能</td><td>非常高</td><td>高</td><td>中</td></tr>
+<tr><td>可用性</td><td>分布式、主从</td><td>分布式、主从</td><td>主从</td></tr>
+<tr><td>堆积能力</td><td>非常好</td><td>非常好</td><td>一般</td></tr>
+</tbody>
+</table>
+<p><strong>功能对比：</strong></p>
+<table>
+<thead>
+<tr><th>对比项</th><th>kafka</th><th>RocketMQ</th><th>RabbitMQ</th></tr>
+</thead>
+<tbody>
+<tr><td>顺序消息</td><td>支持</td><td>支持</td><td>支持</td></tr>
+<tr><td>延时消息</td><td>不支持</td><td>只支持特定Level</td><td>不支持</td></tr>
+<tr><td>事务消息</td><td>不支持</td><td>支持</td><td>不支持</td></tr>
+<tr><td>消息过滤</td><td>支持</td><td>支持</td><td>不支持</td></tr>
+<tr><td>消息查询</td><td>不支持</td><td>支持</td><td>不支持</td></tr>
+<tr><td>消息失败重试</td><td>不支持</td><td>支持</td><td>支持</td></tr>
+<tr><td>批量发送</td><td>支持</td><td>不支持</td><td>不支持</td></tr>
+</tbody>
+</table>
+<p>Kafka：系统间的数据流通道</p>
+<p>RocketMQ：高性能可靠消息传输</p>
+<p>RabbitMQ：可靠消息传输</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

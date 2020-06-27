@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>分布式事务设计 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="分布式场景下，一个流程（场景）会同时对应多个服务。比如电商下单场景，需要支付服务进行支付、库存服务扣减库存、订单服务进行订单生成、物流服务更新物流信息等。如果某一个服务执行失败，或者网络故障引起的请求丢失，那么整个系统可能出现数据不一致。这就是分布式一致性问题，追根到底，&lt;font color=red&gt;**分布式一致性的根本原因在于数据的分布式操作，引起的本地事务无法保证数据的原子性引起**&lt;/font&gt;。分布式一致性问题的解决思路有两种，**一种是分布式事务，一种是尽量通过业务流程避免分布式事务**。分布式事务是直接解决问题，而业务规避其实通过解决出问题的地方（解决提问题的人）。其实在真实业务场景中，如果业务规避不是很麻烦，最优雅的解决方案就是业务规避。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="分布式事务设计 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="分布式场景下，一个流程（场景）会同时对应多个服务。比如电商下单场景，需要支付服务进行支付、库存服务扣减库存、订单服务进行订单生成、物流服务更新物流信息等。如果某一个服务执行失败，或者网络故障引起的请求丢失，那么整个系统可能出现数据不一致。这就是分布式一致性问题，追根到底，&lt;font color=red&gt;**分布式一致性的根本原因在于数据的分布式操作，引起的本地事务无法保证数据的原子性引起**&lt;/font&gt;。分布式一致性问题的解决思路有两种，**一种是分布式事务，一种是尽量通过业务流程避免分布式事务**。分布式事务是直接解决问题，而业务规避其实通过解决出问题的地方（解决提问题的人）。其实在真实业务场景中，如果业务规避不是很麻烦，最优雅的解决方案就是业务规避。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">分布式事务设计</h1></header><article><div><span><p>分布式场景下，一个流程（场景）会同时对应多个服务。比如电商下单场景，需要支付服务进行支付、库存服务扣减库存、订单服务进行订单生成、物流服务更新物流信息等。如果某一个服务执行失败，或者网络故障引起的请求丢失，那么整个系统可能出现数据不一致。这就是分布式一致性问题，追根到底，<font color=red><strong>分布式一致性的根本原因在于数据的分布式操作，引起的本地事务无法保证数据的原子性引起</strong></font>。分布式一致性问题的解决思路有两种，<strong>一种是分布式事务，一种是尽量通过业务流程避免分布式事务</strong>。分布式事务是直接解决问题，而业务规避其实通过解决出问题的地方（解决提问题的人）。其实在真实业务场景中，如果业务规避不是很麻烦，最优雅的解决方案就是业务规避。</p>
+<p>数据一致性定义：任何人、任何时间、任何点、任何接入方式、任何服务，数据都是一致的。</p>
+<p>数据不一致性产生的原因：数据分散在多处（多个DB，DB或缓存）。</p>
+<p>典型分布式事务场景</p>
+<pre><code class="hljs css language-java">Connection connection = <span class="hljs-keyword">null</span>;
+<span class="hljs-keyword">try</span> {
+    connection = DriverManager.getConnection(<span class="hljs-string">"url"</span>);
+    Statement stmt = connection.createStatement();
+    stmt.execute(<span class="hljs-string">"update table .."</span>);<span class="hljs-comment">//①</span>
+    Message message = <span class="hljs-keyword">new</span> Message(<span class="hljs-string">""</span>);
+    MQClient.sendMessage(message);<span class="hljs-comment">//②</span>
+    connection.commit();
+} <span class="hljs-keyword">catch</span> (Exception e) {
+    e.printStackTrace();
+    <span class="hljs-keyword">try</span> {
+        connection.rollback();
+    } <span class="hljs-keyword">catch</span> (Exception ee) {
+        ee.printStackTrace();
+    }
+}
+</code></pre>
+<p>1、如果第①步失败了，正常回滚没问题</p>
+<p>2、如果第①步成功了，第②步失败，抛出异常，回滚也没有问题</p>
+<p>3、如果第①步成功了，第②步超时了，就不能确定第②步是否真的的成功，就容易出现事务不一致</p>
+<p>如果步骤②一定可以成功，可以不停的重试步骤②直到成功，可以设置重试次数和超时时间，如果达到最大重试次数，或者超过一定时间，就不再重试，把数据插入到本地事务表（人工介入重发），事务提交。</p>
+<h2><a class="anchor" aria-hidden="true" id="分布式事务分类"></a><a href="#分布式事务分类" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>分布式事务分类</h2>
+<p>分布式事务实现方案从类型上分刚性事务、柔型事务。</p>
+<ul>
+<li>刚性事务：通常无业务改造，强一致性，原生支持回滚/隔离性，低并发，适合短事务
+<ul>
+<li>XA 协议（2PC、JTA、JTS）、3PC</li>
+</ul></li>
+<li>柔性事务：有业务改造，最终一致性，实现补偿接口，实现资源锁定接口，高并发，适合长事务。
+<ul>
+<li>TCC/FMT、Saga（状态机模式、Aop模式）、本地事务消息、消息事务（半消息）</li>
+</ul></li>
+</ul>
+<h3><a class="anchor" aria-hidden="true" id="刚性分布式事务"></a><a href="#刚性分布式事务" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>刚性分布式事务</h3>
+<ul>
+<li><p>1、强一致、XA模型，属于CAP中的CP模型。</p></li>
+<li><p>2、满足传统事务特性，ACID（Atomicity原子性，Consistency一致性，Isolation隔离性，Durability持久性）</p></li>
+</ul>
+<p>隔离级别：读未提交、读已提交（Oracle默认）、可重复读（MySQL默认）、序列化（分布式锁从隔离级别上讲是序列化）</p>
+<ul>
+<li>3、XA模型</li>
+</ul>
+<p>XA是X/Open CAE Sepcification（Distributed Transaction Processing）模型中定义，XA规范由AP，RM，TM组成。XA
+接口函数由数据库厂商提供。</p>
+<p><strong>应用程序（Application Program，AP）</strong>：AP定义事务边界（定时事务开始和结束）并访问事务边界内的资源<br>
+<strong>资源管理器（Resource Manager，RM）</strong>：RM管理计算机共享资源，资源即数据库等<br>
+<strong>事务管理器（Transaction Manager，TM）</strong>：负责管理全局事务，分配事务唯一标识，控制事务的执行进度，并负责事务的提交、回滚、失败恢复等。</p>
+<p><img src="./chapter2-6-distribute-transaction.assets/image19.png" style="zoom:70%;" /></p>
+<p>阿里最近开源Fescar分布式事务，不过还不成熟。</p>
+<h3><a class="anchor" aria-hidden="true" id="2pc"></a><a href="#2pc" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2PC</h3>
+<p>2PC，Two-phaseCommit，二阶段提交，是XA规范标准实现，AP发起事务commit请求，TM发起prepare投票，RM都同意后，TM再发起commit，Commit过程出现宕机，节点服务重启后，根据XA recover再次进行commit补偿。</p>
+<p><img src="./chapter2-6-distribute-transaction.assets/image20.png" style="zoom:70%;" /></p>
+<p>2PC分成2个阶段，第一阶段：请求阶段（commit-request phase，或称表决阶段，voting phase）和第二阶段：提交阶段（commit phase）。</p>
+<p><strong>表决阶段：</strong>事务协调者（TM）串行给每个参与者（RM）发送Prepare消息，每个参与者要么直接返回失败，要么在本地执行SQL、记录事务日志(Undo、Redo)，但不提交，到达一种&quot;万事俱备，只欠东风&quot;的状态。<strong>二阶段提交协议中第一阶段就要执行SQL，记录日志</strong></p>
+<p>可以进一步将准备阶段分为以下三个步骤：<br>
+① TM串行向每个参与者节点询问是否可以执行提交操作，并等待各参与者节点的响应<br>
+② 参与者节点执行询问的所有SQL语句，并将Undo和Redo写入日志<br>
+③ 各参与者节点响应TM发起的询问。如果参与者节点的事务操作实际执行成功，则返回一个&quot;success&quot;消息；如果参与者节点的事务操作实际执行失败，则返回一个&quot;abort&quot;消息</p>
+<p><strong>提交阶段：</strong>如果TM收到了参与者的失败消息或者超时，直接给每个参与者发送回滚（Rollback）消息；否则，发送提交（Commit）消息；参与者根据TM的指令执行提交或者回滚操作，释放所有事务处理过程中使用的锁资源。（注意：必须在最后阶段释放锁资源）<strong>二阶段提交协议中第二阶段执行commit或rollback</strong></p>
+<p>分支一：当TM从所有参与者节点获得的相应消息都为&quot;success&quot;时<br>
+① TM向所有参与者节点发出&quot;正式提交(commit)&quot;的请求<br>
+② 参与者节点正式完成操作，并释放在整个事务期间内占用的资源<br>
+③ 参与者节点向TM发送&quot;完成&quot;消息<br>
+④ TM受到所有参与者节点反馈的&quot;完成&quot;消息后，完成事务</p>
+<p>分支二：如果任一参与者节点在第一阶段返回的响应消息为&quot;abort&quot;，或者TM在第一阶段的询问超时之前无法获取所有参与者节点的响应消息时<br>
+① TM向所有参与者节点发出&quot;回滚操作(rollback)&quot;的请求<br>
+② 参与者节点利用之前写入的Undo信息执行回滚，并释放在整个事务期间内占用的资源<br>
+③ 参与者节点向TM发送&quot;回滚完成&quot;消息<br>
+④ TM受到所有参与者节点反馈的&quot;回滚完成&quot;消息后，取消事务</p>
+<p>不管最后结果如何，第二阶段都会结束当前事务。</p>
+<p><strong>二阶段提交协议存在的问题：</strong></p>
+<p>1、全流程的同步阻塞：不管是第一阶段还是第二阶段，所有参与节点都是事务阻塞型。当参与者占有公共资源时，其他第三方访问公共资源不得不处于阻塞状态。同步阻塞模型、数据库资源锁定时间过长、全局锁（隔离级别是串行化），并发低、不适合长事务场景。</p>
+<p>2、TM单点故障：由于全流程依赖TM的协调，一旦TM发生故障。参与者会一直阻塞下去。尤其在第二阶段，TM发生故障，那么所有的参与者还都处于锁定事务资源的状态中，而无法继续完成事务操作。所有参与者必须等待TM重新上线（TM重新选举）后才能继续工作。</p>
+<p>3、TM脑裂引起数据不一致：在第二阶段中，当TM向参与者发送commit请求之后，发生了局部网络异常或者在发送commit请求过程中TM发生了故障，这会导致只有一部分参与者接受到了commit请求。而在这部分参与者接到commit请求之后就会执行commit操作。但是其他部分未接到commit请求的机器则无法执行事务提交。于是整个分布式系统便出现了数据不一致性的现象。</p>
+<p>4、<strong>TM脑裂引起事务状态不确定</strong>：TM在发出commit消息之后宕机，而接收到这条消息的参与者同时也宕机了。那么即使通过选举协议产生了新的TM，这条事务的状态也是不确定的，没人知道事务是否被已经提交。</p>
+<h3><a class="anchor" aria-hidden="true" id="3pc"></a><a href="#3pc" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3PC</h3>
+<p>2PC是CP的刚性事务，追求数据强一致性。但在TM脑裂情况下可能会造成数据不一致和事务状态不确定问题。无法达到CP的完美状态。因此业界就出现了3PC，用来处理TM脑裂引起的数据不一致和事务状态不确定问题。因为3PC是为彻底解决的2PC的数据不一致和事务状态不确定问题而出现。根据这一个前提：</p>
+<p>① 3PC确保任何分支下的数据一致性<br>
+② 3PC确保任何分支最多3次握手得到最终结果（超时机制）<br>
+③ RM超时后的事务状态必须从TM获取。2PC只有TM的超时机制，3PC新增了参与者（RM）的超时机制，一方面辅助解决了2PC的事务/事务问题，还能降低一定的同步阻塞问题。因为TM、RM双向超时机制，所以维基百科对3PC定义为&quot;非阻塞&quot;协议。</p>
+<p><img src="./chapter2-6-distribute-transaction.assets/image21.png" style="zoom:70%;" /></p>
+<p>3PC分成3个阶段：CanCommit（准备阶段）、PreCommit（对齐阶段）、DoCommit（提交阶段）</p>
+<p>准备阶段：跟2PC的表决阶段很类似，TM向参与者发送commit请求，参与者如果可以提交就返回Yes，否则返回No，询问超时默认参与者为No。唯一差别在于SQL层面：准备阶段只做了SQL处理，并未记录事务日志（Undo和Redo）</p>
+<p>对齐阶段：TM和各个参与者对齐事务状态，TM通知各个参与者事务最终状态，各个参与者如果一直未收到事务对齐通知，会在超时后从TM反查事务状态实现事务状态对齐。在SQL层面：事务状态对齐后，记录事务日志（Undo和Redo）</p>
+<p>提交阶段：该阶段进行真正的事务提交。根据第二阶段得到的事务状态结果，各参与者根据TM的通知命令进行提交/abor或者超时后自动提交/abort。</p>
+<p><strong>总结：</strong></p>
+<p>或许3PC也不完美，网上有好多各版本的3PC的流程图和解释。有的甚至还存在明显的问题，为3PC的理解带来了更大的苦难。身为架构师，就需要去追寻本质，了解3PC的前世今生，抓住3PC的本质，就很容易理解3PC了。</p>
+<p>对于数据一致性，Google Chubby的作者Mike Burrows说过：&quot;there is only one
+consensus protocol, and that's Paxos&quot; -- all other approaches are just
+broken versions of Paxos。&quot;</p>
+<p>译文：世上只有一种一致性算法，那就是Paxos，所有其他一致性算法都是Paxos算法的不完整版。</p>
+<h3><a class="anchor" aria-hidden="true" id="柔性分布式事物"></a><a href="#柔性分布式事物" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>柔性分布式事物</h3>
+<p>最终一致性，CAP，BASE理论，属于AP模型。</p>
+<p>CAP：一致性、可用性、分区容错性不能同时兼备。在分布式环境下P一定需要，CA权衡折中。</p>
+<p>BASE理论：Basically Available基本可用，Soft state软状态，Eventual
+consistency最终一致性。</p>
+<p>架构思考：柔性分布式事务是对XA协议的妥协，它通过降低强一致性要求，从而降低数据库资源的锁定时间，提升可用性。</p>
+<p>典型实现：TCC模型，Saga模型</p>
+<h3><a class="anchor" aria-hidden="true" id="tcc模型"></a><a href="#tcc模型" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TCC模型</h3>
+<p>Try-Confirm-Cancel：TCC模型完全交由业务实现，每个子业务都需要实现Try-Confirm-Cancel三个接口，对业务侵入大，资源锁定交由业务方。也属于两阶段提交模型（Try成功Confirm，Try失败Cancel）。</p>
+<p>Try：尝试执行业务，完成所有业务检查，预留必要的业务资源<br>
+Confirm：真正执行业务，不再做业务检查<br>
+Cancel：释放Try阶段预留业务资源</p>
+<p>示例：A用户向B用户汇款500元</p>
+<p><img src="./chapter2-6-distribute-transaction.assets/image22.png" style="zoom:67%;" /></p>
+<h3><a class="anchor" aria-hidden="true" id="saga模型"></a><a href="#saga模型" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Saga模型</h3>
+<p>起源于1987年Hector Garica-Molina，Kenneth
+Salem发表的论文《Sagas》。Saga模型把一个分布式事务拆分为多个本地事务，每个本地事务都有相应的执行模块和补偿模块（对应TCC中的Confirm和Cancle）。当Saga事务中任意一个本地事务出错时，可以通过调用相关的补偿方法恢复之前的事务，达到事务最终一致性。当每个Saga子事务T1,T2,...,Tn都有对应的补偿定义C1,C2,...,Cn-1那么Sage系统可以保证：</p>
+<p>a.  子事务序列<code>T1,T2,...,Tn</code>得以完成（最佳情况）<br>
+b.  或者序列<code>T1,T2,...,Tj,Cj-1,,C2,C1（0&lt;j&lt;n）</code>得以完成</p>
+<p>Saga的隔离性：业务层控制并发，在应用层加锁，应用层预先冻结资源</p>
+<p>Saga恢复方式：向后恢复，补偿所有已完成的事务，如果任一子事务失败；向前恢复，重试失败的事务，假设每个子事务最终都会成功。</p>
+<h3><a class="anchor" aria-hidden="true" id="刚性分布式事务与柔性分布式事务对比"></a><a href="#刚性分布式事务与柔性分布式事务对比" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>刚性分布式事务与柔性分布式事务对比</h3>
+<table>
+<thead>
+<tr><th></th><th>刚性事务（XA）</th><th>柔性事务</th></tr>
+</thead>
+<tbody>
+<tr><td>业务改造</td><td>无</td><td>有</td></tr>
+<tr><td>回滚</td><td>支持</td><td>实现补偿接口</td></tr>
+<tr><td>一致性</td><td>强一致</td><td>最终一致</td></tr>
+<tr><td>隔离性</td><td>原生支持</td><td>实现资源锁定接口</td></tr>
+<tr><td>并发性能</td><td>严重衰退</td><td>略微衰退</td></tr>
+<tr><td>适合场景</td><td>短事务，并发较低</td><td>长事务，并发高</td></tr>
+</tbody>
+</table>
+<h2><a class="anchor" aria-hidden="true" id="如何解决分布式事务"></a><a href="#如何解决分布式事务" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>如何解决分布式事务</h2>
+<p>首先尽量规避分布式事务，引入分布式事务后系统将变的复杂容易出错。考虑从业务场景消除分布式事务。思路：核心业务先处理，其它业务异步处理。如果实在需要采用分布式事务，则使用柔性分布式事务。</p>
+<p>柔性分布式事务通用处理思路：长事务转变成短事务（本地事务）。</p>
+<ul>
+<li>异步场景：基于MQ消息驱动分布式事务</li>
+</ul>
+<p><img src="./chapter2-6-distribute-transaction.assets/image23.png" style="zoom:67%;" /></p>
+<ul>
+<li>同步场景：基于异步补偿方式（Saga模型）</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="异步场景分布式事务设计"></a><a href="#异步场景分布式事务设计" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>异步场景分布式事务设计</h2>
+<h3><a class="anchor" aria-hidden="true" id="方案一：基于rocketmq事务消息，业务方提供本地操作是否成功的回查功能"></a><a href="#方案一：基于rocketmq事务消息，业务方提供本地操作是否成功的回查功能" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>方案一：基于RocketMQ事务消息，业务方提供本地操作是否成功的回查功能</h3>
+<p><img src="./chapter2-6-distribute-transaction.assets/image24.png" style="zoom:70%;" /></p>
+<p>上图说明了事务消息的大致方案，其中分为两个流程：正常事务消息的发送及提交、事务消息的补偿流程。</p>
+<p>1、事务消息发送及提交：</p>
+<p>①发送消息（half消息）<br>
+②服务端响应消息写入结果<br>
+③根据发送结果执行本地事务（如果写入失败，此时half消息对业务不可见）<br>
+④根据本地事务状态执行Commit或者Rollback（Commit操作生成消息索引，消息对消费者可见）</p>
+<p>2、补偿流程：</p>
+<p>⑤对没有Commit/Rollback的事务消息（pending状态的消息），从MQ服务端发起一次&quot;回查&quot;<br>
+⑥Producer（同ProducerGroup）收到回查消息，检查回查消息对应的本地事务的状态<br>
+⑦根据本地事务状态，重新Commit或者Rollback</p>
+<p>其中，补偿阶段用于解决消息Commit或者Rollback发生超时或者失败的情况（第④阶段异常）</p>
+<p>方案的优点：通用；缺点：业务方需要提供回查接口，对业务侵入大，发送消息非幂等，消费端需要处理幂等。</p>
+<h3><a class="anchor" aria-hidden="true" id="方案二：本地事务消息表，本地操作和发送消息（记录本地消息表）通过本地事务强一致"></a><a href="#方案二：本地事务消息表，本地操作和发送消息（记录本地消息表）通过本地事务强一致" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>方案二：本地事务消息表，本地操作和发送消息（记录本地消息表）通过本地事务强一致</h3>
+<p><img src="./chapter2-6-distribute-transaction.assets/image25.png" style="zoom:70%;" /></p>
+<p>假如第一步成功，第二部从MQ中消费处理业务一直不能成功，需要记录错误日志、报警然后人工介入。</p>
+<p>优点：业务侵入小，不需要实现回查接口，且不依赖于MQ的事务消息，缺点：仍然需要考虑消息去重。</p>
+<p>需要注意：</p>
+<p>1、部署多个进程获取数据发送消息时，需要使用分布式锁，避免大量消息的重复发送<br>
+2、部署多个消费进程时，因为消息可能会重复需要考虑使用分布式锁和业务幂等问题。</p>
+<h2><a class="anchor" aria-hidden="true" id="同步场景分布式事务设计"></a><a href="#同步场景分布式事务设计" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>同步场景分布式事务设计</h2>
+<p><img src="./chapter2-6-distribute-transaction.assets/image26.png" style="zoom:67%;" /></p>
+<p>解决方案：基于异步补偿的分布式事务，为什么是异步？失败后直接返回用户失败，然后异步执行补偿。</p>
+<p>架构设计的三大关键点：基于补偿机制，记录请求调用链条，提供幂等补偿接口。</p>
+<p><img src="./chapter2-6-distribute-transaction.assets/image27.png" style="zoom:67%;" /></p>
+<p>业务逻辑层Proxy设计（基于AOP实现）</p>
+<p>1、逻辑层调用方法上加上事务注解@Around(&quot;execution(* *(..)) &amp;&amp;
+@annotation(TX)&quot;)，环绕注解器<br>
+2、Proxy在真正业务逻辑被调用前，生成一个全局唯一TXID标示事务组，TXID保存在ThreadLocal变量中</p>
+<blockquote>
+<p>逻辑层方法开始调用前，向事务组表中记录：事务组ID，状态（初始状态），开始时间，结束时间<br>
+逻辑层方法调用接受后，通过TXID更新事务组状态（成功或失败）、结束时间</p>
+</blockquote>
+<p>3、业务逻辑层调用数据访问层之前，通过RPCProxy代理记录当前调用请求参数</p>
+<blockquote>
+<p>通过RPCProxy代理实现，拦截请求参数，自增生成请求序列号，请求参数通过序列化后保存。输出存储在事务调用表：事务组ID，事务序号，调用方法，参数类型，参数（序列化后的二进制）</p>
+</blockquote>
+<p>4、如果业务正常，调用完成后，当前方法的调用记录存档或删除（记录事务组状态成功）</p>
+<p>5、如果业务异常，记录事务组状态为失败，事务补偿服务查询调用链反向补偿</p>
+<p>数据访问层设计</p>
+<p>1、提供的是原子接口，并提供该原子接口的补偿接口，补偿接口需要保证幂等<br>
+2、在原子接口上通过注解的形式标示出它的补偿接口@Compensable(cancelMethod=&quot;cancelRecord&quot;)</p>
+<p>分布式事务补偿服务</p>
+<p>1、<strong>事务组表</strong>，记录事务组状态（txid, state, stimestamp,etimestamp）<br>
+2、<strong>事务调用组表</strong>，记录事务组内的每一次调用以及相关参数（txid, actionid, callmethod, pramatype, params）。params中记录的是序列化后的对象，可采用blob形式存储<br>
+3、补偿策略：分布式事务补偿服务tshchedule定时扫描出异常事务，执行补偿<br>
+4、补偿服务失败：记录错误日志，报警，人工介入</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#分布式事务分类">分布式事务分类</a><ul class="toc-headings"><li><a href="#刚性分布式事务">刚性分布式事务</a></li><li><a href="#2pc">2PC</a></li><li><a href="#3pc">3PC</a></li><li><a href="#柔性分布式事物">柔性分布式事物</a></li><li><a href="#tcc模型">TCC模型</a></li><li><a href="#saga模型">Saga模型</a></li><li><a href="#刚性分布式事务与柔性分布式事务对比">刚性分布式事务与柔性分布式事务对比</a></li></ul></li><li><a href="#如何解决分布式事务">如何解决分布式事务</a></li><li><a href="#异步场景分布式事务设计">异步场景分布式事务设计</a><ul class="toc-headings"><li><a href="#方案一：基于rocketmq事务消息，业务方提供本地操作是否成功的回查功能">方案一：基于RocketMQ事务消息，业务方提供本地操作是否成功的回查功能</a></li><li><a href="#方案二：本地事务消息表，本地操作和发送消息（记录本地消息表）通过本地事务强一致">方案二：本地事务消息表，本地操作和发送消息（记录本地消息表）通过本地事务强一致</a></li></ul></li><li><a href="#同步场景分布式事务设计">同步场景分布式事务设计</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

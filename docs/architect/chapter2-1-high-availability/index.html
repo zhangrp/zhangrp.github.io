@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>高可用设计手段 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 什么是高可用"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="高可用设计手段 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 什么是高可用"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">高可用设计手段</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="什么是高可用"></a><a href="#什么是高可用" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>什么是高可用</h2>
+<p>高可用HA（High Availability）是分布式系统架构设计中必须考虑的因素之一。它通常是指，通过设计减少系统不能提供服务的时间。</p>
+<p>假设系统一直能够提供服务，我们说系统的可用性是100%。如果系统每运行100个时间单位，会有1个时间单位无法提供服务，我们说系统的可用性是99%。<font color=red>很多公司的高可用目标是4个9，也就是99.99%，这就意味着系统的年停机时间为53分钟。</font></p>
+<h2><a class="anchor" aria-hidden="true" id="为什么需要高可用"></a><a href="#为什么需要高可用" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>为什么需要高可用</h2>
+<p>软硬件均不可靠。</p>
+<ul>
+<li>硬件：硬件有生命周期（3-5年），硬件故障，网络划分等。</li>
+<li>软件：bugs（统计发现10-15行就会发现一个bug），<font color=red>软件存在性能极限（存在突发请求，比如微博服务突发大流量）</font>，软件间相互影响（比如，进程A的内存泄露可能造成同一主机进程B异常）。</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="高可用评估方式"></a><a href="#高可用评估方式" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>高可用评估方式</h2>
+<p>传统高可用的评估方式：一段时间（比如一年）的停机时间占比（停机时间/总时间）。2个9，一年停机的时间不能超过88小时，3个9一年停机时间不能超过9小时，4个9是53分钟。能达到4个9就算比较好的了。</p>
+<p>科学的高可用评估方式：一段时间（比如一年）的停机影响请求占比（停机时间影响请求量/总的请求量）。因为存在闲时和忙时。甚至还可以按照请求的影响程度评估，比如同样是影响500个请求，但请求涉及的金额不同。</p>
+<h2><a class="anchor" aria-hidden="true" id="微服务高可用手段"></a><a href="#微服务高可用手段" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>微服务高可用手段</h2>
+<p>1、服务冗余：同一服务冗余多份，这样当一个服务异常后可以转移到另外一个服务，是服务高可用的必须手段</p>
+<p>2、无状态化：实现服务冗余必须要服务无状态化，这样才能保证请求到任何一个服务都是一样的</p>
+<p>3、负载均衡：服务冗余后，上游通过一定的分发策略调用下游的多个服务，这就是负载均衡</p>
+<p>4、幂等设计：因为网络调用存在不确定性，需提供接口幂等，请求超时后可以重试</p>
+<p>5、超时机制：通过网络调用会存在三种状态，成功、失败、超时</p>
+<p>6、异步化设计</p>
+<p>7、服务限流降级熔断：当达到服务最大容量时，进行服务的限流。当下游服务不可用时，进行服务的降级熔断，保证本服务不因为单个接口的问题，造成整个服务的雪崩</p>
+<p>8、数据复制/缓存/Sharding：通过数据复制保证数据库的高可用。数据的冗余多份，一般有两种方式：基于一致性协议的CP模型和基于主从复制的AP模型。</p>
+<p>9、架构拆分、服务治理</p>
+<h2><a class="anchor" aria-hidden="true" id="服务实时监控"></a><a href="#服务实时监控" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务实时监控</h2>
+<p>高可用依赖于服务的实时监控。指标：请求平均耗时、请求异常条数。需要监控平台收集并展示这些指标。</p>
+<h2><a class="anchor" aria-hidden="true" id="服务分级"></a><a href="#服务分级" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务分级</h2>
+<p>对服务进行分级，哪些是重要服务，哪些是次要服务。有什么用途？</p>
+<ul>
+<li>1、评估服务异常时的影响层面</li>
+<li>2、当压力大时哪些服务应该被降级</li>
+</ul>
+<p>服务分级后，当服务出现问题后可用做一些自动化的手段。</p>
+<h2><a class="anchor" aria-hidden="true" id="高可用案例-如何优雅停止线上服务"></a><a href="#高可用案例-如何优雅停止线上服务" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>高可用案例-如何优雅停止线上服务</h2>
+<p>网关层已具备热切换能力：热开关切换</p>
+<p>网关层不具备热切换能力：通过iptables设置只出不进，等过了前端超时时间后，就可以做了。在设置iptables一定要谨慎，先添加允许策略，再添加屏蔽策略，避免出现把自己也限制的情况，造成无法登陆。</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#什么是高可用">什么是高可用</a></li><li><a href="#为什么需要高可用">为什么需要高可用</a></li><li><a href="#高可用评估方式">高可用评估方式</a></li><li><a href="#微服务高可用手段">微服务高可用手段</a></li><li><a href="#服务实时监控">服务实时监控</a></li><li><a href="#服务分级">服务分级</a></li><li><a href="#高可用案例-如何优雅停止线上服务">高可用案例-如何优雅停止线上服务</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

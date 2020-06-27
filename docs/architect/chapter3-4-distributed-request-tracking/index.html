@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>分布式请求跟踪系统设计与实践 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="微服务现状："/><meta name="docsearch:language" content="en"/><meta property="og:title" content="分布式请求跟踪系统设计与实践 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="微服务现状："/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">分布式请求跟踪系统设计与实践</h1></header><article><div><span><p>微服务现状：</p>
+<p>1、某个核心服务挂了，导致上游出现大量报警，如何快速确定哪个服务出了问题？<br>
+2、某个核心服务挂了，导致大量报错，如何快速确定哪里出了问题？<br>
+3、应用程序有性能瓶颈，如何确定瓶颈在哪里？<br>
+4、App端请求响应延迟高，怎样确定是由哪些服务导致的？<br>
+5、线上发布了服务，怎么知道它一切正常，比如发布8台服务器，如何直观了解是否有请求进来，访问一切正常？</p>
+<p>分布式请求跟踪系统。</p>
+<h2><a class="anchor" aria-hidden="true" id="开源分布式请求跟踪系统"></a><a href="#开源分布式请求跟踪系统" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>开源分布式请求跟踪系统</h2>
+<p>2014年4月Google论文《Depper, a Large-Scale Distributed Systems Tracing
+Infrastructure》</p>
+<p>1、阿里鹰眼（EagleEye），闭源<br>
+2、大众点评CAT，开源<br>
+3、京东Hydra，开源<br>
+4、Pinpoint，APM（Application Performance Management），开源（韩国NAVER），数据存储在HBase<br>
+5、Apache SkyWalking，由国内开源爱好者吴晟（原OneAPM工程师，目前在华为）开源并提交到Apache孵化器的产品，存储支持ES，MySQL，TiDB</p>
+<p><font color=red>如果数据量大推荐用Pinpoint，但需要维护HBase集群，如果数据量小可采用SkyWalking。</font></p>
+<h2><a class="anchor" aria-hidden="true" id="设计需求"></a><a href="#设计需求" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>设计需求</h2>
+<p><font color=red>1、基于日志的分布式请求跟踪系统</font></p>
+<blockquote>
+<p>业务侵入小；将每个系统分散的日志聚合在一起，并进行海量日志分析，从而生成有价值的数据</p>
+</blockquote>
+<p>2、核心---调用链</p>
+<blockquote>
+<p>每次请求都生成一个全局唯一的ID（TraceId），通过它将不同系统的日志串在一起，重组成条用链；<br>
+开发人员通过分布式请求系统跟踪排查问题；<br>
+也可以对多个请求进行统计和分析。</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="设计目标"></a><a href="#设计目标" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>设计目标</h2>
+<p>1、低侵入性：作为非业务组件，尽可能少侵入或者无侵入其它业务系统，对于使用方透明，减少业务开发人员的负担</p>
+<p>2、灵活的应用策略：使用方可以根据需求，自定义收集数据的范围和粒度（哪些需要收集及采样率）</p>
+<p>3、时效性：从数据产生到收集，到数据的分析和处理，再到最终的页面展示，尽可能快</p>
+<p>4、决策支持：分析数据可以在决策支持层面发挥作用</p>
+<p>5、可视化：使用场景友好的用户视角，丰富的展示方式，可读性高</p>
+<h2><a class="anchor" aria-hidden="true" id="使用场景"></a><a href="#使用场景" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>使用场景</h2>
+<p>一、调用链跟踪</p>
+<p>一次请求调用过程的展示，以图形化的方式梳理出各个微服务集群之间的调用关系，并记录整个调用过程的耗时情况（整体耗时及各步骤耗时），协助开发人员分析整个系统的瓶颈点与热点，从而优化系统。</p>
+<p>二、调用链路分析</p>
+<p>对多个调用链路进行分析，整理出集群之间的调用关系，计算出整个调用链路的关键节点、直接依赖、间接依赖、依赖强度等。调用拓扑。</p>
+<p>三、调用来源分析</p>
+<p>针对某一特定集群，整理出其他集群对其的调用情况，防止错误调用的情况发生。</p>
+<p>知道拓扑后对业务的回归测试非常有帮助，可以实现精准化测试。</p>
+<p>四、调用量分析</p>
+<p>实时统计各个集群的调用次数、QPS、平均耗时、最大耗时等信息，开发人员可根据相关信息进行容量规划</p>
+<p>五、监控请求调用量</p>
+<p>开发人员通过自定义正则表达式，对匹配该正则URL的请求进行实时监控，包括调用次数、QPS、平均耗时、最大耗时、最小耗时等</p>
+<h2><a class="anchor" aria-hidden="true" id="整体架构"></a><a href="#整体架构" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>整体架构</h2>
+<p>1、埋点和生成日志：Java探针（-javaagent技术）通过本地socket将收集到的数据实时发送给本机上的日志收集节点agent，本地的日志收集agent将本机上多个Java探针的日志数据发送到日志收集服务集群</p>
+<p>2、收集和存储日志：日志收集服务器集群对数据进行格式化处理后，分成三个工作流进行后续处理</p>
+<p>3、汇总和重组调用链</p>
+<p>4、分析和统计调用链</p>
+<p>a）原始数据直接存入到Elasticsearch集群中，用于页面实时调用链路的展示<br>
+b）原始数据存入本地日志中，通过Flume上传到HDFS集群中，利用Hadoop集群定时的进行离线分析，分析后的结果存入到Elasticsearch集群中，用于页面数据分析的展示<br>
+c）原始数据发送到Spark/Flink在线分析集群，进行QPS、平均耗时等实时数据统计、分别将统计结果保存到Redis集群与Elasticsearch集群中，用于页面实时数据统计的展示</p>
+<h3><a class="anchor" aria-hidden="true" id="埋点和日志生成"></a><a href="#埋点和日志生成" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>埋点和日志生成</h3>
+<p><img src="./chapter3-4-distributed-request-tracking.assets/image45.png" style="zoom:67%;" /></p>
+<h2><a class="anchor" aria-hidden="true" id="pinpoint"></a><a href="#pinpoint" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Pinpoint</h2>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#开源分布式请求跟踪系统">开源分布式请求跟踪系统</a></li><li><a href="#设计需求">设计需求</a></li><li><a href="#设计目标">设计目标</a></li><li><a href="#使用场景">使用场景</a></li><li><a href="#整体架构">整体架构</a><ul class="toc-headings"><li><a href="#埋点和日志生成">埋点和日志生成</a></li></ul></li><li><a href="#pinpoint">Pinpoint</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

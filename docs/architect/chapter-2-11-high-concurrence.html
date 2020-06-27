@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>并发设计手段 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="系统性能：吞吐量Throughput，响应延迟Response Delay"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="并发设计手段 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="系统性能：吞吐量Throughput，响应延迟Response Delay"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">并发设计手段</h1></header><article><div><span><p>系统性能：吞吐量Throughput，响应延迟Response Delay</p>
+<p>性能优化目标：缩短响应时间，提高吞吐量，让系统处理合理状态</p>
+<h2><a class="anchor" aria-hidden="true" id="性能优化手段"></a><a href="#性能优化手段" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>性能优化手段</h2>
+<p>找到系统瓶颈：分析系统业务流程，找到关键路径并分解优化。调用了多少次RPC接口，载入多少数据，使用什么算法，非核心流程能否异步化，没有数据依赖的逻辑能否并行执行。</p>
+<p>空间换时间：系统时间是瓶颈，例如：缓存复用计算结果，降低时间开销，因为CPU时间较内存容量更加昂贵。</p>
+<p>时间换空间：数据大小是瓶颈，例如：网络传输是瓶颈，使用系统时间换取传输的空间，使用HTTP的gzip压缩传输。又如：App请求分类接口，使用版本号判断哪些数据更新，只下载更新的数据。</p>
+<h2><a class="anchor" aria-hidden="true" id="性能优化层次"></a><a href="#性能优化层次" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>性能优化层次</h2>
+<p>从整体到细节，从全局视角到局部视角。</p>
+<p>1、架构设计层次：如何拆分系统，如何使各部分系统整体负载更加均衡，充分发挥硬件设施性能优势，较少系统内部开销<br>
+2、算法逻辑层次：关注算法选择是否高效，算法逻辑优化，空间时间优化，任务并行处理，使用无锁数据结构等。总体上是空间换时间还是时间换空间<br>
+3、代码优化层次：关注代码细节优化，代码实现是否合理，是否创建了过多的对象，循环遍历是否高效，cache使用是否合理，是否重用计算结果</p>
+<h3><a class="anchor" aria-hidden="true" id="代码层次优化"></a><a href="#代码层次优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>代码层次优化</h3>
+<p>1、循环遍历是否合理高效，不要在循环里调用RPC接口、查询分布式缓存、执行SQL等。建议先调批量接口组装好数据，再循环处理；<br>
+2、代码逻辑避免生成过多对象和无效对象；<br>
+3、ArrayList，HashMap初始容量设置是否合理，其扩容代价较高；<br>
+4、数据对象是否合理重用，比如通过RPC查到的数据能复用则必须复用；<br>
+5、根据数据访问特性选择合适数据结构，比如读多写少，考虑CopyOnWriteArrayList（写时复制思想）；<br>
+6、拼接字符串的时候是使用String相加还是使用StringBuilder进行append；<br>
+7、是否正确初始化数据，有些全局共享数据，使用饿汉模式，在用户访问之前先初始化好；<br>
+8、局部性原理，二位数组遍历是a[i][j]还是a[j][i]；</p>
+<p>缓存使用</p>
+<p>9、业务系统使用缓存降低响应时间提高性能，必须提高缓存命中率，命中率低反而会拖慢请求；<br>
+10、很聚焦的高频访问，时效性要求不高很适合缓存提升性能。如banner，广告位，时效性要求不是很高，更新了可以不用实时体现，很适合使用缓存提升性能；<br>
+11、如果对数据时效性要求很高，比如严格的时效性，需要慎重考虑更新缓存带来的一致性问题；<br>
+12、时效性和缓存的冲突，比如商品服务对商品进行了缓存，由于更新缓存和更新商品不是同一个事务，则对数据时效性要求高的如交易，就只能直接从数据库查询商品信息；</p>
+<h3><a class="anchor" aria-hidden="true" id="算法逻辑层次优化"></a><a href="#算法逻辑层次优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>算法逻辑层次优化</h3>
+<p>1、用更高效的算法那替换现有的算法，而不改变其接口<br>
+2、增量式算法，复用之前的计算结果，比如一个报表服务，要从全量数据中生成报表数据量很大，但是每次增量的数据较少，则可以考虑只计算增量数据和之前计算结果合并，这样处理的数据量就小很多；<br>
+3、并发和锁优化，都多写少的业务场景下，基于CAS的Lock Free比mutex性能更好；写多读少的场景使用mutex好一些；<br>
+4、当系统时间是瓶颈，采用空间换时间逻辑算法，分配更多空间节省系统时间；<br>
+5、当系统空间时瓶颈，采用时间换空间策略算法；<br>
+6、并行执行，比如一段逻辑调用多个RPC接口，而这些接口之间并没有数据依赖，则可以考虑并行调用，降低响应时间；<br>
+7、异步执行，分析业务流程中的主要流程，把次要流程拆分出来异步执行，更进一步可以拆分到单独的模块去执行，比如使用消息队列，彻底和核心流程解耦，提高核心流程的稳定性以经降低响应时间</p>
+<h3><a class="anchor" aria-hidden="true" id="架构设计层次优化"></a><a href="#架构设计层次优化" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>架构设计层次优化</h3>
+<p>1、系统微服务化<br>
+2、无状态设计，动态水平弹性扩展<br>
+3、调用链路梳理，热点数据尽量靠近用户，CDN<br>
+4、分布式cache，多级多类型缓存<br>
+5、提前拒绝，保证柔性可用<br>
+6、容量规划<br>
+7、分布分表，读写分离，数据分片</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#性能优化手段">性能优化手段</a></li><li><a href="#性能优化层次">性能优化层次</a><ul class="toc-headings"><li><a href="#代码层次优化">代码层次优化</a></li><li><a href="#算法逻辑层次优化">算法逻辑层次优化</a></li><li><a href="#架构设计层次优化">架构设计层次优化</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

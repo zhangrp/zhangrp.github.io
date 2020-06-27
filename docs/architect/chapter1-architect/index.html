@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>互联网总体架构设计 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="&lt;img src=&quot;./chapter1-architect.assets/image1.png&quot; alt=&quot;image1&quot; style=&quot;zoom:50%;&quot; /&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="互联网总体架构设计 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="&lt;img src=&quot;./chapter1-architect.assets/image1.png&quot; alt=&quot;image1&quot; style=&quot;zoom:50%;&quot; /&gt;"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">互联网总体架构设计</h1></header><article><div><span><p><img src="./chapter1-architect.assets/image1.png" alt="image1" style="zoom:50%;" /></p>
+<h2><a class="anchor" aria-hidden="true" id="互联网架构演进之路"></a><a href="#互联网架构演进之路" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>互联网架构演进之路</h2>
+<h3><a class="anchor" aria-hidden="true" id="架构是什么"></a><a href="#架构是什么" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>架构是什么</h3>
+<p>对场景的抽象后得出支撑骨架。场景不仅指业务场景，也包含人员技术研发能力、业务复杂度、数据规模大小、时间成本、运维能力等。架构为场景而生，被场景所弃。架构没有最好，只有最合适。最合适的架构都是场景折中的结果。</p>
+<p><img src="./chapter1-architect.assets/image2.png" alt="image2"></p>
+<p>单体架构按请求功能水平拆分就是水平分层架构，按业务垂直拆分就是面向服务架构SOA。即水平拆分又垂直拆分就是微服务架构，剥离微服务架构中的通讯组件为单独进程就是服务网格架构。Serviceless即所谓的FAAS，方法即服务。</p>
+<h2><a class="anchor" aria-hidden="true" id="单体架构设计与实践"></a><a href="#单体架构设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>单体架构设计与实践</h2>
+<blockquote>
+<p>Monoliths、ALL IN
+ONE，所有的逻辑都在一个服务端完成，部署、测试、发布、扩展简单。</p>
+<p>如何扩展？通过nginx扩展。（单体架构扩展还是有问题的，比如session的问题，可通过ip_hash可以解决，radware也有类似的功能）</p>
+<p>应用场景：</p>
+<p>业务场景简单、功能不复杂、研发人员少</p>
+<p>创业公司初期</p>
+<p>性能要求极其苛刻的场景，如﻿量化交易，﻿高频交易</p>
+<p>痛点：耦合太多（代码提交、上线、维护），通过拆分破局</p>
+<p>数据库：垂直分库，水平分表</p>
+<p>架构拆分：架构﻿按业务纬度垂直拆分，﻿拆成多个服务（订单、用户等），﻿面向服务架构；架构﻿按功能纬度水平拆分，﻿拆成多层（网关层、业务逻辑层、数据访问层），分层架构。</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="面向服务架构设计与实践"></a><a href="#面向服务架构设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>面向服务架构设计与实践</h2>
+<p>单体架构按业务垂直拆分，比如应用拆成用户、商品、交易三个模块，部署成3个进程。服务之间通过企业服务总线（ESB）通信。</p>
+<p><img src="./chapter1-architect.assets/image3.png" alt=""></p>
+<p>缺点：拆分后每个服务仍是单体。</p>
+<h2><a class="anchor" aria-hidden="true" id="水平分层架构设计与实践"></a><a href="#水平分层架构设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>水平分层架构设计与实践</h2>
+<blockquote>
+<p>单体架构按请求功能水平拆分，比如拆分成网关层、业务逻辑层、数据访问层三个进程。</p>
+</blockquote>
+<p><img src="./chapter1-architect.assets/image4.png" alt=""></p>
+<h3><a class="anchor" aria-hidden="true" id="分层设计原则"></a><a href="#分层设计原则" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>分层设计原则</h3>
+<p>展示服务与网关服务分离、网关服务与逻辑服务分离、逻辑服务与数据服务分离。</p>
+<p>网关服务一般和业务逻辑无关，所以独立出来。</p>
+<p>为什么要单独拆开数据服务层呢？数据服务层直接和数据库打交道，对研发人员的技术能力要求较高。这一层由技术好的研发人员开发。一般数据服务层不出问题，就不会出大问题。事务如何控制呢？</p>
+<h3><a class="anchor" aria-hidden="true" id="网关层"></a><a href="#网关层" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>网关层</h3>
+<blockquote>
+<p>网关层可以不同的业务逻辑层用一个，但部署多套。主要功能：</p>
+</blockquote>
+<p>请求鉴权：登录鉴权</p>
+<p>数据完整性检查：校验数据的完整性，主要一些通用字段的检查，而非业务字段的检查</p>
+<p>协议转换：HTTP转TCP，json转map</p>
+<p>路由转发：根据CMD（请求命名号，类似于我们的serverId）转发到不同的业务逻辑层</p>
+<p>服务治理：限流、降级、熔断</p>
+<p>网关的选型</p>
+<p>对比纬度   Zuul      Spring Cloud Gateway   Nginx       Kong         Tky      Node.js       自研</p>
+<hr>
+<p>编程语言   Java      Java                   C           C + Lua      Go       JS            Java
+成熟度     高        低                     高          高           高       高            高
+使用成本   低        较低                   高          较低         较低     较低          低
+IO模型     BIO       Netty                  epoll       epoll        AIO      AIO           Netty
+技术生态   Netflix   Spring Cloud           Nginx社区   OpenRestry   Go社区   Node.js社区   公示内部
+适用场景   网关      网关                   负载均衡    网关         网关     网关          网关</p>
+<p>推荐Zuul。</p>
+<h3><a class="anchor" aria-hidden="true" id="业务逻辑层"></a><a href="#业务逻辑层" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>业务逻辑层</h3>
+<p>实现具体的业务逻辑，业务逻辑判断，业务逻辑编排。</p>
+<h3><a class="anchor" aria-hidden="true" id="数据访问层"></a><a href="#数据访问层" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据访问层</h3>
+<p>数据访问层功能</p>
+<p>CRUD：业务增删改查</p>
+<p>ORM：Object-Relationl
+Mapping，在关系型数据库和对象之间作一个映射，操作对象而非复杂的sql，推荐MyBatis
+3</p>
+<p>Sharding（分库分表）：推荐Sharding-JDBC（Sphere）</p>
+<p>屏蔽底层存储差异：不同数据库、缓存等</p>
+<h3><a class="anchor" aria-hidden="true" id="同步架构还是异步架构？"></a><a href="#同步架构还是异步架构？" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>同步架构还是异步架构？</h3>
+<p>异步架构</p>
+<p>目的：提升吞吐量</p>
+<p>手段：写消息队列。为什么写MQ比写DB快，MQ是顺序写，DB是随机写，而且如果MQ采用异步刷盘方式写内存。MQ可放在网关和业务逻辑层之间。</p>
+<p>使用场景：写请求而非读请求，写请求也需要区分不同的业务类型</p>
+<p>分几层？</p>
+<p>太多，请求路径变长、平均响应延迟变高、定位问题变的复杂、运维成本增加；太少，单体架构；比较适中，四层架构：网关层、业务逻辑层、数据访问层、数据存储层；五层架构：网关层、异步消息队列层、业务逻辑层、数据访问层、数据存储层。</p>
+<p>分层架构缺点：每层粒度过粗，再按业务垂直拆就是微服务架构，如何按业务拆，DDD领域驱动。</p>
+<h2><a class="anchor" aria-hidden="true" id="微服务架构设计与实践"></a><a href="#微服务架构设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>微服务架构设计与实践</h2>
+<p>In short, the microservice architectural style is an approach to
+developing a single application as a suite of small services, each
+running in its own process and communicating with lightweight
+mechanisms, often an HTTP resource API. These services are built around
+business capabilities and independently deployable by fully automated
+deployment machinery. There is a bare minimum of centralized management
+of these services, which may be written in different programming
+languages and use different data storage technologies.</p>
+<p><img src="./chapter1-architect.assets/image5.png" style="zoom: 67%;" /></p>
+<p>2个纬度拆分，按业务垂直拆分，按功能水平拆分。</p>
+<p>目的：项目快速迭代、项目持续交付，降本增效</p>
+<p>使用场景：</p>
+<p>需求层面：需求变化不大的，不建议用微服务架构</p>
+<p>性能层面：使用微服务后吞吐量变高，但RT也会变高（请求链路变长），对性能要求非常高的不建议采用微服务架构</p>
+<p>数据一致层面：最终一致性</p>
+<p>普适的完整微服务架构：</p>
+<p><img src="./chapter1-architect.assets/image6.png" alt=""></p>
+<p>微服务的问题：</p>
+<p>通信组件需要集成到业务程序中，尽管是以jar包的方式。</p>
+<p><img src="./chapter1-architect.assets/image7.png" alt=""></p>
+<p>业务需要关注服务间通信：业务迭代速度慢</p>
+<p>基础设施组件升级困难：影响基础设施团队的交付能力和交付速度</p>
+<p>多编程语言之间通信问题：业务每种语言一套基础设施，成本大</p>
+<p>微服务架构的演进</p>
+<p>业务团队专注于业务逻辑本身、服务通信交给基础设施团队、物理解耦业务研发团队和基础设施团队、一套基础设施支持多语言开发、基础设施能力从应用程序中下推、真正做到快速迭代，持续交付。</p>
+<h2><a class="anchor" aria-hidden="true" id="服务网格架构设计与实践"></a><a href="#服务网格架构设计与实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务网格架构设计与实践</h2>
+<p>服务网格是什么？</p>
+<p>服务网格是一个基础设施层，用于处理服务间的通信；云原生应用有着复杂的服务拓扑，服务网格负责在这些拓扑中实现请求的可靠传递；在实践中，服务网格通常实现为一组轻量级<strong>网络代理</strong>，与应用程序部署在一起，而对应用程序透明。</p>
+<p><img src="./chapter1-architect.assets/image8.png"  /></p>
+<p>开源产品：Istio，来自Google、IBM、Lyft公司，采用Go/C++语言，代理部署为Sidecar</p>
+<p>Service Mesh优点：</p>
+<p>1、Service Mesh独立进程、独立升级</p>
+<p>2、业务团队专注于业务逻辑本身</p>
+<p>3、一套基础设施支持多语言开发</p>
+<p>4、业务团队和基础设施团队物理解耦</p>
+<p>5、服务治理和服务本身的物理剥离</p>
+<p>普适的完整服务网格架构：</p>
+<p><img src="./chapter1-architect.assets/image9.png" alt=""></p>
+<h2><a class="anchor" aria-hidden="true" id="案例实践"></a><a href="#案例实践" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>案例实践</h2>
+<p><img src="./chapter1-architect.assets/image10.png" alt=""></p>
+<p>分为网关层、业务逻辑层、数据访问层、DB/Cache</p>
+<p>存在问题：业务逻辑层，粒度粗，所有业务逻辑耦合在一个物理内部进程内，迭代效率低</p>
+<p><img src="./chapter1-architect.assets/image11.png" alt=""></p>
+<p>对业务逻辑层进行垂直拆分，</p>
+<p>存在问题：公共业务逻辑层，组件化，引用jar包</p>
+<p>服务化，下层为独立服务，提供兼容接口</p>
+<p><img src="./chapter1-architect.assets/image12.png" alt=""></p>
+<p>抽象公共业务逻辑。</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#互联网架构演进之路">互联网架构演进之路</a><ul class="toc-headings"><li><a href="#架构是什么">架构是什么</a></li></ul></li><li><a href="#单体架构设计与实践">单体架构设计与实践</a></li><li><a href="#面向服务架构设计与实践">面向服务架构设计与实践</a></li><li><a href="#水平分层架构设计与实践">水平分层架构设计与实践</a><ul class="toc-headings"><li><a href="#分层设计原则">分层设计原则</a></li><li><a href="#网关层">网关层</a></li><li><a href="#业务逻辑层">业务逻辑层</a></li><li><a href="#数据访问层">数据访问层</a></li><li><a href="#同步架构还是异步架构？">同步架构还是异步架构？</a></li></ul></li><li><a href="#微服务架构设计与实践">微服务架构设计与实践</a></li><li><a href="#服务网格架构设计与实践">服务网格架构设计与实践</a></li><li><a href="#案例实践">案例实践</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

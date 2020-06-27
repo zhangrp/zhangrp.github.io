@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>服务降级设计 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="当服务整体负载超出预设的上线阈值或即将到来的流量预计将会超过预设阈值时，&lt;font color=red&gt;**为了保证重要或基本的服务能正常运行**，**拒绝部分请求**&lt;/font&gt;或者将一些不重要或不紧急的服务或任务运行服务延迟使用或暂停使用。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="服务降级设计 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="当服务整体负载超出预设的上线阈值或即将到来的流量预计将会超过预设阈值时，&lt;font color=red&gt;**为了保证重要或基本的服务能正常运行**，**拒绝部分请求**&lt;/font&gt;或者将一些不重要或不紧急的服务或任务运行服务延迟使用或暂停使用。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">服务降级设计</h1></header><article><div><span><p>当服务整体负载超出预设的上线阈值或即将到来的流量预计将会超过预设阈值时，<font color=red><strong>为了保证重要或基本的服务能正常运行</strong>，<strong>拒绝部分请求</strong></font>或者将一些不重要或不紧急的服务或任务运行服务延迟使用或暂停使用。</p>
+<p>流量高峰期短时请求量大，而服务能力有限，为了避免系统雪崩，而采用服务降级。</p>
+<p><font color=red>服务降级目标：保证核心服务可用；非核心服务弱可用甚至不可用。服务降级策略自动开启。</font></p>
+<h2><a class="anchor" aria-hidden="true" id="服务降级手段"></a><a href="#服务降级手段" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务降级手段</h2>
+<p>服务降级手段：拒绝部分请求，关闭部分服务（业务相关）。</p>
+<h3><a class="anchor" aria-hidden="true" id="拒绝部分请求"></a><a href="#拒绝部分请求" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>拒绝部分请求</h3>
+<p>1、拒绝部分老请求<br>
+减轻微服务请求处理数量，确保&quot;新&quot;请求正常响应。RPC队列方式（记录请求入队时间，在请求出队处理时，检查请求在队列等待时间，超过一定时间比如1s，直接丢弃）</p>
+<p>2、优先级请求方式<br>
+非核心请求直接丢弃，服务的优先级通过配置中心配置。</p>
+<p>3、随机拒绝方式<br>
+随机丢弃一定比例的请求，会出现网站一会可用，一会不可用的情况。</p>
+<p>实际实践时采用第一种加第二种的方式，第一种作为服务降级的开启条件。</p>
+<h2><a class="anchor" aria-hidden="true" id="服务降级框架层次"></a><a href="#服务降级框架层次" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务降级框架层次</h2>
+<p>集中式：在网关层做统一的服务降级。存在问题，网关层需要关注下面每一层的处理能力。</p>
+<p>自治式：网关层、业务逻辑层、数据访问层分别实现服务降级。推荐采用这种，每层只关注自己的处理能力。</p>
+<h2><a class="anchor" aria-hidden="true" id="服务限流算法"></a><a href="#服务限流算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务限流算法</h2>
+<p>上面说的降级算法的开启条件是请求等待被处理的时间。但在一般的场景下可以使用下面的限流算法。</p>
+<h3><a class="anchor" aria-hidden="true" id="计数器（固定窗口）算法"></a><a href="#计数器（固定窗口）算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>计数器（固定窗口）算法</h3>
+<p>计数器算法是使用计数器在周期内累加访问次数，当达到设定的限流值时，触发限流策略。下一个周期开始时，进行清零，重新计数。</p>
+<p>这个算法通常用于QPS限流和统计总访问量。具体的实现可以是这样的：对于每次服务调用，可以通过
+AtomicLong.incrementAndGet()方法来给计数器加1并返回最新值，通过这个最新值和阈值进行比较。</p>
+<p>该算法一个较严重的弊端：如果我在单位时间1s内的前10ms，已经通过了100个请求，那后面的990ms，只能眼巴巴的把请求拒绝，把这种现象称为&quot;突刺现象&quot;。</p>
+<h3><a class="anchor" aria-hidden="true" id="滑动窗口算法"></a><a href="#滑动窗口算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>滑动窗口算法</h3>
+<p>滑动窗口算法是将时间周期分为N个小周期，分别记录每个小周期内访问次数，并且根据时间滑动删除过期的小周期。</p>
+<p>如下图，假设时间周期为1min，将1min再分为2个小周期，统计每个小周期的访问数量，则可以看到，第一个时间周期内，访问数量为75，第二个时间周期内，访问数量为100，超过100的访问则被限流掉了。</p>
+<p><img src="./chapter2-7-service-reduce.assets/image28.png" style="zoom:50%;" /></p>
+<p>由此可见，当滑动窗口的格子划分的越多，那么滑动窗口的滚动就越平滑，限流的统计就会越精确。此算法可以很好的解决固定窗口算法的临界问题。</p>
+<h3><a class="anchor" aria-hidden="true" id="漏桶算法"></a><a href="#漏桶算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>漏桶算法</h3>
+<p>漏桶算法是访问请求到达时直接放入漏桶，如当前容量已达到上限（限流值），则进行丢弃（触发限流策略）。漏桶以固定的速率进行释放访问请求（即请求通过），直到漏桶为空。</p>
+<p><img src="./chapter2-7-service-reduce.assets/image29.png" style="zoom: 80%;" /></p>
+<p>在算法实现方面，可以准备一个队列，用来保存请求，另外通过一个线程池定期从队列中获取请求并执行，可以一次性获取多个并发执行。漏斗桶消除了突刺问题，但存在一个弊端是无法处理突发流量。</p>
+<h3><a class="anchor" aria-hidden="true" id="令牌桶算法"></a><a href="#令牌桶算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>令牌桶算法</h3>
+<p>令牌桶算法是程序以r（r=时间周期/限流值）的速度向令牌桶中增加令牌，直到令牌桶满，请求到达时向令牌桶请求令牌，如获取到令牌则通过请求，否则触发限流策略</p>
+<p><img src="./chapter2-7-service-reduce.assets/image30.png" style="zoom:60%;" /></p>
+<p>Google开源工具包Guava提供了基于令牌桶算法的限流工具类RateLimiter。初始化是提供每单位时间生成多少个令牌，然后通过tryAcquire()或acquire()获取令牌。</p>
+<p>与漏斗相比，令牌桶的某些优势：</p>
+<p>1、如果令牌桶中的存储桶已满，令牌将被丢弃，而不是数据包（数据包可以选择等待）。在漏斗桶中，数据包将被丢弃</p>
+<p>2、令牌桶可以以更快的速率发送令牌以应对大型突发，而漏斗桶始终以恒定速率处理数据</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#服务降级手段">服务降级手段</a><ul class="toc-headings"><li><a href="#拒绝部分请求">拒绝部分请求</a></li></ul></li><li><a href="#服务降级框架层次">服务降级框架层次</a></li><li><a href="#服务限流算法">服务限流算法</a><ul class="toc-headings"><li><a href="#计数器（固定窗口）算法">计数器（固定窗口）算法</a></li><li><a href="#滑动窗口算法">滑动窗口算法</a></li><li><a href="#漏桶算法">漏桶算法</a></li><li><a href="#令牌桶算法">令牌桶算法</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
