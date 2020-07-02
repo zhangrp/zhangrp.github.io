@@ -1,0 +1,275 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>发号器 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 业务系统对ID的要求"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="发号器 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 业务系统对ID的要求"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">发号器</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="业务系统对id的要求"></a><a href="#业务系统对id的要求" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>业务系统对ID的要求</h2>
+<p>1、全局唯一：不能出现重复的ID，这是最基本的要求<br>
+2、趋势递增：MySQL InnoDB引擎采用聚集索引，采用B+Tree的数据结构存储索引数据，趋势递增可以保证写入的性能<br>
+3、单调递增：保证下一个ID一定大于上一个ID，如事物版本号、排序等特殊要求<br>
+4、信息安全：如果ID是连续的，恶意用户的爬取工作就会非常容易，直接按照顺序下载指定URL，﻿如果是订单号，竞争对手可以直接知道一天的订单量。所以一般需要ID无规则。<br>
+5、高性能、高可靠性：如果ID生成系统瘫痪，其它依赖ID生成的系统都将无法工作</p>
+<blockquote>
+<p>a）平均延迟和TOP999延迟都要尽可能的低<br>
+b）可用性5个9<br>
+c）高QPS</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="数据库自增长序列"></a><a href="#数据库自增长序列" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>数据库自增长序列</h2>
+<p>利用数据库自增序列实现全局ID，最常见的一种方式。</p>
+<p>优点：实现简单，性能可以接受；数字ID天然有序，对分页或者需要排序的结果有帮助</p>
+<p>缺点：</p>
+<ul>
+<li>1、不同数据库的语法和实现不同，在数据库迁移或数据库多版本支持的时候需要特殊处理
+<ul>
+<li>如MySQL是auto_increment，可以在插入数据时自动补充主键ID，而Oracle需要通过Sequence生成，SEQ_XXXX.nextval</li>
+</ul></li>
+<li>2、在单个数据库或读写分离或一主多从的情况下，只有一个主库可以生成，有单点故障的风险</li>
+<li>3、在性能达不到要求的情况下，比较难扩展</li>
+<li>4、分库分表的时候会有麻烦</li>
+<li>5、在数据插入前无法获取到ID，数据插入后，获取的ID虽然是惟一的，但一定要等到事物提交后，ID才生效：有些双向引用的数据，不得不插入后再做一次更新；单向引用的，需要插入后再查询</li>
+</ul>
+<p>优化方案：</p>
+<p>针对主库单点，如果有多个Master库，或者针对分表，可以采用不同的起始值相同的步长（Master个数或分表的个数）。比如Master1生成1 4 7，Master2生成2 5 8，Master3生成3 6 9。</p>
+<h3><a class="anchor" aria-hidden="true" id="last_insert_id"></a><a href="#last_insert_id" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>LAST_INSERT_ID</h3>
+<p>针对MySQL auto_increment，在插入后如果其它地方要用这个主键，可以采用<code>SELECT LAST_INSERT_ID();</code>获取上次插入的值。</p>
+<p>值得注意的是：</p>
+<ul>
+<li>① 如果一次插入了多条记录，这个函数返回的是第一个记录的ID值</li>
+<li>② LAST_INSERT_ID是基于Connection的，只要每个线程都使用独立的Connection对象，LAST_INSERT_ID函数将返回该Connection对AUTO_INCREMENT列最新的insert or
+update作生成的第一个record的ID</li>
+<li>③ 这个值不会被其它客户端（Connection）影响，保证了你能够找回自己的ID而不用担心其它客户端的活动，而且不需要加锁</li>
+<li>④ 使用单INSERT语句插入多条记录, LAST_INSERT_ID返回一个列表</li>
+<li>⑤ LAST_INSERT_ID是与table无关的，如果向表a插入数据后，再向表b插入数据，LAST_INSERT_ID会改变</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="ticket-server方案"></a><a href="#ticket-server方案" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Ticket Server方案</h2>
+<p>一个Ticket服务器是一个只包含一个数据库独立的数据库服务器。然后这个数据库里包含了一些类似Ticket32和Ticket64的表（分别用于提供32位整型主键和64位长整型主键）。</p>
+<p>Tickets64的Sckeme大概像这样：</p>
+<pre><code class="hljs css language-sql"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`Tickets64`</span> (
+  <span class="hljs-string">`id`</span> <span class="hljs-built_in">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> auto_increment,
+  <span class="hljs-string">`stub`</span> <span class="hljs-built_in">char</span>(<span class="hljs-number">1</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">default</span> <span class="hljs-string">''</span>,
+  PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`id`</span>),
+  <span class="hljs-keyword">UNIQUE</span> <span class="hljs-keyword">KEY</span> <span class="hljs-string">`stub`</span> (<span class="hljs-string">`stub`</span>)
+) <span class="hljs-keyword">ENGINE</span>=MyISAM
+</code></pre>
+<p><code>SELECT * from Tickets64</code>返回的一行数据大概像这样：</p>
+<table>
+<thead>
+<tr><th>id</th><th>stub</th></tr>
+</thead>
+<tbody>
+<tr><td>111111</td><td>a</td></tr>
+</tbody>
+</table>
+<p>当我们需要一个新的64位的主键的时候，我们可以通过执行下面的SQL得到：</p>
+<pre><code class="hljs css language-sql"><span class="hljs-keyword">REPLACE</span> <span class="hljs-keyword">INTO</span> Tickets64 (stub) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">'a'</span>);
+<span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">LAST_INSERT_ID</span>();
+</code></pre>
+<p><font color=red>存储引擎为什么采用MyISAM？</font></p>
+<h3><a class="anchor" aria-hidden="true" id="存在单点问题"></a><a href="#存在单点问题" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>存在单点问题</h3>
+<p>实现高可用的方法是跑两个Ticket服务。将ID生成的职责均分到两个服务上，一个生成奇数，一个生成偶数。设置如下：</p>
+<pre><code class="hljs css language-properties"><span class="hljs-comment"># TicketServer1:</span>
+<span class="hljs-meta">auto-increment-increment</span> = <span class="hljs-string">2</span>
+<span class="hljs-meta">auto-increment-offset</span> = <span class="hljs-string">1</span>
+<span class="hljs-comment"># TicketServer2:</span>
+<span class="hljs-meta">auto-increment-increment</span> = <span class="hljs-string">2</span>
+<span class="hljs-meta">auto-increment-offset</span> = <span class="hljs-string">2</span>
+</code></pre>
+<p>然后我们使用轮询的方式去轮流访问这两个服务器，来达到负载均衡的目的和应对停机的情况。如果有一边不能保持同步了（停机了），那最多就是可能会有连续的几十万个奇数（或者偶数）的ID。但这不会有任何副作用。</p>
+<p>通过多Master分步长的方式能够满足高可用及性能的要求，但仍然有以下缺点：</p>
+<p>1、系统水平扩展困难。定义好步长和机器数之后，再添加机器就非常麻烦。比如一台机器扩展成两台，可以这样做：把第二台机器的起始值设置为比第一台超过很多的一个偶数，同时设置步长为2，然后摘下第一台，把ID保存一个奇数，同时也设置步长为2，再把机器挂上去。这样第一台生成奇数，第二台生成偶数。按照这种思路一台扩容到两台还好，如果是100台扩容到120台就是噩梦</p>
+<p>2、数据库压力还是很大，每次获取ID都得读写一次数据库，只能靠堆机器来提高性能</p>
+<p>3、ID趋势递增，非单调递增</p>
+<h2><a class="anchor" aria-hidden="true" id="uuid"></a><a href="#uuid" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>UUID</h2>
+<p>主要组成部分：当前日期和时间、时钟序列、IEEE机器识别号</p>
+<p>优点：实现简单、性能非常高（本地生成，没有网络消耗）</p>
+<p>缺点：</p>
+<ul>
+<li>1、没有顺序，不能保证趋势递增</li>
+<li>2、太长，16字节128位，通常采用36长度的字段传标示，存储传输成本高。采用字符串存储，查询效率低，且不可读</li>
+<li>3、信息不安全，基于MAC地址生成的UUID算法可能会造成MAC地址泄露。这个漏洞曾用于寻找梅丽莎病毒制作者的位置</li>
+<li>4、不适合作为MySQL主键。官方建议主键越短越好；在InnoDB引擎下，无序的主键可能会引起数据位置频繁变动，严重影响性能。</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="类snowflake算法"></a><a href="#类snowflake算法" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>类SnowFlake算法</h2>
+<p>是一种以划分命名空间来生成ID的一种算法，对64位二级制数据进行分段</p>
+<p><img src="./id-generate.assets/image-20200629123423227.png" alt="image-20200629123423227"></p>
+<ul>
+<li>1位标识符：始终是0标示正数</li>
+<li>41位时间戳：存储的是时间差（当前时间-开始时间）的毫秒数，开始时间是我们ID生成器开始使用的时间。41位能够使用69年</li>
+<li>10位机器编码：可以不是1024个节点</li>
+</ul>
+<blockquote>
+<p>如果分机房（IDC），可以用5位标示机房，5位标示机器ID。</p>
+<p>5位能表示32个不同的数据，而实际上应该不会有32个IDC，可以用2位区分IDC，8位表示机器，这样支持4个机房，每个机房支持256个机器</p>
+</blockquote>
+<ul>
+<li>12位序列号：毫秒内的计算，同一个节点，一毫秒可以产生4096个ID序列</li>
+</ul>
+<p>理论上SnowFlake方案的QPS为<code>4096*1000=409.6W</code>，这样的分配方式可以保证任何一个IDC的任何一台机器在任意毫秒内生成的ID不同。</p>
+<p>优点：简单高效，生成速度快，整个ID是趋势递增的，灵活度高，<font color=red>整个划分可以按业务需求调整bit位的划分</font></p>
+<p>缺点：<font color=red>强依赖机器的时钟，如果时钟回拨，会导致重复ID生成</font></p>
+<p>具体实现时需要注意：</p>
+<p>1、数据采用位移的方式</p>
+<p>2、当一毫秒数据已使用完之后需要等到下一毫秒。实现上可以通过while+sleep或者不sleep只while比较时间。</p>
+<h2><a class="anchor" aria-hidden="true" id="redis"></a><a href="#redis" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Redis</h2>
+<p>依赖Redis的单线程特性，生产全局唯一ID。使用原子操作INCR和INCRBY来实现。比较适合使用Redis来生成每天从0开始的流水号，比如订单号=日期+当日自增长。每天在Redis中生成一个key，使用INCR进行累加。</p>
+<h2><a class="anchor" aria-hidden="true" id="zookeeper"></a><a href="#zookeeper" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>ZooKeeper</h2>
+<p>通过znode数据版本来生成序列号。过程：</p>
+<p>1、为每个sequence对象创建一个persistent节点</p>
+<p>2、调用set设置数据，该节点的数据版本号会自动加1，并返回版本号</p>
+<p>3、客户端使用版本号作为序列号</p>
+<pre><code class="hljs css language-shell">[zk: localhost:2181(CONNECTED) 8] create /sequence 1
+Created /sequence
+[zk: localhost:2181(CONNECTED) 11] set /sequence 1
+cZxid = 0x4
+ctime = Sun May 03 10:50:40 CST 2020
+mZxid = 0x6
+mtime = Sun May 03 10:51:18 CST 2020
+pZxid = 0x4
+cversion = 0
+dataVersion = 2
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 1
+numChildren = 0
+</code></pre>
+<p>缺点：需要依赖zookeeper，性能不是很高，且版本号是32位的。</p>
+<h2><a class="anchor" aria-hidden="true" id="leaf-美团点评分布式id生成系统"></a><a href="#leaf-美团点评分布式id生成系统" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Leaf-美团点评分布式ID生成系统</h2>
+<h3><a class="anchor" aria-hidden="true" id="leaf-segment数据库方案"></a><a href="#leaf-segment数据库方案" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Leaf-segment数据库方案</h3>
+<p>Leaf-segment方案，是在Ticket Server方案上的优化。做了如下改变：</p>
+<p>① Ticket Server方案中每次获取ID都得读写一次数据库，造成数据库压力大。改为利用proxy server批量获取，每次获取一个segment（step决定大小）号段的值。用完之后再去数据库获取新的号段，可以大大的减轻数据库的压力</p>
+<p>② 各个业务不同的发号需求用biz_tag字段来区分，每个biz_tag的ID获取相互隔离，互不影响。如果以后有性能需求需要对数据库扩容，不需要上述描述的复杂的扩容操作，只需要对biz_tag分库分表就行。（数据库压力很小，存储量也很小，应该无需扩容，先从扩容server和step考虑）</p>
+<p>数据库表设计如下：</p>
+<table>
+<thead>
+<tr><th>字段</th><th>类型</th><th>允许空</th><th>主键</th><th>默认值</th><th>描述</th></tr>
+</thead>
+<tbody>
+<tr><td>biz_tag</td><td>varchar(128)</td><td>否</td><td>是</td><td></td><td>区分业务，比如订单、商品</td></tr>
+<tr><td>max_id</td><td>bigint(20)</td><td>否</td><td></td><td>1</td><td>该biz_tag目前已被分配的ID号段的最大值，先跟新再获取且在同一事物中</td></tr>
+<tr><td>step</td><td>int(11)</td><td>否</td><td></td><td></td><td>步长</td></tr>
+<tr><td>desc</td><td>varchar(256)</td><td>是</td><td></td><td></td><td></td></tr>
+<tr><td>update_time</td><td>timestamp</td><td>否</td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+<p>原来获取ID每次都需要写数据库，现在只需要把step设置得足够大，比如1000。那么只有当1000个号被消耗完了之后才会去重新读写一次数据库。读写数据库的频率从1减小到了1/step，大致架构如下图所示：</p>
+<p><img src="./id-generate.assets/image-20200629123714824.png" alt="image-20200629123714824" style="zoom: 67%;" /></p>
+<p>比如：test_tag在第一台Leaf机器上是1~1000的号段，当这个号段用完时，会去加载另一个长度为step=1000的号段，假设另外两台号段都没有更新，这个时候第一台机器新加载的号段就应该是3001~4000。同时数据库对应的biz_tag这条数据的max_id会从3000被更新成4000，更新号段的SQL语句如下：</p>
+<pre><code class="hljs css language-sql"><span class="hljs-comment">--通过being-commit保证更正和查询的原子性</span>
+<span class="hljs-keyword">Begin</span>
+<span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">SET</span> max_id=max_id+step <span class="hljs-keyword">WHERE</span> biz_tag=xxx;
+<span class="hljs-keyword">SELECT</span> tag, max_id, step <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">table</span> <span class="hljs-keyword">WHERE</span> biz_tag=xxx;
+<span class="hljs-keyword">Commit</span>
+</code></pre>
+<p>优点：</p>
+<p>1、Leaf服务可以很方便的线性扩展，性能完全能够支撑大多数业务场景</p>
+<p>2、ID号码是趋势递增的8byte的64位数字，满足上述数据库存储的主键要求</p>
+<p>3、容灾性高：<font color=red>Leaf服务内部有号段缓存，即使DB宕机，短时间内Leaf仍能正常对外提供服务</font></p>
+<p>4、可以自定义max_id的大小，非常方便业务从原有的ID方式上迁移过来</p>
+<p>缺点：</p>
+<blockquote>
+<p>1、<font color=red>ID号码不够随机，信息不安全（如果是内部系统或者对外部不可见的数据，这种ID没有关系，如果是订单的ID就需要采用SnowFlake算法）</font></p>
+</blockquote>
+<blockquote>
+<p>2、TP999数据波动大，当号段使用完之后还是会hang在更新数据库的I/O上，tg999数据会出现偶尔的尖刺（TP=Top Percentile）</p>
+</blockquote>
+<blockquote>
+<p>3、DB宕机会造成整个系统不可用</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="双buffer优化（预加载）"></a><a href="#双buffer优化（预加载）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>双buffer优化（预加载）</h3>
+<p>对于第二个缺点，Leaf-segment做了一些优化，简单的说就是：采用双buffer预加载，即当号段消费到某个点（10%）时就异步的把下一个号段加载到内存中。而不需要等到号段用尽的时候才去更新号段。这样做就可以很大程度上的降低系统的TP999指标。详细实现如下图所示：</p>
+<p><img src="./id-generate.assets/image-20200629123808795.png" alt="image-20200629123808795" style="zoom:67%;" /></p>
+<p>采用双buffer的方式，Leaf服务内部有两个号段缓存区segment。当前号段已下发10%时，如果下一个号段未更新，则另启一个更新线程去更新下一个号段。当前号段全部下发完后，如果下个号段准备好了则切换到下个号段为当前segment接着下发，循环往复。</p>
+<p>每个biz-tag都有消费速度监控，通常推荐segment长度设置为服务高峰期发号QPS的600倍（10分钟），这样即使DB宕机，Leaf仍能持续发号10-20分钟不受影响。</p>
+<p>每次请求来临时都会判断下个号段的状态，从而更新此号段，所以偶尔的网络抖动不会影响下个号段的更新。</p>
+<p>Segment中并不是把全部的ID序列缓存下来，而是记录最大值（long），当前值（AtomicLong）,获取时返回AtomicLong.getAndIncrement()。</p>
+<h3><a class="anchor" aria-hidden="true" id="leaf高可用容灾"></a><a href="#leaf高可用容灾" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Leaf高可用容灾</h3>
+<p>对于第三点&quot;DB可用性&quot;问题，目前采用一主两从的方式，同时分机房部署，Master和Slave之间采用半同步方式同步数据。当然这种方案在一些情况会退化成异步模式，甚至在非常极端情况下仍然会造成数据不一致的情况，但是出现的概率非常小。如果你的系统要保证100%的数据强一致，可以选择使用&quot;类Paxos算法&quot;实现的强一致MySQL方案，如MySQL 5.7GA的MySQL Group Replication。但是运维成本和精力都会相应的增加，根据实际情况选型即可。</p>
+<p><img src="./id-generate.assets/image-20200629123846622.png" alt="image-20200629123846622" style="zoom:67%;" /></p>
+<p>同时Leaf服务分IDC部署，服务调用的时候，根据负载均衡算法会优先调用同机房的Leaf服务。在该IDC内Leaf服务不可用的时候才会选择其他机房的Leaf服务。</p>
+<p>Leaf-segment方案可以生成趋势递增的ID，同时ID号是可计算的，不适用于订单ID生成场景，比如竞对在两天中午12点分别下单，通过订单id号相减就能大致计算出公司一天的订单量，这个是不能忍受的。这种情况可以采用Leaf-snowflake方案。</p>
+<h3><a class="anchor" aria-hidden="true" id="leaf-snowflake方案"></a><a href="#leaf-snowflake方案" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Leaf-snowflake方案</h3>
+<p><img src="./id-generate.assets/image-20200629123912751.png" alt="image-20200629123912751"></p>
+<p>Leaf-snowflake方案完全沿用snowflake方案的bit位设计，即是&quot;1+41+10+12&quot;的方式组装ID号。对于workerID的分配，当服务集群数量较小的情况下，完全可以手动配置。当Leaf服务规模较大，手动配置成本太高。所以使用Zookeeper持久顺序节点的特性自动对snowflake节点配置wokerID。Leaf-snowflake是按照下面几个步骤启动的：</p>
+<ul>
+<li><p>① 启动Leaf-snowflake服务，连接Zookeeper，在leaf_forever父节点下检查自己是否已经注册过（是否有该顺序子节点），可以通过判断值ip+port来判断是否为自己写的顺序节点</p></li>
+<li><p>② 如果有注册过直接取回自己的workerID（zk顺序节点生成的int类型ID号），启动服务</p></li>
+<li><p>③ 如果没有注册过，就在该父节点下面创建一个持久顺序节点，创建成功后取回顺序号当做自己的workerID号，启动服务</p></li>
+</ul>
+<p><img src="./id-generate.assets/image-20200629123938497.png" alt="image-20200629123938497" style="zoom:67%;" /></p>
+<p><font color=red>zookeeper中的两种节点</font></p>
+<blockquote>
+<p>永久节点leaf_forever： 用来获取workId，写入的是ip+port，并</p>
+<p>临时节点leaf_temporary：用来解决时钟回拨的问题</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="弱依赖zookeeper"></a><a href="#弱依赖zookeeper" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>弱依赖ZooKeeper</h3>
+<p>除了每次启动会去ZK拿数据以外，也会在本机文件系统上缓存一个workerID文件。当ZooKeeper出现问题，恰好机器出现问题需要重启时，能保证服务能够正常启动。这样做到了对三方组件的弱依赖。一定程度上提高了SLA（SLA是Service-Level Agreement的缩写，意思是服务等级协议）。</p>
+<h3><a class="anchor" aria-hidden="true" id="解决时钟问题"></a><a href="#解决时钟问题" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>解决时钟问题</h3>
+<p>因为这种方案依赖时间，如果机器的时钟发生了回拨，那么就会有可能生成重复的ID号，需要解决时钟回退的问题。</p>
+<p><img src="./id-generate.assets/image-20200629124051554.png" alt="image-20200629124051554" style="zoom:50%;" /></p>
+<p>参见上图整个启动流程图</p>
+<ul>
+<li>1、服务启动时首先检查自己是否写过ZooKeeper leaf_forever节点
+<ul>
+<li>若写过，则用自身系统时间与<code>leaf_forever/${self}</code>节点记录时间做比较，若小于<code>leaf_forever/${self}</code>时间则认为机器时间发生了大步长回拨，服务启动失败并报警</li>
+<li>若未写过，证明是新服务节点，直接创建持久节点<code>leaf_forever/${self}</code>并写入自身系统时间，接下来综合对比其余Leaf节点的系统时间来判断自身系统时间是否准确</li>
+</ul></li>
+</ul>
+<blockquote>
+<p>具体做法是取leaf_temporary下的所有临时节点(所有运行中的Leaf-snowflake节点)的服务IP：Port，然后通过RPC请求得到所有节点的系统时间，计算<code>sum(time)/nodeSize</code>。若<code>abs(系统时间-sum(time)/nodeSize) &lt;阈值</code>，认为当前系统时间准确，正常启动服务，同时写临时节点<code>leaf_temporary/${self}</code>维持租约。否则认为本机系统时间发生大步长偏移，启动失败并报警。</p>
+</blockquote>
+<ul>
+<li>2、每隔一段时间(3s)上报自身系统时间写入<code>leaf_forever/${self}</code>。</li>
+</ul>
+<pre><code class="hljs css language-sh"><span class="hljs-comment"># 创建leaf_forever节点</span>
+[zk: localhost:2181(CONNECTED) 3] create /leaf_forever 1
+Created /leaf_forever
+<span class="hljs-comment"># 当服务创建时检查自己是否写过leaf_forever顺序节点（节点中有标示具体的IP和端口，后面的序号作为workerID），如果每写过，就创建顺序节点，节点名称为IP+port，节点值为当点主机的时间</span>
+[zk: localhost:2181(CONNECTED) 4] create -s /leaf_forever/10.10.152.57:8080_ serverLongDatetime
+Created /leaf_forever/10.10.152.57:8080_0000000000
+[zk: localhost:2181(CONNECTED) 5] create -s /leaf_forever/10.10.152.57:8082_ serverLongDatetime
+Created /leaf_forever/10.10.152.57:8082_0000000001
+[zk: localhost:2181(CONNECTED) 6] create -s /leaf_forever/10.10.152.59:8082_ serverLongDatetime
+Created /leaf_forever/10.10.152.59:8082_0000000002
+<span class="hljs-comment"># 每隔3秒向节点中写入当前主机的时间</span>
+[zk: localhost:2181(CONNECTED) 8] <span class="hljs-built_in">set</span> /leaf_forever/10.10.152.57:8080_0000000000 serverLongDatetime
+<span class="hljs-comment"># 获取节点信息</span>
+[zk: localhost:2181(CONNECTED) 7] get /leaf_forever/10.10.152.57:8080_0000000000
+serverLongDatetime
+</code></pre>
+<p>由于强依赖时钟，对时间的要求比较敏感，在机器工作时NTP同步也会造成秒级别的回退，建议可以直接关闭NTP同步。要么在时钟回拨的时候直接不提供服务直接返回ERROR_CODE，等时钟追上即可。或者做一层重试，然后上报报警系统，更或者是发现有时钟回拨之后自动摘除本身节点并报警，如下：</p>
+<pre><code class="hljs css language-java"><span class="hljs-comment">//发生了回拨，此刻时间小于上次发号时间</span>
+<span class="hljs-keyword">if</span> (timestamp &lt; lastTimestamp) {
+    <span class="hljs-keyword">long</span> offset = lastTimestamp - timestamp;
+    <span class="hljs-keyword">if</span> (offset &lt;= <span class="hljs-number">5</span>) {
+        <span class="hljs-keyword">try</span> {
+            <span class="hljs-comment">//时间偏差大小小于5ms，则等待两倍时间</span>
+            wait(offset &lt;&lt; <span class="hljs-number">1</span>);<span class="hljs-comment">//wait</span>
+            timestamp = timeGen();
+            <span class="hljs-keyword">if</span> (timestamp &lt; lastTimestamp) {
+                <span class="hljs-comment">//还是小于，抛异常并上报</span>
+                throwClockBackwardsEx(timestamp);
+            }
+        } <span class="hljs-keyword">catch</span> (InterruptedException e) {
+            <span class="hljs-keyword">throw</span> e;
+        }
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">//throw</span>
+        throwClockBackwardsEx(timestamp);
+    }
+}
+<span class="hljs-comment">//分配ID</span>
+</code></pre>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#业务系统对id的要求">业务系统对ID的要求</a></li><li><a href="#数据库自增长序列">数据库自增长序列</a><ul class="toc-headings"><li><a href="#last_insert_id">LAST_INSERT_ID</a></li></ul></li><li><a href="#ticket-server方案">Ticket Server方案</a><ul class="toc-headings"><li><a href="#存在单点问题">存在单点问题</a></li></ul></li><li><a href="#uuid">UUID</a></li><li><a href="#类snowflake算法">类SnowFlake算法</a></li><li><a href="#redis">Redis</a></li><li><a href="#zookeeper">ZooKeeper</a></li><li><a href="#leaf-美团点评分布式id生成系统">Leaf-美团点评分布式ID生成系统</a><ul class="toc-headings"><li><a href="#leaf-segment数据库方案">Leaf-segment数据库方案</a></li><li><a href="#双buffer优化（预加载）">双buffer优化（预加载）</a></li><li><a href="#leaf高可用容灾">Leaf高可用容灾</a></li><li><a href="#leaf-snowflake方案">Leaf-snowflake方案</a></li><li><a href="#弱依赖zookeeper">弱依赖ZooKeeper</a></li><li><a href="#解决时钟问题">解决时钟问题</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

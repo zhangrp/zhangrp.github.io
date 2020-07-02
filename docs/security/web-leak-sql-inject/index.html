@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>SQL注入 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="服务器上的数据库运行非法的SQL语句，主要通过拼接来完成。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="SQL注入 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="服务器上的数据库运行非法的SQL语句，主要通过拼接来完成。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">SQL注入</h1></header><article><div><span><p>服务器上的数据库运行非法的SQL语句，主要通过拼接来完成。</p>
+<p>比如一个网站的登录验证是这样拼接sql的：</p>
+<pre><code class="hljs css language-java">String name = <span class="hljs-string">"admin"</span>;
+String password  = <span class="hljs-string">"123"</span>;
+String sql = <span class="hljs-string">"select * from user where name = '"</span> + name + <span class="hljs-string">"' and password = '"</span> + password + <span class="hljs-string">"'"</span>;
+System.out.println(sql);
+
+name = <span class="hljs-string">"admin"</span>;
+password  = <span class="hljs-string">"' or '1' = '1"</span>;
+sql = <span class="hljs-string">"select * from user where name = '"</span> + name + <span class="hljs-string">"' and password = '"</span> + password + <span class="hljs-string">"'"</span>;
+System.out.println(sql);
+</code></pre>
+<p>正常输入的时候，执行的sql为：</p>
+<p><code>select * from user where name = 'admin' and password = '123'</code>是没有问题的。</p>
+<p>如果通过刻意伪造，把password传成【<code>' or '1' = '1</code>】，执行的sql为：</p>
+<p><code>select * from user where name = 'admin' and password = '' or '1' = '1'</code>，这样就肯定能查出来数据。</p>
+<p><strong>防范手段：禁止使用sql拼接，而采用变量替换的形式的。</strong></p>
+<p>Java中的PreparedStatement是预先编译的SQL语句，可以传入适当参数并且多次执行。由于没有拼接的过程，因此可以防止SQL注入的发生。</p>
+<p>另外，代码中不可能完全消除sql拼接，比如分表中拼接表名，这时候要进行严格的参数校验。</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

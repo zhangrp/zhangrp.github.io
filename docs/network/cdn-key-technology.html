@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>CDN关键技术 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="随着宽带网络和宽带流媒体应用的兴起，CDN（通常被称为内容分发网络Content distribution network，有时也被称作内容传递网络Content delivery network）作为一种提高网络内容，特别是提高流媒体内容传输的服务质量、节省骨干网络带宽的技术，在国内外得到越来越广泛的应用。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="CDN关键技术 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="随着宽带网络和宽带流媒体应用的兴起，CDN（通常被称为内容分发网络Content distribution network，有时也被称作内容传递网络Content delivery network）作为一种提高网络内容，特别是提高流媒体内容传输的服务质量、节省骨干网络带宽的技术，在国内外得到越来越广泛的应用。"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">CDN关键技术</h1></header><article><div><span><p>随着宽带网络和宽带流媒体应用的兴起，CDN（通常被称为内容分发网络Content distribution network，有时也被称作内容传递网络Content delivery network）作为一种提高网络内容，特别是提高流媒体内容传输的服务质量、节省骨干网络带宽的技术，在国内外得到越来越广泛的应用。</p>
+<p>CDN的关键技术主要有内容路由技术、内容分发技术、内容存储技术、内容管理技术等。</p>
+<h2><a class="anchor" aria-hidden="true" id="内容路由技术"></a><a href="#内容路由技术" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>内容路由技术</h2>
+<p><strong>CDN负载均衡系统</strong>实现CDN的内容路由功能。它的作用是将用户的请求导向整个CDN网络中的最佳节点。最佳节点的选定可以根据多种策略，例如距离、节点负载等。<font color=red><strong>负载均衡系统是整个CDN的核心，负载均衡的准确性和效率直接决定了整个CDN的效率和性能。</strong></font></p>
+<p>通常负载均衡可以分为两个层次：<strong>全局负载均衡（GSLB）和本地负载均衡（SLB，Server Load Balancer）</strong>。</p>
+<h3><a class="anchor" aria-hidden="true" id="全局负载均衡"></a><a href="#全局负载均衡" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>全局负载均衡</h3>
+<p>全局负载均衡（GSLB）<strong>主要的目的是在整个网络范围内将用户的请求定向到最近的节点</strong>（或者区域）。因此，就近性判断是全局负载均衡的主要功能。</p>
+<p>实现全局负载均衡，通常可以采用两种方式，<strong>一种是静态的配置</strong>，例如根据静态的IP地址配置表进行IP地址到CDN节点的映射。<strong>另一种方式是动态的检测</strong>，例如实时地让CDN节点探测到目标IP的距离（可以采用RRT，Hops作为度量单位），然后比较探测结果进行负载均衡。当然，静态和动态的方式也可以综合起来使用。</p>
+<p>负载均衡可以通过多种方法实现，主要的方法包括DNS、应用层重定向、传输层重定向等等。</p>
+<p><font color=red>主要决策策略是距离（依靠配置表或动态检测（RRT检测））。</font></p>
+<h3><a class="anchor" aria-hidden="true" id="本地负载均衡"></a><a href="#本地负载均衡" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>本地负载均衡</h3>
+<p>本地负载均衡一般局限于一定的区域范围内，<strong>其目标是在特定的区域范围内寻找一台最适合的节点提供服务</strong>，因此，CDN节点的健康性、负载情况、支持的媒体格式等运行状态是本地负载均衡进行决策的主要依据。</p>
+<p>对于本地负载均衡而言，为了执行有效的决策，需要实时地获取Cache设备的运行状态。获取的方法一般有两种，一种是主动探测，一种是协议交互。主动探测针对SLB设备和Cache设备没有协议交互接口的情况，通过ping等命令主动发起探测，根据返回结果分析状态。另一种是协议交互，即SLB和Cache根据事先定义好的协议实时交换运行状态信息，以便进行负载均衡。比较而言，协议交互比探测方式要准确可靠，但是目前尚没有标准的协议，各厂家的实现一般仅是私有协议，互通比较困难。</p>
+<p><font color=red>主要决策策略是健康性和负载（依靠主动探测或协议交互）</font></p>
+<h2><a class="anchor" aria-hidden="true" id="内容分发技术"></a><a href="#内容分发技术" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>内容分发技术</h2>
+<p>内容分发包含从内容源到CDN边缘Cache的过程。从实现上看，<font color=red>有两种主流的内容分发技术：PUSH和PULL</font>。</p>
+<p>PUSH是一种主动分发的技术。<strong>通常，PUSH由内容管理系统发起，将内容从源或者中心媒体资源库分发到各边缘的Cache节点</strong>。分发的协议可以采用HTTP/FTP等。通过PUSH分发的内容一般是比较热点的内容，这些内容通过PUSH方式预分发（Preload）到边缘Cache，可以实现有针对的内容提供。对于PUSH分发需要考虑的主要问题是分发策略，即在什么时候分发什么内容。一般来说，内容分发可以由CP（内容提供商，Content Provider）或者CDN内容管理员人工确定，也可以通过智能的方式决定，即所谓的<font color=red>智能分发</font>。它根据用户访问的统计信息，以及预定义的内容分发的规则，确定内容分发的过程。</p>
+<p>PULL是一种被动的分发技术，通常由用户请求驱动。当用户请求的内容在本地的边缘Cache上不存在（未命中）时，Cache启动PULL方法从内容源或者其他CDN节点实时获取内容。在PULL方式下，内容的分发是按需的。</p>
+<p>在实际的CDN系统中，一般两种分发方式都支持，但是根据内容的类型和业务模式的不同，在选择主要的内容分发方式时会有所不同。通常，PUSH的方式适合内容访问比较集中的情况，如热点的影视流媒体内容；PULL方式比较适合内容访问分散的情况。</p>
+<p>在内容分发的过程中，对于Cache设备而言，关键的是需要建立内容源URL、<strong>内容发布的URL</strong>、用户访问的URL，以及内容在Cache中存储的位置之间的映射关系。<font color=red>（内容发布的URL，没明白是什么。）</font></p>
+<blockquote>
+<ul>
+<li>PUSH分发：主动分发
+<ul>
+<li>由内容提供商CP或CDN内容管理员人工发起分发</li>
+<li>通过预定的规则，自主只能分发</li>
+<li>适合比较集中情况</li>
+</ul></li>
+<li>PULL分发：被动分发
+<ul>
+<li>用户请求驱动，边缘Cache未命中时回源拉取</li>
+<li>适合内容访问比较分散的情况</li>
+</ul></li>
+<li>两种策略根据业务模式进行选择</li>
+</ul>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="内容存储技术"></a><a href="#内容存储技术" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>内容存储技术</h2>
+<p>对于CDN系统而言，需要考虑两个方面的内容存储问题。一个是内容源的存储，一个是内容在Cache节点中的存储。</p>
+<p>对于内容源的存储，由于内容的规模比较大（通常可以达到几个甚至几十个TB），而且内容的吞吐量较大，因此，通常采用海量存储架构。如NAS和SON。</p>
+<p>对于在Cache节点中的存储，是Cache设计的一个关键问题。需要考虑的因素包括功能和性能两个方面：在功能上包括对各种内容格式的支持、对部分缓存的支持，在性能上包括支持的容量、多文件吞吐率、可靠性、稳定性。其中，多种内容格式的支持要求存储系统根据不同文件格式的读写特点进行优化，以提高文件内容读写的效率，特别是对流媒体文件的读写。</p>
+<p>部分缓存能力指流媒体内容可以以不完整的方式存储和读取。部分缓存的需求来自用户访问行为的随机性，因为许多用户并不会完整地收看整个流媒体节目，事实上，许多用户访问单个流媒体节目的时间不超过10分钟。因此，部分缓存能力能够大大提高存储空间的利用率，并有效地提高用户请求的响应时间。但是部分缓存可能导致内容出现碎片问题，需要进行良好的设计和控制。</p>
+<p>Cache存储的另一个重要因素是存储的可靠性，目前，多数存储系统都采用了RAID技术进行可靠存储。但是不同设备使用的RAID方式各有不同。</p>
+<h2><a class="anchor" aria-hidden="true" id="内容管理技术"></a><a href="#内容管理技术" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>内容管理技术</h2>
+<p>内容管理在广义上涵盖了从内容的发布、注入、分发、调整、传递等一系列过程。在这里，内容管理重点强调内容进入Cache点后的内容管理，我们称为<font color=red>本地内容管理。</font></p>
+<p>本地内容管理主要针对一个CDN节点（由多个CDN Cache设备和一个SLB设备构成）进行。本地内容管理的主要目标是提高内容服务的效率，提高本地节点的存储利用率。通过本地内容管理，可以在CDN节点实现基于内容感知的调度，通过内容感知的调度，可以避免将用户重定向到没有该内容的Cache设备上，从而提高负载均衡的效率。通过本地内容管理还可以有效地实现在CDN节点内容的存储共享，提高存储空间的利用率。</p>
+<p>在实现上，本地内容管理主要包括如下几个方面。</p>
+<ul>
+<li><p>一是本地内容索引。本地内容管理首先依赖于对本地内容的了解。包括每个Cache设备上内容的名称、URL、更新时间、内容信息等。本地内容索引是实现基于内容感知的调度的关键。</p></li>
+<li><p>二是本地内容拷贝。通常，为了提高存储效率，同一个内容在一个CDN节点中仅存储一份，即仅存储在某个特定的Cache上。但是一旦对该内容的访问超过该Cache的服务提供能力，就需要在本地（而不是通过PULL的方式）实现内容的分发。这样可以大大提高效率。</p></li>
+<li><p>三是本地内容访问状态信息收集。搜集各个Cache设备上各个内容访问的统计信息，Cache设备的可用服务提供能力及内容变化的情况。</p></li>
+</ul>
+<p>可以看出，通过本地内容管理，可以将内容的管理从原来的Cache设备一级，提高到CDN节点一级，从而大大增加了CDN的可扩展性和综合能力。</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#内容路由技术">内容路由技术</a><ul class="toc-headings"><li><a href="#全局负载均衡">全局负载均衡</a></li><li><a href="#本地负载均衡">本地负载均衡</a></li></ul></li><li><a href="#内容分发技术">内容分发技术</a></li><li><a href="#内容存储技术">内容存储技术</a></li><li><a href="#内容管理技术">内容管理技术</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

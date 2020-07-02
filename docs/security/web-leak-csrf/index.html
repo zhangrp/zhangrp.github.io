@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>CSRF跨站请求伪造【中风险】 · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="跨站请求伪造(Cross-site request forgery，CSRF)，是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站并执行一些操作（如发邮件，发消息，甚至财产操作如转账和购买商品）。由于浏览器曾经认证过，所以被访问的网站会认为是真正的用户操作而去执行。&lt;font color=red&gt;XSS利用的是用户对指定网站的信任，CSRF利用的是网站对用户浏览器的信任。XSS是获取Cookie后伪造攻击，而CSRF是利用同一个浏览器中共享Cookie进行攻击。&lt;/font&gt;"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="CSRF跨站请求伪造【中风险】 · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="跨站请求伪造(Cross-site request forgery，CSRF)，是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站并执行一些操作（如发邮件，发消息，甚至财产操作如转账和购买商品）。由于浏览器曾经认证过，所以被访问的网站会认为是真正的用户操作而去执行。&lt;font color=red&gt;XSS利用的是用户对指定网站的信任，CSRF利用的是网站对用户浏览器的信任。XSS是获取Cookie后伪造攻击，而CSRF是利用同一个浏览器中共享Cookie进行攻击。&lt;/font&gt;"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">CSRF跨站请求伪造【中风险】</h1></header><article><div><span><p>跨站请求伪造(Cross-site request forgery，CSRF)，是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站并执行一些操作（如发邮件，发消息，甚至财产操作如转账和购买商品）。由于浏览器曾经认证过，所以被访问的网站会认为是真正的用户操作而去执行。<font color=red>XSS利用的是用户对指定网站的信任，CSRF利用的是网站对用户浏览器的信任。XSS是获取Cookie后伪造攻击，而CSRF是利用同一个浏览器中共享Cookie进行攻击。</font></p>
+<p><strong>攻击原理</strong></p>
+<p>假如一家银行用以执行转账操作的URL地址如下:</p>
+<p><code>http://www.examplebank.com/withdraw?account=AccoutName&amp;amount=1000&amp;for=PayeeName</code>，那么，一个恶意攻击者可以在另一个网站上放置如下代码:</p>
+<pre><code class="hljs css language-html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"http://www.examplebank.com/withdraw?account=Alice&amp;amount=1000&amp;for=Badman"</span>\&gt;</span>
+</code></pre>
+<p>如果有账户名为Alice的用户访问了恶意站点，而她之前刚访问过银行不久，登录信息尚未过期，那么她就会损失1000美元。</p>
+<p>这种恶意的网址可以有很多种形式，藏身于网页中的许多地方。此外，攻击者也不需要控制放置恶意网址的网站。例如他可以将这种地址藏在论坛，博客等任何用户生成内容的网站中。这意味着如果服务器端没有合适的防御措施的话，用户即使访问熟悉的可信网站也有受攻击的危险。</p>
+<p>通过例子能够看出，攻击者并不能通过CSRF攻击来直接获取用户的账户控制权，也不能直接窃取用户的任何信息。他们能做到的，是欺骗用户浏览器，让其以用户的名义执行操作。</p>
+<p>程序的重要业务操作没有验证请求来源，也未包含随机令牌。</p>
+<p><img src="./web-leak-csrf.assets/image86.png" alt="csrf"></p>
+<p>安全建议：</p>
+<p>服务端的防御：</p>
+<ul>
+<li>验证HTTP Referer字段</li>
+<li>请求地址中添加token并验证（token不放在cookie中，放在http请求参数中，服务端对其进行验证）</li>
+<li>将token加入http头属性中，避免了token出现在浏览器中，被泄露。</li>
+</ul>
+<p>客户端防御：</p>
+<p>为了配合服务端对token的验证，那么客户端也需要在访问时生成token，这是利用js来给html中的链接和表单请求地址附加csrftoken代码，其中已定义token为全局变量，其值可以从session中得到。</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>

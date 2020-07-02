@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>本地缓存Google Guava Cache · 博客</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 示例"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="本地缓存Google Guava Cache · 博客"/><meta property="og:type" content="website"/><meta property="og:url" content="https://your-docusaurus-test-site.com/"/><meta property="og:description" content="## 示例"/><meta name="twitter:card" content="summary"/><link rel="shortcut icon" href="/img/favicon.ico"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.css"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://your-docusaurus-test-site.com/blog/atom.xml" title="博客 Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://your-docusaurus-test-site.com/blog/feed.xml" title="博客 Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.ico" alt="博客"/><h2 class="headerTitleWithLogo">博客</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="/docs/directory" target="_self">Docs</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class="navSearchWrapper reactNavSearchWrapper"><input type="text" id="search_input_react" placeholder="Search" title="Search"/></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">本地缓存Google Guava Cache</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="示例"></a><a href="#示例" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>示例</h2>
+<pre><code class="hljs css language-java">LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()
+    .maximumSize(<span class="hljs-number">1000</span>)
+    .expireAfterAccess(<span class="hljs-number">10</span>, TimeUnit.SECONDS)
+    .removalListener(<span class="hljs-keyword">new</span> RemovalListener&lt;Object, Object&gt;() {
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRemoval</span><span class="hljs-params">(RemovalNotification&lt;Object, Object&gt; removalNotification)</span> </span>{
+            System.out.println(removalNotification.getKey() + <span class="hljs-string">":"</span> + removalNotification.getCause() + <span class="hljs-string">": "</span> + removalNotification.getCause().toString());
+        }
+    }).build(<span class="hljs-keyword">new</span> CacheLoader&lt;String, String&gt;() {
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">load</span><span class="hljs-params">(String s)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+            System.out.println(<span class="hljs-string">"load cache: "</span> + s);
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"----"</span> + s + <span class="hljs-string">"-----"</span>;
+        }
+    });
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="适用场景"></a><a href="#适用场景" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>适用场景</h2>
+<p>缓存在很多场景下都是相当有用的。例如，计算或检索一个值的代价很高，并且对同样的输入需要不止一次获取值的时候，就应当考虑使用缓存。</p>
+<p>Guava Cache与ConcurrentMap很相似，但也不完全一样。最基本的区别是ConcurrentMap会一直保存所有添加的元素，直到显式地移除。相对地，<font color=red>Guava Cache为了限制内存占用，通常都设定为自动回收元素。</font>在某些场景下，尽管LoadingCache不回收元素，它也是很有用的，因为它会自动加载缓存。</p>
+<p>通常来说，Guava Cache适用于以下场景：</p>
+<ul>
+<li>你愿意消耗一些内存空间来提升速度</li>
+<li>你预料到某些键会被查询一次以上</li>
+<li>缓存中存放的数据总量不会超出内存容量（<font color=red>Guava Cache是单个应用运行时的本地缓存，它不把数据存放到文件或外部服务器。</font>如果这不符合你的需求，请尝试Memcached这类工具）</li>
+</ul>
+<p>注：如果你不需要Cache中的特性，使用ConcurrentHashMap有更好的内存效率。但Cache的大多数特性都很难基于旧有的ConcurrentMap复制，甚至根本不可能做到。</p>
+<h2><a class="anchor" aria-hidden="true" id="缓存构建方式"></a><a href="#缓存构建方式" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>缓存构建方式</h2>
+<p>有没有合理的默认方法来加载或计算与键关联的值？如果有的话，你应当使用CacheLoader。如果没有，或者你想要覆盖默认的加载运算，同时保留&quot;获取缓存-如果没有-则计算&quot;[get-if-absent-compute]的原子语义，你应该在调用get时传入一个Callable实例。缓存元素也可以通过<code>Cache.put</code>方法直接插入，但自动加载是首选的，因为它可以更容易地推断所有缓存内容的一致性。</p>
+<h3><a class="anchor" aria-hidden="true" id="cacheloader"></a><a href="#cacheloader" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>CacheLoader</h3>
+<p>LoadingCache是附带CacheLoader构建而成的缓存实现。创建自己的CacheLoader通常只需要简单地实现<code>V load(K key) throws Exception</code>方法。</p>
+<p>从LoadingCache查询的正规方式是使用get(K)方法。这个方法要么返回已经缓存的值，要么使用CacheLoader向缓存原子地加载新值。由于CacheLoader可能抛出异常，LoadingCache.get(K)也声明为抛出ExecutionException异常。如果你定义的CacheLoader没有声明任何检查型异常，则可以通过getUnchecked(K)查找缓存；但必须注意，一旦CacheLoader声明了检查型异常，就不可以调用getUnchecked(K)。</p>
+<ul>
+<li>LoadingCache.get(K)</li>
+<li>LoadingCache.getUnchecked(K)</li>
+</ul>
+<pre><code class="hljs css language-java">LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()
+    .maximumSize(<span class="hljs-number">1000</span>)
+    }).build(<span class="hljs-keyword">new</span> CacheLoader&lt;String, String&gt;() {
+        <span class="hljs-comment">//这里声明为throws Exception那么只能用LoadingCache.get(K)，而不能使用LoadingCache.getUnchecked(K)</span>
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">load</span><span class="hljs-params">(String s)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+            System.out.println(<span class="hljs-string">"load cache: "</span> + s);
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"----"</span> + s + <span class="hljs-string">"-----"</span>;
+        }
+    });
+
+LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()
+    .maximumSize(<span class="hljs-number">1000</span>)
+    }).build(<span class="hljs-keyword">new</span> CacheLoader&lt;String, String&gt;() {
+        <span class="hljs-comment">//这里声明为不抛异常，可以使用LoadingCache.get(K)，也可以使用LoadingCache.getUnchecked(K)</span>
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">load</span><span class="hljs-params">(String s)</span> </span>{
+            System.out.println(<span class="hljs-string">"load cache: "</span> + s);
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"----"</span> + s + <span class="hljs-string">"-----"</span>;
+        }
+    });
+</code></pre>
+<p>参见源码</p>
+<pre><code class="hljs css language-java"><span class="hljs-function"><span class="hljs-keyword">public</span> V <span class="hljs-title">get</span><span class="hljs-params">(K key)</span> <span class="hljs-keyword">throws</span> ExecutionException </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.localCache.getOrLoad(key);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> V <span class="hljs-title">getUnchecked</span><span class="hljs-params">(K key)</span> </span>{
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.get(key);
+    } <span class="hljs-keyword">catch</span> (ExecutionException var3) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UncheckedExecutionException(var3.getCause());
+    }
+}
+</code></pre>
+<ul>
+<li>LoadingCache.getAll(Iterable&lt;? extends K&gt;)</li>
+</ul>
+<p>getAll(Iterable&lt;? extends K&gt;)方法用来执行批量查询。默认情况下，对每个不在缓存中的键，getAll方法会单独调用CacheLoader.load来加载缓存项。<font color=red>如果批量的加载比多个单独加载更高效，你可以重载CacheLoader.loadAll来利用这一点。getAll(Iterable)的性能也会相应提升。</font></p>
+<pre><code class="hljs css language-java">LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()
+    .maximumSize(<span class="hljs-number">1000</span>)
+    }).build(<span class="hljs-keyword">new</span> CacheLoader&lt;String, String&gt;() {
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">load</span><span class="hljs-params">(String s)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+            System.out.println(<span class="hljs-string">"load cache: "</span> + s);
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"----"</span> + s + <span class="hljs-string">"-----"</span>;
+        }
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> Map&lt;String, String&gt; <span class="hljs-title">loadAll</span><span class="hljs-params">(Iterable&lt;? extends String&gt; keys)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+            System.out.println(<span class="hljs-string">"load all cache: "</span> + s);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.loadAll(keys);
+        }
+    });
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="callable"></a><a href="#callable" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Callable</h3>
+<p>所有类型的Guava Cache，不管有没有自动加载功能，都支持<code>get(K, Callable&lt;V&gt;)</code>方法。这个方法返回缓存中相应的值，或者用给定的Callable运算并把结果加入到缓存中。<font color=red>在整个加载方法完成前，缓存项相关的可观察状态都不会更改。</font>这个方法简便地实现了模式&quot;如果有缓存则返回；否则运算、缓存、然后返回&quot;。另外，如果实现了CacheLoader，传入的Callable仅仅本次有效。</p>
+<pre><code class="hljs css language-java">String key = <span class="hljs-string">"abcc"</span>;
+System.out.println(cacheTest.cache.get(key, <span class="hljs-keyword">new</span> Callable&lt;String&gt;() {
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">call</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>{
+        <span class="hljs-keyword">return</span> key + <span class="hljs-string">"-======="</span>;
+    }
+}));
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="显示插入"></a><a href="#显示插入" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>显示插入</h3>
+<p>使用cache.put(key, value)方法可以直接向缓存中插入值，这会直接覆盖掉给定键之前映射的值。使用Cache.asMap()视图提供的任何方法也能修改缓存。但请注意，asMap视图的任何方法都不能保证缓存项被原子地加载到缓存中。进一步说，asMap视图的原子运算在Guava Cache的原子加载范畴之外，所以相比于<code>Cache.asMap().putIfAbsent(K, V)</code>，<code>Cache.get(K, Callable&lt;V&gt;)</code>应该总是优先使用。</p>
+<p>在加载缓存时会使用<code>ReentrantLock.lock()</code>进行加锁。</p>
+<h2><a class="anchor" aria-hidden="true" id="缓存回收"></a><a href="#缓存回收" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>缓存回收</h2>
+<p>一般，我们几乎一定没有足够的内存缓存所有数据。那么就必须决定：什么时候某个缓存项就不值得保留了？Guava Cache提供了三种基本的缓存回收方式：基于容量回收、定时回收和基于引用回收。</p>
+<h3><a class="anchor" aria-hidden="true" id="基于容量的回收（size-based-eviction）"></a><a href="#基于容量的回收（size-based-eviction）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>基于容量的回收（size-based eviction）</h3>
+<p>如果要规定缓存项的数目不超过固定值，只需使用<code>CacheBuilder.maximumSize(long)</code>。缓存将尝试回收最近没有使用或总体上很少使用的缓存项。另外，在缓存项的数目达到限定值之前，缓存就可能进行回收操作。通常来说，这种情况发生在缓存项的数目逼近限定值时。</p>
+<p>另外，不同的缓存项有不同的“权重”（weights）——例如，如果你的缓存值，占据完全不同的内存空间，你可以使用<code>CacheBuilder.weigher(Weigher)</code>指定一个权重函数，并且用<code>CacheBuilder.maximumWeight(long)</code>指定最大总重。在权重限定场景中，除了要注意回收也是在权重逼近限定值时就进行了，还要知道权重是在缓存创建时计算的，因此要考虑权重计算的复杂度。</p>
+<p><font color=red>注意：maximumWeight指定的是缓存权重，maximumSize指定的是缓存数目而不是大小，如果要实现基于缓存大小回收可以使用maximumWeight实现。</font></p>
+<h3><a class="anchor" aria-hidden="true" id="定时回收（timed-eviction）"></a><a href="#定时回收（timed-eviction）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>定时回收（Timed Eviction）</h3>
+<p>CacheBuilder提供两种定时回收的方法：</p>
+<h4><a class="anchor" aria-hidden="true" id="expireafteraccesslong-timeunit"></a><a href="#expireafteraccesslong-timeunit" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>expireAfterAccess(long, TimeUnit)</h4>
+<p>缓存项在给定时间内没有被读/写访问，则回收。请注意这种缓存的回收顺序和基于大小回收一样。</p>
+<h4><a class="anchor" aria-hidden="true" id="expireafterwritelong-timeunit"></a><a href="#expireafterwritelong-timeunit" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>expireAfterWrite(long, TimeUnit)</h4>
+<p>缓存项在给定时间内没有被写访问（创建或覆盖），则回收。如果认为缓存数据总是在固定时候后变得陈旧不可用，这种回收方式是可取的。</p>
+<p><font color=red>定时回收周期性地在写操作中执行，偶尔在读操作中执行。</font></p>
+<h4><a class="anchor" aria-hidden="true" id="测试定时回收"></a><a href="#测试定时回收" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>测试定时回收</h4>
+<p>对定时回收进行测试时，不一定非得花费两秒钟去测试两秒的过期。你可以使用Ticker接口和CacheBuilder.ticker(Ticker)方法在缓存中自定义一个时间源，而不是非得用系统时钟。</p>
+<h3><a class="anchor" aria-hidden="true" id="基于引用的回收（reference-based-eviction）"></a><a href="#基于引用的回收（reference-based-eviction）" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>基于引用的回收（Reference-based Eviction）</h3>
+<p>通过使用弱引用的键、或弱引用的值、或软引用的值，Guava Cache可以把缓存设置为允许垃圾回收：</p>
+<ul>
+<li>CacheBuilder.weakKeys()：使用弱引用存储键。当键没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用键的缓存用==而不是equals比较键。</li>
+<li>CacheBuilder.weakValues()：使用弱引用存储值。当值没有其它（强或软）引用时，缓存项可以被垃圾回收。因为垃圾回收仅依赖恒等式（==），使用弱引用值的缓存用==而不是equals比较值。</li>
+<li>CacheBuilder.softValues()：使用软引用存储值。软引用只有在响应内存需要时，才按照全局最近最少使用的顺序回收。考虑到使用软引用的性能影响，我们通常建议使用更有性能预测性的缓存大小限定（见上文，基于容量回收）。使用软引用值的缓存同样用==而不是equals比较值。</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="显式清除"></a><a href="#显式清除" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>显式清除</h2>
+<p>任何时候，都可以显式地清除缓存项，而不是等到它被回收：</p>
+<ul>
+<li>单个清除：Cache.invalidate(key)</li>
+<li>批量清除：Cache.invalidateAll(keys)</li>
+<li>清除所有缓存项：Cache.invalidateAll()</li>
+</ul>
+<h2><a class="anchor" aria-hidden="true" id="移除监听器"></a><a href="#移除监听器" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>移除监听器</h2>
+<p>通过CacheBuilder.removalListener(RemovalListener)，你可以声明一个监听器，以便缓存项被移除时做一些额外操作。缓存项被移除时，RemovalListener会获取移除通知[RemovalNotification]，其中包含移除原因[RemovalCause]、键和值。</p>
+<p>请注意，RemovalListener抛出的任何异常都会在记录到日志后被丢弃[swallowed]。</p>
+<pre><code class="hljs css language-java">LoadingCache&lt;String, String&gt; cache = CacheBuilder.newBuilder()
+    .maximumSize(<span class="hljs-number">1000</span>)
+    .expireAfterAccess(<span class="hljs-number">10</span>, TimeUnit.SECONDS)
+    .removalListener(<span class="hljs-keyword">new</span> RemovalListener&lt;Object, Object&gt;() {
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRemoval</span><span class="hljs-params">(RemovalNotification&lt;Object, Object&gt; removalNotification)</span> </span>{
+            System.out.println(removalNotification.getKey() + <span class="hljs-string">":"</span> + removalNotification.getCause() + <span class="hljs-string">": "</span> + removalNotification.getCause().toString());
+        }
+    }).build(<span class="hljs-keyword">new</span> CacheLoader&lt;String, String&gt;() {
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">load</span><span class="hljs-params">(String s)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+            System.out.println(<span class="hljs-string">"load cache: "</span> + s);
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"----"</span> + s + <span class="hljs-string">"-----"</span>;
+        }
+    });
+</code></pre>
+<p>警告：默认情况下，监听器方法是在移除缓存时同步调用的。因为缓存的维护和请求响应通常是同时进行的，代价高昂的监听器方法在同步模式下会拖慢正常的缓存请求。在这种情况下，你可以使用<code>RemovalListeners.asynchronous(RemovalListener, Executor)</code>把监听器装饰为异步操作。</p>
+<pre><code class="hljs css language-java">Executor executor = Executors.newFixedThreadPool(<span class="hljs-number">2</span>);
+LoadingCache&lt;String, Integer&gt; cache = CacheBuilder.newBuilder()
+    .maximumSize(<span class="hljs-number">100</span>)
+    .expireAfterAccess(<span class="hljs-number">10</span>, TimeUnit.SECONDS)
+    .removalListener(RemovalListeners.asynchronous(<span class="hljs-keyword">new</span> RemovalListener&lt;Object, Object&gt;() {
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onRemoval</span><span class="hljs-params">(RemovalNotification&lt;Object, Object&gt; removalNotification)</span> </span>{
+            System.out.println(<span class="hljs-string">"clear cache: "</span>+ removalNotification.getKey() +<span class="hljs-string">" _ "</span> + removalNotification.getCause().toString());
+        }
+    }, executor)).build(<span class="hljs-keyword">new</span> CacheLoader&lt;String, Integer&gt;() {
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">load</span><span class="hljs-params">(String s)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+            System.out.println(<span class="hljs-string">"load cache: "</span> + s);
+            <span class="hljs-keyword">return</span> Integer.valueOf(s);
+        }
+    });
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="清理什么时候发生"></a><a href="#清理什么时候发生" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>清理什么时候发生</h2>
+<p>使用CacheBuilder构建的缓存不会&quot;自动&quot;执行清理和回收工作，也不会在某个缓存项过期后马上清理，也没有诸如此类的清理机制。相反，它会在写操作时顺带做少量的维护工作，或者偶尔在读操作时做--如果写操作实在太少的话。</p>
+<p>这样做的原因在于：如果要自动地持续清理缓存，就必须有一个线程，这个线程会和用户操作竞争共享锁。此外，某些环境下线程创建可能受限制，这样CacheBuilder就不可用了。</p>
+<p>相反，我们把选择权交到你手里。如果你的缓存是高吞吐的，那就无需担心缓存的维护和清理等工作。如果你的缓存只会偶尔有写操作，而你又不想清理工作阻碍了读操作，那么可以创建自己的维护线程，以固定的时间间隔调用<code>Cache.cleanUp()</code>。ScheduledExecutorService可以帮助你很好地实现这样的定时调度。</p>
+<h2><a class="anchor" aria-hidden="true" id="刷新"></a><a href="#刷新" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>刷新</h2>
+<p>刷新和回收不太一样。正如<code>LoadingCache.refresh(K)</code>所声明，刷新表示为键加载新值，这个过程可以是异步的。在刷新操作进行时，缓存仍然可以向其他线程返回旧值，而不像回收操作，读缓存的线程必须等待新值加载完成。</p>
+<p>如果刷新过程抛出异常，缓存将保留旧值，而异常会在记录到日志后被丢弃[swallowed]。</p>
+<p>重载<code>CacheLoader.reload(K, V)</code>可以扩展刷新时的行为，这个方法允许开发者在计算新值时使用旧的值。</p>
+<p><code>CacheBuilder.refreshAfterWrite(long, TimeUnit)</code>可以为缓存增加自动定时刷新功能。和expireAfterWrite相反，refreshAfterWrite通过定时刷新可以让缓存项保持可用，但请注意：缓存项只有在被检索时才会真正刷新（如果CacheLoader.refresh实现为异步，那么检索不会被刷新拖慢）。因此，如果你在缓存上同时声明expireAfterWrite和refreshAfterWrite，缓存并不会因为刷新盲目地定时重置，如果缓存项没有被检索，那刷新就不会真的发生，缓存项在过期时间后也变得可以回收。</p>
+<h2><a class="anchor" aria-hidden="true" id="其他特性"></a><a href="#其他特性" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>其他特性</h2>
+<h3><a class="anchor" aria-hidden="true" id="统计"></a><a href="#统计" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>统计</h3>
+<p>CacheBuilder.recordStats()用来开启Guava Cache的统计功能。统计打开后，Cache.stats()方法会返回CacheStats对象以提供如下统计信息：</p>
+<ul>
+<li>hitRate()：缓存命中率；</li>
+<li>averageLoadPenalty()：加载新值的平均时间，单位为纳秒；</li>
+<li>evictionCount()：缓存项被回收的总数，不包括显式清除。</li>
+</ul>
+<p>此外，还有其他很多统计信息。这些统计信息对于调整缓存设置是至关重要的，在性能要求高的应用中我们建议密切关注这些数据。</p>
+<h3><a class="anchor" aria-hidden="true" id="asmap视图"></a><a href="#asmap视图" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>asMap视图</h3>
+<p>asMap视图提供了缓存的ConcurrentMap形式，但asMap视图与缓存的交互需要注意：</p>
+<ul>
+<li><code>cache.asMap()</code>包含当前所有加载到缓存的项。因此相应地，<code>cache.asMap().keySet()</code>包含当前所有已加载键;</li>
+<li><code>asMap().get(key)</code>实质上等同于<code>cache.getIfPresent(key)</code>，而且不会引起缓存项的加载。这和Map的语义约定一致。</li>
+</ul>
+<p>所有读写操作都会重置相关缓存项的访问时间，包括<code>Cache.asMap().get(Object)</code>方法和<code>Cache.asMap().put(K, V)</code>方法，但不包括<code>Cache.asMap().containsKey(Object)</code>方法，也不包括在<code>Cache.asMap()</code>的集合视图上的操作。比如，遍历<code>Cache.asMap().entrySet()</code>不会重置缓存项的读取时间。</p>
+<h3><a class="anchor" aria-hidden="true" id="中断"></a><a href="#中断" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>中断</h3>
+<p>缓存加载方法（如Cache.get）不会抛出InterruptedException。我们也可以让这些方法支持InterruptedException，但这种支持注定是不完备的，并且会增加所有使用者的成本，而只有少数使用者实际获益。</p>
+<p><font color=red>Cache.get请求到未缓存的值时会遇到两种情况：当前线程加载值；或等待另一个正在加载值的线程。</font>这两种情况下的中断是不一样的。等待另一个正在加载值的线程属于较简单的情况：使用可中断的等待就实现了中断支持；但当前线程加载值的情况就比较复杂了：因为加载值的CacheLoader是由用户提供的，如果它是可中断的，那我们也可以实现支持中断，否则我们也无能为力。</p>
+<p>如果用户提供的CacheLoader是可中断的，为什么不让Cache.get也支持中断？从某种意义上说，其实是支持的：如果CacheLoader抛出InterruptedException，Cache.get将立刻返回（就和其他异常情况一样）；此外，在加载缓存值的线程中，Cache.get捕捉到InterruptedException后将恢复中断，而其他线程中InterruptedException则被包装成了ExecutionException。</p>
+<p>原则上，我们可以拆除包装，把ExecutionException变为InterruptedException，但这会让所有的LoadingCache使用者都要处理中断异常，即使他们提供的CacheLoader不是可中断的。如果你考虑到所有非加载线程的等待仍可以被中断，这种做法也许是值得的。但许多缓存只在单线程中使用，它们的用户仍然必须捕捉不可能抛出的InterruptedException异常。即使是那些跨线程共享缓存的用户，也只是有时候能中断他们的get调用，取决于那个线程先发出请求。</p>
+<p>对于这个决定，我们的指导原则是让缓存始终表现得好像是在当前线程加载值。这个原则让使用缓存或每次都计算值可以简单地相互切换。如果老代码（加载值的代码）是不可中断的，那么新代码（使用缓存加载值的代码）多半也应该是不可中断的。</p>
+<p>如上所述，Guava Cache在某种意义上支持中断。另一个意义上说，Guava Cache不支持中断，这使得LoadingCache成了一个有漏洞的抽象：当加载过程被中断了，就当作其他异常一样处理，这在大多数情况下是可以的；但如果多个线程在等待加载同一个缓存项，即使加载线程被中断了，它也不应该让其他线程都失败（捕获到包装在ExecutionException里的InterruptedException），正确的行为是让剩余的某个线程重试加载。为此，我们记录了一个bug。然而，与其冒着风险修复这个bug，我们可能会花更多的精力去实现另一个建议AsyncLoadingCache，这个实现会返回一个有正确中断行为的Future对象。</p>
+</span></div></article></div><div class="docs-prevnext"></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#示例">示例</a></li><li><a href="#适用场景">适用场景</a></li><li><a href="#缓存构建方式">缓存构建方式</a><ul class="toc-headings"><li><a href="#cacheloader">CacheLoader</a></li><li><a href="#callable">Callable</a></li><li><a href="#显示插入">显示插入</a></li></ul></li><li><a href="#缓存回收">缓存回收</a><ul class="toc-headings"><li><a href="#基于容量的回收（size-based-eviction）">基于容量的回收（size-based eviction）</a></li><li><a href="#定时回收（timed-eviction）">定时回收（Timed Eviction）</a></li><li><a href="#基于引用的回收（reference-based-eviction）">基于引用的回收（Reference-based Eviction）</a></li></ul></li><li><a href="#显式清除">显式清除</a></li><li><a href="#移除监听器">移除监听器</a></li><li><a href="#清理什么时候发生">清理什么时候发生</a></li><li><a href="#刷新">刷新</a></li><li><a href="#其他特性">其他特性</a><ul class="toc-headings"><li><a href="#统计">统计</a></li><li><a href="#asmap视图">asMap视图</a></li><li><a href="#中断">中断</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="copyright">Copyright © 2020</section></footer></div><script type="text/javascript" src="https://cdn.jsdelivr.net/docsearch.js/1/docsearch.min.js"></script><script>
+                document.addEventListener('keyup', function(e) {
+                  if (e.target !== document.body) {
+                    return;
+                  }
+                  // keyCode for '/' (slash)
+                  if (e.keyCode === 191) {
+                    const search = document.getElementById('search_input_react');
+                    search && search.focus();
+                  }
+                });
+              </script><script>
+              var search = docsearch({
+                
+                apiKey: 'my-search-only-api-key-1234',
+                indexName: 'my-index-name',
+                inputSelector: '#search_input_react'
+              });
+            </script></body></html>
