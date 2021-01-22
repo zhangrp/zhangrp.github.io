@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1,maximum-scale=1">
     <title>小学</title>
 </head>
 
@@ -683,7 +683,7 @@
         </tbody>
     </table>
 
-    <input type="text" id="inputtext"><input type="button" value="确定" onclick="query();">
+    <input class='input' type="text" id="inputtext"><input style="font-size:20px; margin-left:10px;" type="button" value="确定" onclick="query();">
 
     <table id="result">
 
@@ -691,6 +691,8 @@
 </body>
 
 <style>
+	.input{width:160px;height:30px;font-size:20px; line-height:30px;}
+
     tr,
     td {
         border: 1px solid bisque;
