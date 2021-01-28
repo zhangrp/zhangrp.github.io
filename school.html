@@ -4,6 +4,8 @@
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimum-scale=1,maximum-scale=1">
     <title>小学</title>
+    <script src="./pd_xiaoxue.js"></script>
+    <script src="./pd_chuzhong.js"></script>
 </head>
 
 <body>
@@ -1656,6 +1658,17 @@
             }
         }
 
+        for (let i = 0; i < pd_xiaoxue.length; i++) {
+            if (pd_xiaoxue[i][0].indexOf(text) >= 0 || pd_xiaoxue[i][1].indexOf(text) >= 0) {
+                queryResult.push({
+                    name: pd_xiaoxue[i][0].replaceAll(text, "<span class='red'>" + text + "</span>"),
+                    address: '',
+                    community: pd_xiaoxue[i][1].replaceAll(text, "<span class='red'>" + text + "</span>"),
+                });
+            }
+        }
+
+
         let html = "";
         for (let i = 0; i < queryResult.length; i++) {
             html = html + "<tr>" +
@@ -1677,6 +1690,17 @@
                     name: infos_high[i].name.replaceAll(text, "<span class='red'>" + text + "</span>"),
                     address: infos_high[i].address,
                     community: infos_high[i].community.replaceAll(text, "<span class='red'>" + text + "</span>"),
+                });
+            }
+        }
+
+
+        for (let i = 0; i < pd_chuzhong.length; i++) {
+            if (pd_chuzhong[i][0].indexOf(text) >= 0 || pd_chuzhong[i][1].indexOf(text) >= 0) {
+                queryResult.push({
+                    name: pd_chuzhong[i][0].replaceAll(text, "<span class='red'>" + text + "</span>"),
+                    address: '',
+                    community: pd_chuzhong[i][1].replaceAll(text, "<span class='red'>" + text + "</span>"),
                 });
             }
         }
